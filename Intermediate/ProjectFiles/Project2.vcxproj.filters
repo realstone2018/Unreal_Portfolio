@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\Project2.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\Project2.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\Project2Editor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.gitignore" />
+    <None Include="..\..\.vsconfig" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\Project2">
+      <UniqueIdentifier>{33208BF1-5050-3D31-8386-491B46E7D13D}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project2\MyCharacter.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\MyCharacter.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\MyClass.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\MyClass.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\MyClass2.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\MyClass2.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <None Include="..\..\Source\Project2\Project2.Build.cs">
+      <Filter>Source\Project2</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\Project2\Project2.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Project2.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
