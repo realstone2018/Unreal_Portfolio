@@ -31,22 +31,16 @@
     <Filter Include="Source\Project2">
       <UniqueIdentifier>{33208BF1-5050-3D31-8386-491B46E7D13D}</UniqueIdentifier>
     </Filter>
-    <ClCompile Include="..\..\Source\Project2\MyCharacter.cpp">
+    <ClCompile Include="..\..\Source\Project2\Gun.cpp">
       <Filter>Source\Project2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\MyCharacter.h">
+    <ClInclude Include="..\..\Source\Project2\Gun.h">
       <Filter>Source\Project2</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\Source\Project2\MyClass.cpp">
+    <ClCompile Include="..\..\Source\Project2\KillEmAllGameMode.cpp">
       <Filter>Source\Project2</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\MyClass.h">
-      <Filter>Source\Project2</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\Source\Project2\MyClass2.cpp">
-      <Filter>Source\Project2</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\MyClass2.h">
+    <ClInclude Include="..\..\Source\Project2\KillEmAllGameMode.h">
       <Filter>Source\Project2</Filter>
     </ClInclude>
     <None Include="..\..\Source\Project2\Project2.Build.cs">
@@ -57,6 +51,57 @@
     </ClCompile>
     <ClInclude Include="..\..\Source\Project2\Project2.h">
       <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\ShooterAIController.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\ShooterAIController.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\ShooterCharacter.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\ShooterCharacter.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\ShooterPlayerController.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\ShooterPlayerController.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\SimpleShooterGameModeBase.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\SimpleShooterGameModeBase.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project2\AI">
+      <UniqueIdentifier>{BCC01092-4E1E-33FA-8CF6-AAF728FEA716}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project2\AI\BTService_PlayerLocation.cpp">
+      <Filter>Source\Project2\AI</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\AI\BTService_PlayerLocation.h">
+      <Filter>Source\Project2\AI</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\AI\BTService_PlayerLocationIfSee.cpp">
+      <Filter>Source\Project2\AI</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\AI\BTService_PlayerLocationIfSee.h">
+      <Filter>Source\Project2\AI</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\AI\BTTask_ClearBlackboardValue.cpp">
+      <Filter>Source\Project2\AI</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\AI\BTTask_ClearBlackboardValue.h">
+      <Filter>Source\Project2\AI</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\AI\BTTask_Shoot.cpp">
+      <Filter>Source\Project2\AI</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\AI\BTTask_Shoot.h">
+      <Filter>Source\Project2\AI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
