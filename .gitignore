@@ -70,7 +70,7 @@
 */DerivedDataCache/*
 
 # Compiled source files for the engine to use
-*/Intermediate/*
+*/Intermediate
 */Plugins/*/Intermediate/*
 
 */.vsconfig
@@ -79,6 +79,8 @@
 *.zip
 Content/AssetPacks
 Content/ModularSciFi
-
-
+Content/ParagonIggyScorch
+Content/ParagonRampage
+Content/FourEvilDragonsPBR
+Content/Kraken
 
