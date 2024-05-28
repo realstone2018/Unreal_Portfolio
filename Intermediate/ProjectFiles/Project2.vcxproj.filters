@@ -11,6 +11,7 @@
     <None Include="..\..\Source\Project2Editor.Target.cs">
       <Filter>Source</Filter>
     </None>
+    <None Include="..\..\.gitattributes" />
     <None Include="..\..\.gitignore" />
     <None Include="..\..\.vsconfig" />
     <Filter Include="Config">
@@ -31,12 +32,6 @@
     <Filter Include="Source\Project2">
       <UniqueIdentifier>{33208BF1-5050-3D31-8386-491B46E7D13D}</UniqueIdentifier>
     </Filter>
-    <ClCompile Include="..\..\Source\Project2\Gun.cpp">
-      <Filter>Source\Project2</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\Gun.h">
-      <Filter>Source\Project2</Filter>
-    </ClInclude>
     <ClCompile Include="..\..\Source\Project2\KillEmAllGameMode.cpp">
       <Filter>Source\Project2</Filter>
     </ClCompile>
@@ -50,6 +45,24 @@
       <Filter>Source\Project2</Filter>
     </ClCompile>
     <ClInclude Include="..\..\Source\Project2\Project2.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\PTCameraShakeBase.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTCameraShakeBase.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\PTCameraShakePattern.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTCameraShakePattern.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\PTInputComponent.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTInputComponent.h">
       <Filter>Source\Project2</Filter>
     </ClInclude>
     <ClCompile Include="..\..\Source\Project2\ShooterAIController.cpp">
@@ -102,6 +115,93 @@
     </ClCompile>
     <ClInclude Include="..\..\Source\Project2\AI\BTTask_Shoot.h">
       <Filter>Source\Project2\AI</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project2\Character">
+      <UniqueIdentifier>{38F57921-2DAC-3C42-AC2F-C811D749FC58}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project2\Character\PTCharacterBase.cpp">
+      <Filter>Source\Project2\Character</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Character\PTCharacterBase.h">
+      <Filter>Source\Project2\Character</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\Character\PTCharacterControlData.cpp">
+      <Filter>Source\Project2\Character</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Character\PTCharacterControlData.h">
+      <Filter>Source\Project2\Character</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\Character\PTMonster.cpp">
+      <Filter>Source\Project2\Character</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Character\PTMonster.h">
+      <Filter>Source\Project2\Character</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\Character\PTPlayerCharacter.cpp">
+      <Filter>Source\Project2\Character</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Character\PTPlayerCharacter.h">
+      <Filter>Source\Project2\Character</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\Character\PTPlayerController.cpp">
+      <Filter>Source\Project2\Character</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Character\PTPlayerController.h">
+      <Filter>Source\Project2\Character</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\Character\PTScorch.cpp">
+      <Filter>Source\Project2\Character</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Character\PTScorch.h">
+      <Filter>Source\Project2\Character</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project2\Character\CharacterStat">
+      <UniqueIdentifier>{E16EDB10-1C94-37B2-AD35-41A609D2A7A6}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project2\Character\CharacterStat\PTCharacterStatComponent.cpp">
+      <Filter>Source\Project2\Character\CharacterStat</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Character\CharacterStat\PTCharacterStatComponent.h">
+      <Filter>Source\Project2\Character\CharacterStat</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project2\GameData">
+      <UniqueIdentifier>{B1204D7C-869F-3172-BDD5-BCE24F3BAADF}</UniqueIdentifier>
+    </Filter>
+    <ClInclude Include="..\..\Source\Project2\GameData\PTCharacterStat.h">
+      <Filter>Source\Project2\GameData</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\GameData\PTGameDataSingleton.cpp">
+      <Filter>Source\Project2\GameData</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\GameData\PTGameDataSingleton.h">
+      <Filter>Source\Project2\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Project2\GameData\PTGun.h">
+      <Filter>Source\Project2\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Project2\GameData\PTGunData.h">
+      <Filter>Source\Project2\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Project2\GameData\PTMonsterStat.h">
+      <Filter>Source\Project2\GameData</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project2\Interface">
+      <UniqueIdentifier>{0AB931B9-6496-3780-856C-F73A7EDFE1FC}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project2\Interface\PTPlayerInputInterface.cpp">
+      <Filter>Source\Project2\Interface</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Interface\PTPlayerInputInterface.h">
+      <Filter>Source\Project2\Interface</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project2\Weapon">
+      <UniqueIdentifier>{9120F6ED-1B3E-3835-A413-126A3DACC42A}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project2\Weapon\Gun.cpp">
+      <Filter>Source\Project2\Weapon</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Weapon\Gun.h">
+      <Filter>Source\Project2\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

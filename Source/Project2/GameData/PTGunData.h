@@ -1,0 +1,62 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Engine/DataTable.h"
+#include "PTGunData.generated.h"
+
+UENUM(BlueprintType)
+enum class EFireMode : uint8
+{
+	Single UMETA(DisplayName="Single"),		// 단발 
+	Burst UMETA(DisplayName="Burst"),		// 점사
+	Automatic UMETA(DisplayName="Auto"),	// 연발
+};
+
+USTRUCT(BlueprintType)
+struct FPTGunData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	FPTGunData() : Damage(0.0f), Range(0.0f), MaxAmmo(0), Recoil(0.0f), FireRate(0.0f), ReloadTime(0.0f), FireMode(EFireMode::Single), BurstCount(1) {}
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	float Damage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	float Range;	// 사거리
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	int32 MaxAmmo;	// 탄창
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	float Recoil;	// 반동
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	float FireRate;	// 발사 속도
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	float ReloadTime;	// 재장전 시간
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	EFireMode FireMode;	// 발사 타입
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	int32 BurstCount; // 점사 모드에서 한번에 발사되는 탄 수 
+	
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
+	// FString ModelName;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
+	// FString MuzzleflashEffectName;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
+	// FString MuzzleflashSoundName;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
+	// FString ImpactEffectName;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
+	// FString ImpactSoundName;
+	
+};
