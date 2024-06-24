@@ -45,7 +45,8 @@ public:
 
     template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
     T* GetPooledObject(EPoolListType PoolType, FTransform const& Trans);
-    
+
+    UFUNCTION()
     void ReturnPooledObject(AActor* Object);
     
     UPROPERTY()

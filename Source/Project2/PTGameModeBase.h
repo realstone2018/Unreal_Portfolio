@@ -46,6 +46,9 @@ private:
 private:
 	UFUNCTION()
 	void SpawnMonster(int num);
+
+	UFUNCTION()
+	void RemoveMonster(AActor* DeadActor);
 	
 	UPROPERTY()
 	APTMonster* Monster;

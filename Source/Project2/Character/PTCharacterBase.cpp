@@ -19,13 +19,27 @@ APTCharacterBase::APTCharacterBase()
 	HpBar = CreateDefaultSubobject<UPTWidgetComponent>(TEXT("Widget"));
 	HpBar->SetupAttachment(GetMesh());
 	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 180.f));
-	
+	HpBar->SetHiddenInGame(true);
+
 	static ConstructorHelpers::FClassFinder<UPTUserWidget> HpBarWidgetRef(TEXT("/Game/Project2/Character/UI/WBP_HpBar.WBP_HpBar_C"));
-	if (HpBarWidgetRef.Class) {
-		HpBar->SetWidgetClass(HpBarWidgetRef.Class); 
+	if (HpBarWidgetRef.Class)
+	{
+		HpBarWidgetClass = HpBarWidgetRef.Class;
+	}
+}
+
+void APTCharacterBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (HpBar && HpBarWidgetClass && GetShouldDisplayHpBar())
+	{
+		HpBar->SetWidgetClass(HpBarWidgetClass); 
 		HpBar->SetWidgetSpace(EWidgetSpace::Screen);
 		HpBar->SetDrawSize(FVector2D(150.f, 15.f)); //위젯이 담길 사이즈 (패널의 크기?)
 		HpBar->SetCollisionEnabled(ECollisionEnabled::NoCollision); //불필요한 충돌처리 비활성화
+
+		HpBar->SetHiddenInGame(false);
 	}
 }
 

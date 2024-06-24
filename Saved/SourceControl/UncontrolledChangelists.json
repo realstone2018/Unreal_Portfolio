@@ -5,7 +5,8 @@
 			"guid": "00000000000000000000000000000000",
 			"description": "Default Uncontrolled Changelist",
 			"files": [
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/BP_Monster.uasset"
+				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/BP_Monster.uasset",
+				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/Anim/ABP_Scorch.uasset"
 			]
 		}
 	]

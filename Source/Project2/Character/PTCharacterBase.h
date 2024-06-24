@@ -19,6 +19,8 @@ class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationAtta
 public:
 	APTCharacterBase();
 
+	virtual void PostInitializeComponents() override;
+	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAceess = "true"))
 	TObjectPtr<class UPTCharacterMoveComponent> MoveComponent;
@@ -28,11 +30,14 @@ protected:
 	// Widget
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPTWidgetComponent> HpBar; 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UPTUserWidget> HpBarWidgetClass;
 	
 	//virtual void SetupCharacterWidget(class UPTUserWidget* InUserWidget) override;	
 
 	virtual void SetupCharacterWidget(UPTUserWidget* InUserWidget) override;
-
+	virtual bool GetShouldDisplayHpBar() { return true; }
 	
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -48,5 +53,6 @@ public:
 
 	virtual void Kill(AActor* victim);
 	virtual void Dead();
+
 	
 };

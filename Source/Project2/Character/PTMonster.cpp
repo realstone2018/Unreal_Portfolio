@@ -45,9 +45,12 @@ void APTMonster::Instantiate()
 	MonsterStat->SetMonsterStat(FName("Scorch"));
 	
 	SetActorHiddenInGame(false);
-	SetActorEnableCollision(true);
-	SetActorTickEnabled(true);
 
+	SetActorEnableCollision(true);
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTMONSTER);
+	
+	SetActorTickEnabled(true);
+	
 	// 애니메이션 활성화
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	GetComponents(SkeletalMeshComponents);
@@ -62,10 +65,16 @@ void APTMonster::Instantiate()
 	{
 		AIController->RunAI();
 	}
+
+	MoveComponent->SetMovementMode(EMovementMode::MOVE_Walking);
+
+	HpBar->SetHiddenInGame(false);
 }
 
 void APTMonster::Dispose()
 {
+	UE_LOG(LogTemp, Display, TEXT("APTMonster::Dispose()"));
+
 	OnDead.Unbind();
 	SetActorHiddenInGame(true);
 
@@ -180,9 +189,12 @@ void APTMonster::Attack()
 
 void APTMonster::Dead()
 {
+	UE_LOG(LogTemp, Display, TEXT("APTMonster::Dead()"));
+
 	Super::Dead();
 
-	SetActorEnableCollision(false);
+	
+	//SetActorEnableCollision(false);
 	SetActorTickEnabled(false);
 	
 	// 비헤이비어 트리 비활성화
@@ -193,13 +205,7 @@ void APTMonster::Dead()
 		AIController->StopAI();
 	}
 
-	FTimerHandle DeadTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(DeadTimerHandle, FTimerDelegate::CreateLambda(
-		[&]()
-		{
-			OnDead.ExecuteIfBound(this);
-		}
-	), 5.0f, false);
+	OnDead.ExecuteIfBound(this);
 }
 
 void APTMonster::EndAttackMontage(UAnimMontage* TargetMontage, bool IsProperlyEnded)

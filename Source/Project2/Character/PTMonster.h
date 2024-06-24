@@ -27,12 +27,15 @@ public:
 	virtual void Instantiate() override;
 	virtual void Dispose() override;
 
-//Stat
+// Stat
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPTMonsterStatComponent> MonsterStat;
 
 	virtual UPTCharacterStatComponent* GetStatComponent() override;
+
+// Widget
+	virtual bool GetShouldDisplayHpBar() override { return true; }
 
 
 #pragma region Battle

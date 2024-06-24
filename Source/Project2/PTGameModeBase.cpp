@@ -115,10 +115,7 @@ void APTGameModeBase::SpawnMonster(int num)
 	APTMonster* SpawnedMonster = PoolManager->GetPooledObject<APTMonster>(EPoolListType::Monster, SpawnTransform);
 	if (SpawnedMonster)
 	{
-		SpawnedMonster->OnDead.BindLambda([this](AActor* DeadActor)
-		{
-			PoolManager->ReturnPooledObject(DeadActor);	
-		});
+		SpawnedMonster->OnDead.BindUObject(this, &APTGameModeBase::RemoveMonster);
 		
 		UE_LOG(LogTemp, Log, TEXT("Monster spawned successfully."));
 	}
@@ -126,4 +123,15 @@ void APTGameModeBase::SpawnMonster(int num)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to spawn monster."));
 	}
+}
+
+void APTGameModeBase::RemoveMonster(AActor* DeadActor)
+{
+	FTimerHandle DeadTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(DeadTimerHandle, FTimerDelegate::CreateLambda(
+		[this, DeadActor]()
+		{
+			PoolManager->ReturnPooledObject(DeadActor);
+		}
+	), 5.0f, false);
 }

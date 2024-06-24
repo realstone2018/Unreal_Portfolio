@@ -34,6 +34,9 @@ protected:
 	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
 
 	virtual UPTCharacterStatComponent* GetStatComponent() override;
+
+// Widget
+	virtual bool GetShouldDisplayHpBar() override { return false; }
 	
 public:
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
