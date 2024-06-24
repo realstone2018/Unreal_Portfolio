@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/PTCharacterBase.h"
-#include "PTInputComponent.h"
+#include "PTComponent/PTInputComponent.h"
 #include "Interface/PTPlayerInputInterface.h"
 #include "Character/CharacterStat/PTCharacterStatComponent.h"
 #include "Weapon/Gun.h"
@@ -19,24 +19,34 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-// Camera Section
+// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class USpringArmComponent> CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UCameraComponent> FollowCamera;
 	
-
-// Input Section
+// Input
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UPTInputComponent* PlayerInputComponent;
+	TObjectPtr<class UPTInputComponent> PlayerInputComponent;
+	
+// Stat
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
+
+	virtual UPTCharacterStatComponent* GetStatComponent() override;
 	
 public:
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// IPTPlayerInputInterface
-	virtual void StartAttack() override;
-	virtual void StopAttack() override;
+	virtual void Evation() override;
+	
+// IPTPlayerInputInterface
+	void StartAttack() override;
+	void StopAttack() override;
+	void EvationAction() override { Evation(); }
 
+	virtual void Dead() override;
+	
 // Weapon
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -48,9 +58,5 @@ private:
 	void Reloading();
 	
 	bool bIsReloading;
-
-
-
-
 	
 };

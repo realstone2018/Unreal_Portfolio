@@ -2,11 +2,15 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
-#include "PTInputComponent.h"
-#include "Character/CharacterStat/PTCharacterStatComponent.h"
+#include "PTComponent/PTInputComponent.h"
+#include "PTComponent/Character/PTPlayerStatComponent.h"
 #include "GameData/PTGameDataSingleton.h"
 #include "GameFramework/CharacterMovementComponent.h"	// for GetCharacterMovement()
 #include "Weapon/Gun.h"
+#include "Physics/PTCollision.h"
+#include "Components/CapsuleComponent.h"
+#include "PTComponent/Character//PTCharacterMoveComponent.h"
+#include "SimpleShooterGameModeBase.h"
 
 APTPlayerCharacter::APTPlayerCharacter()
 {
@@ -18,9 +22,37 @@ APTPlayerCharacter::APTPlayerCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+	
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTPLAYER);
 
 	PlayerInputComponent = CreateDefaultSubobject<UPTInputComponent>(TEXT("InputComponet"));
+	StatComponent = CreateDefaultSubobject<UPTPlayerStatComponent>(TEXT("PlayerStatComponent"));
+}
 
+void APTPlayerCharacter::BeginPlay()
+{
+	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter.BeginPlay()"));
+	
+	Super::BeginPlay();
+
+	//TODO: 레벨 시스템 적용하면 현재 레벨 넣기 
+	StatComponent->SetCharacterLevelStat(1);
+	
+	PlayerInputComponent->Init(CameraBoom);
+	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
+
+	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+	Gun->SetOwner(this);
+	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("Rifle"));
+}
+
+UPTCharacterStatComponent* APTPlayerCharacter::GetStatComponent()
+{
+	UE_LOG(LogTemp, Display, TEXT("APTPlayerCharacter::GetStatComponent()"));
+
+	return StatComponent;
 }
 
 // BeginPlay보다 먼저 호출됨
@@ -34,20 +66,16 @@ void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 	PlayerInputComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 }
 
-void APTPlayerCharacter::BeginPlay()
+void APTPlayerCharacter::Evation()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter.BeginPlay()"));
+	Super::Evation();
+
+	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter::Evation()"));
+
+	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
+		MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
 	
-	Super::BeginPlay();
-
-	PlayerInputComponent->Init(CameraBoom);
-	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
-
-	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
-	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
-	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-	Gun->SetOwner(this);
-	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("Rifle"));
+	MoveComponent->MoveToDirection(Direction, 400.f, 0.3f);	
 }
 
 void APTPlayerCharacter::StartAttack()
@@ -91,4 +119,18 @@ void APTPlayerCharacter::Reloading()
 
 		
 	}
+}
+
+void APTPlayerCharacter::Dead()
+{	
+	Super::Dead();
+	
+	ASimpleShooterGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>();
+	if (GameMode != nullptr)
+	{
+		//GameMode->PawnKilled(this);
+	}
+	
+	// 더이상 어떤 행동도 하지 않도록 컨트롤러를 폰에서 분리 
+	DetachFromControllerPendingDestroy();
 }

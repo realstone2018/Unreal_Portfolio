@@ -5,37 +5,7 @@
 			"guid": "00000000000000000000000000000000",
 			"description": "Default Uncontrolled Changelist",
 			"files": [
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/GameData/PTCharacterStatTable.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/Action/IA_Shoot.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/Action/IA_Jump.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/IMC_Shoulder.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/IMC_Quater.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/ControlData/PC_Shoulder.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/ControlData/PC_Quater.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/Action/IA_ShoulderMove.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/Action/IA_ShoulderLook.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/Action/IA_QuaterMove.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Level/MAP_Ingame.umap",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/BP_PlayerCharacter.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Blueprint/BP_TestGameMode.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Udemy/Blueprint/BP_ShooterCharacter.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Blueprint/BP_Rifle.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/GameData/PTGunDataTable.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/BP_Monster.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/IggyScorchPlayerCharacter.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/PT_BP__Monster.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/ABP_Monster.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/PT_ABP_Monster.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/ABP_Scorch.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Level/MAP_Debug.umap",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/BP_PTMonster.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Udemy/Blueprint/BP_Rifle.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/ControlData/PC_Quater2.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/ControlData/PC_Shoulder2.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/Action/IA_Move.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/Action/IA_Look.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Input/IMC_Def.uasset",
-				"D:/Study/Unreal/MyProject/Project2/Content/Project2/GameData/PTCharacterStatDataTable.uasset"
+				"D:/Study/Unreal/MyProject/Project2/Content/Project2/Character/BP_Monster.uasset"
 			]
 		}
 	]

@@ -33,8 +33,7 @@ void AGun::SetGunData(const FPTGunData& InGunData)
 
 bool AGun::PullTrigger()
 {
-	UE_LOG(LogTemp, Display, TEXT("Gun::PullTrigger() - %f"), UGameplayStatics::GetRealTimeSeconds(GetWorld()));
-	UE_LOG(LogTemp, Display, TEXT("Gun::PullTrigger() - %s"), bIsFiring ? TEXT("True") : TEXT("False"));
+	//UE_LOG(LogTemp, Display, TEXT("Gun::PullTrigger() - %f"), UGameplayStatics::GetRealTimeSeconds(GetWorld()));
 
 	//TODO: 재장전중이거나 발사도중 재 입력이 들어오는등 PullTrigger가 연속으로 두번호출된다던가 이런류의 에러처리 필요, 꼬이지 않게 간결하고 정확한 코드 필요
 	if (bullet <= 0)
@@ -97,7 +96,7 @@ bool AGun::GunTrace(FHitResult& Hit, FVector& ShotDirection)
 	}
 
 
-	DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
+	//DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
 	
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
@@ -167,7 +166,7 @@ void AGun::Fire()
 		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactSound, Hit.Location);
 	}
 	
-	DrawDebugPoint(GetWorld(), Hit.Location, 10, FColor::Red, true);
+	//DrawDebugPoint(GetWorld(), Hit.Location, 10, FColor::Red, true);
 }
 
 void AGun::ConsumeBullet()

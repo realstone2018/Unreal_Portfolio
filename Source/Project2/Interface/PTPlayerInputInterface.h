@@ -24,4 +24,6 @@ class PROJECT2_API IPTPlayerInputInterface
 public:
 	virtual void StartAttack() = 0;
 	virtual void StopAttack() = 0;
+
+	virtual void EvationAction() = 0;
 };

@@ -15,6 +15,8 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../App/UE_5.3/Engine/Plugins/Importers/USDImporter/Source/ThirdParty/USD/include/pxr/usd/usd/object.h" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../../App/UE_5.3/Engine/Source/ThirdParty/rpclib/2.2.1/include/rpc/msgpack/object.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/Project2/GameData/PTGunData.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -457,7 +459,34 @@
       <workItem from="1716565557208" duration="2960000" />
       <workItem from="1716569255172" duration="29980000" />
       <workItem from="1716769389213" duration="54000" />
-      <workItem from="1716769512488" duration="19760000" />
+      <workItem from="1716769512488" duration="20354000" />
+      <workItem from="1716893789995" duration="10691000" />
+      <workItem from="1716975625603" duration="212000" />
+      <workItem from="1716975931466" duration="5375000" />
+      <workItem from="1717047808275" duration="3584000" />
+      <workItem from="1717051554338" duration="5446000" />
+      <workItem from="1717073065683" duration="3070000" />
+      <workItem from="1717121132640" duration="10179000" />
+      <workItem from="1717463744762" duration="16099000" />
+      <workItem from="1717572896410" duration="4807000" />
+      <workItem from="1718019366210" duration="313000" />
+      <workItem from="1718183963356" duration="8243000" />
+      <workItem from="1718358421928" duration="3009000" />
+      <workItem from="1718361851033" duration="3214000" />
+      <workItem from="1718418389632" duration="2358000" />
+      <workItem from="1718458330458" duration="10281000" />
+      <workItem from="1718548350295" duration="19065000" />
+      <workItem from="1718781460740" duration="13616000" />
+      <workItem from="1718870122529" duration="21900000" />
+      <workItem from="1718951010742" duration="6444000" />
+      <workItem from="1718957905795" duration="8053000" />
+      <workItem from="1719013304658" duration="197000" />
+      <workItem from="1719013537211" duration="2039000" />
+      <workItem from="1719019682165" duration="17921000" />
+      <workItem from="1719156532219" duration="5613000" />
+      <workItem from="1719162334564" duration="2132000" />
+      <workItem from="1719193954929" duration="619000" />
+      <workItem from="1719194833475" duration="1209000" />
     </task>
     <servers />
   </component>
@@ -467,26 +496,5 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Source/Project2/Weapon/Gun.cpp</url>
-          <line>137</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Source/Project2/Weapon/Gun.cpp</url>
-          <line>142</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Source/Project2/Weapon/Gun.cpp</url>
-          <line>139</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -5,40 +5,26 @@ UPTCharacterStatComponent::UPTCharacterStatComponent()
 {
 	CurrentLevel = 1;
 	AttackRadius = 50.0f;
+	CurrentHp = 100;
+	MaxHp = 100;
+	
 	bWantsInitializeComponent = true;
 }
 
-void UPTCharacterStatComponent::InitializeComponent()
+void UPTCharacterStatComponent::SetHp(int NewHp, int NewMaxHp)
 {
-	Super::InitializeComponent();
-
-	SetLevelStat(CurrentLevel);
-	SetHp(BaseStat.MaxHp);
-}
-
-void UPTCharacterStatComponent::SetLevelStat(int32 InNewLevel)
-{
-	CurrentLevel = FMath::Clamp(InNewLevel, 1, UPTGameDataSingleton::Get().CharacterMaxLevel);
-
-	FPTCharacterStat CharacterStat = UPTGameDataSingleton::Get().GetCharacterStat(CurrentLevel);
-	SetBaseStat(CharacterStat);
-	
-	check(BaseStat.MaxHp > 0.0f);
-}
-
-void UPTCharacterStatComponent::SetHp(float NewHp)
-{
-	CurrentHp = FMath::Clamp<float>(NewHp, 0.0f, BaseStat.MaxHp);
+	MaxHp = NewMaxHp;
+	CurrentHp = FMath::Clamp(NewHp, 0.0f, MaxHp);
 	OnHpChanged.Broadcast(CurrentHp);
 }
 
 
-float UPTCharacterStatComponent::ApplyDamage(float InDamage)
+float UPTCharacterStatComponent::ApplyDamage(int InDamage)
 {
-	const float PrevHp = CurrentHp;
-	const float ActualDamage = FMath::Clamp<float>(InDamage, 0, PrevHp);
+	const int PrevHp = CurrentHp;
+	const int ActualDamage = FMath::Clamp(InDamage, 0, PrevHp);
 
-	SetHp(PrevHp - ActualDamage);
+	SetHp(PrevHp - ActualDamage, MaxHp);
 	if (CurrentHp <= KINDA_SMALL_NUMBER) {
 		OnHpZero.Broadcast();
 	}

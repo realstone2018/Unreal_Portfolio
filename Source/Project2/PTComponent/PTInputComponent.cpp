@@ -184,14 +184,19 @@ void UPTInputComponent::OnJumpInput()
 {
 	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnJumpInput()"));
 
-	PlayerCharacter->Jump();
+	//PlayerCharacter->Jump();
+	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(PlayerCharacter);	
+	if (PlayerInputInterface)
+	{
+		PlayerInputInterface->EvationAction();
+	}
 }
 
 void UPTInputComponent::OnJumpStopInput()
 {
 	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnJumpStopInput()"));
 
-	PlayerCharacter->StopJumping();
+	//PlayerCharacter->StopJumping();
 }
 
 void UPTInputComponent::OnStartAttackInput()

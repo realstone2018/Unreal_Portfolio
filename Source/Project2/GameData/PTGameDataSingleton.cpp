@@ -1,5 +1,7 @@
 #include "GameData/PTGameDataSingleton.h"
 
+#include "PTMonsterStat.h"
+
 //싱글톤 Get함수가 실패한 경우, 구현
 DEFINE_LOG_CATEGORY(LogPTGameDataSingleton);
 
@@ -7,12 +9,13 @@ UPTGameDataSingleton::UPTGameDataSingleton()
 {
 	LoadCharacterStatData();
 	LoadGunData();
+	LoadMonsterData();
 }
 
 void UPTGameDataSingleton::LoadCharacterStatData()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Script/Engine.DataTable'/Game/Project2/GameData/PTCharacterStatTable.PTCharacterStatTable'"));
-	if (nullptr != DataTableRef.Object)
+	if (DataTableRef.Object != nullptr)
 	{
 		const UDataTable* DataTable = DataTableRef.Object;
 		check(DataTable->GetRowMap().Num() > 0);
@@ -36,7 +39,7 @@ void UPTGameDataSingleton::LoadCharacterStatData()
 void UPTGameDataSingleton::LoadGunData()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Script/Engine.DataTable'/Game/Project2/GameData/PTGunDataTable.PTGunDataTable'"));
-	if (nullptr != DataTableRef.Object)
+	if (DataTableRef.Object != nullptr)
 	{
 		const UDataTable* DataTable= DataTableRef.Object;
 		for (const auto& Row : DataTable->GetRowMap())
@@ -54,6 +57,27 @@ void UPTGameDataSingleton::LoadGunData()
 	}
 }
 
+void UPTGameDataSingleton::LoadMonsterData()
+{
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Script/Engine.DataTable'/Game/Project2/GameData/PTMonsterStatTable.PTMonsterStatTable'"));
+	if (DataTableRef.Object != nullptr)
+	{
+		const UDataTable* DataTable = DataTableRef.Object;
+		for (const auto& Row : DataTable->GetRowMap())
+		{
+			FName RowName = Row.Key;
+			FPTMonsterStat* RowValue = reinterpret_cast<FPTMonsterStat*>(Row.Value);
+			if (RowValue)
+			{
+				MonsterStatMap.Add(RowName, *RowValue);
+			}
+		}
+
+		check(MonsterStatMap.Num() > 0);
+	}
+}
+
+
 UPTGameDataSingleton& UPTGameDataSingleton::Get()
 {
 	//CastChecked로 형변환이 되는지 (가져온게 유요한 객체인지) 강력하게 확인
@@ -67,6 +91,22 @@ UPTGameDataSingleton& UPTGameDataSingleton::Get()
 	UE_LOG(LogPTGameDataSingleton, Error, TEXT("Invalid Game Singleton"));
 	//함수 완성을 위한 return, 실제 사용되지는 않음 
 	return *NewObject<UPTGameDataSingleton>();
+}
+
+FPTMonsterStat UPTGameDataSingleton::GetMonsterStat(FName MonsterName)
+{
+	bool IsContain = MonsterStatMap.Contains(MonsterName);
+	if (IsContain)
+	{
+		MonsterStat = MonsterStatMap[MonsterName];
+		float test = MonsterStat.Attack;
+		return MonsterStat;
+	}
+	else
+	{
+		MonsterStat = FPTMonsterStat();
+		return MonsterStat;
+	}
 }
 
 

@@ -3,11 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CharacterStat/PTCharacterStatComponent.h"
 #include "GameFramework/Character.h"
+#include "Interface/PTAnimationAttackInterface.h"
+#include "Interface/PTCharacterWidgetInterface.h"
+#include "UI/PTWidgetComponent.h"
+#include "UI/PTUserWidget.h"
 #include "PTCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT2_API APTCharacterBase : public ACharacter
+class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationAttackInterface, public IPTCharacterWidgetInterface
 {
 	GENERATED_BODY()
 
@@ -15,13 +20,33 @@ public:
 	APTCharacterBase();
 
 protected:
-	// Stat
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UPTCharacterStatComponent> StatComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAceess = "true"))
+	TObjectPtr<class UPTCharacterMoveComponent> MoveComponent;
+
+	virtual UPTCharacterStatComponent* GetStatComponent();
+
+	// Widget
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UPTWidgetComponent> HpBar; 
+	
+	//virtual void SetupCharacterWidget(class UPTUserWidget* InUserWidget) override;	
+
+	virtual void SetupCharacterWidget(UPTUserWidget* InUserWidget) override;
 
 	
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Evation();
+
+	virtual void OnNotifyAttack() override;
+
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION(BlueprintPure)
+	virtual bool IsDead();
+
+	virtual void Kill(AActor* victim);
+	virtual void Dead();
+	
 };

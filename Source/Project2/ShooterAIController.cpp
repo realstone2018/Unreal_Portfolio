@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill		out your copyright notice in the Description page of Project Settings.
 
 
 #include "ShooterAIController.h"
@@ -23,7 +23,7 @@ void AShooterAIController::BeginPlay()
 	}
 }
 
-bool AShooterAIController::IsDead() const
+bool AShooterAIController::IsDead()	 const
 {
 	AShooterCharacter* ControlledCharacter = Cast<AShooterCharacter>(GetPawn());
 	if (ControlledCharacter != nullptr)
@@ -34,3 +34,4 @@ bool AShooterAIController::IsDead() const
 	//캐릭터가 사망시 컨트롤러가 분리되니 GetPawn()이 null일수 있음, 이 경우 당연히 true
 	return true;
 }
+	
