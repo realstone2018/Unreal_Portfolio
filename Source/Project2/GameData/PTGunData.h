@@ -18,10 +18,10 @@ struct FPTGunData : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	FPTGunData() : Damage(0.0f), Range(0.0f), MaxAmmo(0), Recoil(0.0f), FireRate(0.0f), ReloadTime(0.0f), FireMode(EFireMode::Single), BurstCount(1) {}
+	FPTGunData() : Damage(0), Range(0.0f), MaxAmmo(0), Recoil(0.0f), FireRate(0.0f), ReloadTime(0.0f), FireMode(EFireMode::Single), BurstCount(1), Penetration(1) {}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
-	float Damage;
+	int32 Damage;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	float Range;	// 사거리
@@ -43,6 +43,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	int32 BurstCount; // 점사 모드에서 한번에 발사되는 탄 수 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	int32 Penetration; // 관통수 
 	
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
 	// FString ModelName;

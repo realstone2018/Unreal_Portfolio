@@ -11,6 +11,8 @@
 #include "Components/CapsuleComponent.h"
 #include "PTComponent/Character//PTCharacterMoveComponent.h"
 #include "SimpleShooterGameModeBase.h"
+#include "UI/PTHUDWidget.h"
+#include "PTComponent/Character/PTCharacterStatComponent.h"
 
 APTPlayerCharacter::APTPlayerCharacter()
 {
@@ -36,7 +38,7 @@ void APTPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	//TODO: 레벨 시스템 적용하면 현재 레벨 넣기 
-	StatComponent->SetCharacterLevelStat(1);
+	// StatComponent->SetCharacterLevelStat(1);
 	
 	PlayerInputComponent->Init(CameraBoom);
 	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
@@ -133,4 +135,16 @@ void APTPlayerCharacter::Dead()
 	
 	// 더이상 어떤 행동도 하지 않도록 컨트롤러를 폰에서 분리 
 	DetachFromControllerPendingDestroy();
+}
+
+void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
+{
+	if (InHUDWidget)
+	{
+		InHUDWidget->UpdateStat(StatComponent->GetBaseStat(), StatComponent->GetModifierStat());
+		InHUDWidget->UpdateHpBar(StatComponent->GetCurrentHp());
+
+		StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
+		StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
+	}
 }

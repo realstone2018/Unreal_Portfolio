@@ -487,7 +487,8 @@
       <workItem from="1719156532219" duration="5613000" />
       <workItem from="1719162334564" duration="2132000" />
       <workItem from="1719193954929" duration="619000" />
-      <workItem from="1719194833475" duration="8727000" />
+      <workItem from="1719194833475" duration="8878000" />
+      <workItem from="1719324439617" duration="16499000" />
     </task>
     <servers />
   </component>
@@ -497,21 +498,5 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Source/Project2/Character/PTMonster.cpp</url>
-          <line>46</line>
-          <option name="timeStamp" value="100" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Source/Project2/AI/BTService_PlayerLocationIfSee.cpp</url>
-          <line>15</line>
-          <option name="timeStamp" value="101" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

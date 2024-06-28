@@ -13,6 +13,7 @@
     </None>
     <None Include="..\..\.gitattributes" />
     <None Include="..\..\.gitignore" />
+    <None Include="..\..\.vsconfig" />
     <Filter Include="Config">
       <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
     </Filter>
@@ -181,15 +182,6 @@
     <ClInclude Include="..\..\Source\Project2\Character\PTScorch.h">
       <Filter>Source\Project2\Character</Filter>
     </ClInclude>
-    <Filter Include="Source\Project2\Character\CharacterStat">
-      <UniqueIdentifier>{E16EDB10-1C94-37B2-AD35-41A609D2A7A6}</UniqueIdentifier>
-    </Filter>
-    <ClCompile Include="..\..\Source\Project2\Character\CharacterStat\PTCharacterStatComponent.cpp">
-      <Filter>Source\Project2\Character\CharacterStat</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\Character\CharacterStat\PTCharacterStatComponent.h">
-      <Filter>Source\Project2\Character\CharacterStat</Filter>
-    </ClInclude>
     <Filter Include="Source\Project2\GameData">
       <UniqueIdentifier>{B1204D7C-869F-3172-BDD5-BCE24F3BAADF}</UniqueIdentifier>
     </Filter>
@@ -283,6 +275,12 @@
     <ClInclude Include="..\..\Source\Project2\PTComponent\Character\PTCharacterMoveComponent.h">
       <Filter>Source\Project2\PTComponent\Character</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Character\PTCharacterStatComponent.cpp">
+      <Filter>Source\Project2\PTComponent\Character</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Character\PTCharacterStatComponent.h">
+      <Filter>Source\Project2\PTComponent\Character</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Project2\PTComponent\Character\PTMonsterStatComponent.cpp">
       <Filter>Source\Project2\PTComponent\Character</Filter>
     </ClCompile>
@@ -298,10 +296,28 @@
     <Filter Include="Source\Project2\UI">
       <UniqueIdentifier>{0ACE227A-9D57-3594-9799-35970EEE021F}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Project2\UI\PTCharacterStatWidget.cpp">
+      <Filter>Source\Project2\UI</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\UI\PTCharacterStatWidget.h">
+      <Filter>Source\Project2\UI</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\UI\PTCharactHUDInterface.cpp">
+      <Filter>Source\Project2\UI</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\UI\PTCharactHUDInterface.h">
+      <Filter>Source\Project2\UI</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Project2\UI\PTHpBarWidget.cpp">
       <Filter>Source\Project2\UI</Filter>
     </ClCompile>
     <ClInclude Include="..\..\Source\Project2\UI\PTHpBarWidget.h">
+      <Filter>Source\Project2\UI</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\UI\PTHUDWidget.cpp">
+      <Filter>Source\Project2\UI</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\UI\PTHUDWidget.h">
       <Filter>Source\Project2\UI</Filter>
     </ClInclude>
     <ClCompile Include="..\..\Source\Project2\UI\PTUserWidget.cpp">

@@ -17,7 +17,6 @@ protected:
 	virtual void NativeConstruct() override;
 
 public:
-
 	FORCEINLINE void SetMaxHp(float NewMaxHp) { MaxHp = NewMaxHp; }
 
 	//TODO: 

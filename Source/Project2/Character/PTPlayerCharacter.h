@@ -4,12 +4,13 @@
 #include "Character/PTCharacterBase.h"
 #include "PTComponent/PTInputComponent.h"
 #include "Interface/PTPlayerInputInterface.h"
-#include "Character/CharacterStat/PTCharacterStatComponent.h"
+#include "INterface/PTCharactHUDInterface.h"
+#include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "Weapon/Gun.h"
 #include "PTPlayerCharacter.generated.h"
 
 UCLASS()
-class PROJECT2_API APTPlayerCharacter : public APTCharacterBase, public IPTPlayerInputInterface
+class PROJECT2_API APTPlayerCharacter : public APTCharacterBase, public IPTPlayerInputInterface, public IPTCharactHUDInterface
 {
 	GENERATED_BODY()
 
@@ -35,9 +36,6 @@ protected:
 
 	virtual UPTCharacterStatComponent* GetStatComponent() override;
 
-// Widget
-	virtual bool GetShouldDisplayHpBar() override { return false; }
-	
 public:
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -49,7 +47,8 @@ public:
 	void EvationAction() override { Evation(); }
 
 	virtual void Dead() override;
-	
+
+
 // Weapon
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -61,5 +60,13 @@ private:
 	void Reloading();
 	
 	bool bIsReloading;
+
+// UI Section
+protected:
+	// Widget
+	virtual bool GetShouldDisplayHpBar() override { return false; }
+	
+	// IPTCharacterHUDInterface
+	virtual void SetupHUDWidget(UPTHUDWidget* InHUDWidget) override;
 	
 };

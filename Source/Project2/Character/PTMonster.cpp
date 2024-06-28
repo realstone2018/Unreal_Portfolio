@@ -2,7 +2,6 @@
 
 
 #include "Character/PTMonster.h"
-#include "CharacterStat/PTCharacterStatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/PTCollision.h"
 #include "Engine/DamageEvents.h"

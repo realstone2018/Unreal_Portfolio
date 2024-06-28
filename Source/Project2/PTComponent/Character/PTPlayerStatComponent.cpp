@@ -6,7 +6,16 @@
 #include "GameData/PTGameDataSingleton.h"
 
 UPTPlayerStatComponent::UPTPlayerStatComponent()
+{	 
+	bWantsInitializeComponent = true;
+}
+
+void UPTPlayerStatComponent::InitializeComponent()
 {
+	Super::InitializeComponent();
+
+	//TODO: 레벨 시스템 적용하면 현재 레벨 넣기 
+	SetCharacterLevelStat(1);
 }
 
 void UPTPlayerStatComponent::SetCharacterLevelStat(int32 InNewLevel)

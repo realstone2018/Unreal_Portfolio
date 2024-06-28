@@ -1,0 +1,29 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Blueprint/UserWidget.h"
+#include "GameData/PTCharacterStat.h"
+#include "PTHUDWidget.generated.h"
+
+UCLASS()
+class PROJECT2_API UPTHUDWidget : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	UPTHUDWidget(const FObjectInitializer& ObjectInitializer);
+
+protected:
+	virtual void NativeConstruct() override;
+
+public:
+	void UpdateStat(const FPTCharacterStat& BaseStat, const FPTCharacterStat& ModifierStat);
+	void UpdateHpBar(int NewCurrentHp);
+	
+protected:
+	UPROPERTY()
+	TObjectPtr<class UPTHpBarWidget> HpBar;
+
+	UPROPERTY()
+	TObjectPtr<class UPTCharacterStatWidget> CharacterStat;
+};

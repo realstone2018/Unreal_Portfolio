@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/CharacterStat/PTCharacterStatComponent.h"
+#include "PTComponent/Character//PTCharacterStatComponent.h"
 #include "GameData/PTMonsterStat.h"
 #include "PTMonsterStatComponent.generated.h"
 

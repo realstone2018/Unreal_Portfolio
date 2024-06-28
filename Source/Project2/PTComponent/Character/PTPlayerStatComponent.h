@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/CharacterStat/PTCharacterStatComponent.h"
+#include "PTComponent/Character//PTCharacterStatComponent.h"
 #include "PTPlayerStatComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnStatChangedDelegate, const FPTCharacterStat& /*BaseStat*/, const FPTCharacterStat& /*ModifierStat*/)
@@ -13,6 +13,8 @@ class PROJECT2_API UPTPlayerStatComponent : public UPTCharacterStatComponent
 
 public:
 	UPTPlayerStatComponent();
+
+	virtual void InitializeComponent() override;
 	
 	FOnStatChangedDelegate OnStatChanged;
 

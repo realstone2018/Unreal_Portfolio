@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CharacterStat/PTCharacterStatComponent.h"
+#include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "GameFramework/Character.h"
 #include "Interface/PTAnimationAttackInterface.h"
 #include "Interface/PTCharacterWidgetInterface.h"
