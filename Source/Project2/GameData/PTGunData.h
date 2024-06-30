@@ -26,7 +26,10 @@ struct FPTGunData : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	FPTGunData() : Damage(0), Range(0.0f), MaxAmmo(0), Recoil(0.0f), FireRate(0.0f), ReloadTime(0.0f), FireMode(EFireMode::Single), BurstCount(1), Penetration(1) {}
+	FPTGunData() : GunType(EGunType::Rifle), Damage(0), Range(0.0f), MaxAmmo(0), Recoil(0.0f), FireRate(0.0f), ReloadTime(0.0f), FireMode(EFireMode::Single), BurstCount(1), Penetration(1) {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	EGunType GunType;	// 총 분류
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	int32 Damage;
