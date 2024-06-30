@@ -9,7 +9,8 @@
 UENUM()
 enum class ECharacterControlType : uint8 {
 	Shoulder,
-	Quater
+	Quater,
+	Zoom,
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -19,16 +20,14 @@ class PROJECT2_API UPTInputComponent : public UActorComponent
 
 public:	
 	UPTInputComponent();
-
-	virtual void BeginPlay() override;
-
+	
 	void Init(USpringArmComponent* SpringArm);
 	void SetupPlayerInputComponent(UEnhancedInputComponent* PlayerInputComponent);
 	void SetCharacterControl(ECharacterControlType NewType);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ACharacter* PlayerCharacter;
+	ACharacter* Character;
 
 	UPROPERTY()
 	UCharacterMovementComponent* MovementComponent;
@@ -40,7 +39,7 @@ protected:
 	TMap<ECharacterControlType, class UPTCharacterControlData*> CharacterControlMap;
 
 	void ApplyCharacterControlData(const class UPTCharacterControlData* CharacterControlData);
-	void ChangeCharacterControl(const ULocalPlayer* LocalPlayer);
+	void ChangeCharacterControl(ECharacterControlType Type);
 	
 	ECharacterControlType CurrentCharacterControlType;
 
@@ -58,6 +57,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> ShootAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+	TObjectPtr<class UInputAction> ReloadAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+	TObjectPtr<class UInputAction> ZoomAction;
+
+	
 	void OnShoulderMoveInput(const FInputActionValue& Value);
 	void OnShoulderLookInput(const FInputActionValue& Value);
 	void OnQuaterMoveInput(const FInputActionValue& Value);
@@ -67,6 +72,11 @@ protected:
 
 	void OnStartAttackInput();
 	void OnCompleteAttackInout();
+
+	void OnReloadInput();
+	void OnZoomInInput();
+	void OnZoomOutInput();
+	
 	
 	//TODO: 옵션에서 감도 설정할 수 있게
 	UPROPERTY(EditAnywhere)

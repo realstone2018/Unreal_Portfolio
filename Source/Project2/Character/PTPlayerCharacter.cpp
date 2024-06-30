@@ -31,23 +31,23 @@ APTPlayerCharacter::APTPlayerCharacter()
 	StatComponent = CreateDefaultSubobject<UPTPlayerStatComponent>(TEXT("PlayerStatComponent"));
 }
 
-void APTPlayerCharacter::BeginPlay()
+void APTPlayerCharacter::PostInitializeComponents()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter.BeginPlay()"));
+	Super::PostInitializeComponents();
 	
-	Super::BeginPlay();
-
-	//TODO: 레벨 시스템 적용하면 현재 레벨 넣기 
-	// StatComponent->SetCharacterLevelStat(1);
-	
-	PlayerInputComponent->Init(CameraBoom);
-	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
-
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	Gun->SetOwner(this);
 	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("Rifle"));
+}
+
+void APTPlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerInputComponent->Init(CameraBoom);
+	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
 }
 
 UPTCharacterStatComponent* APTPlayerCharacter::GetStatComponent()
@@ -70,6 +70,9 @@ void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 
 void APTPlayerCharacter::Evation()
 {
+	//TODO: 회피중엔 재장전 캔슬
+
+	
 	Super::Evation();
 
 	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter::Evation()"));
@@ -83,6 +86,10 @@ void APTPlayerCharacter::Evation()
 void APTPlayerCharacter::StartAttack()
 {
 	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter.Attack()"));
+	if (bIsReloading)
+	{
+		return;
+	}
 	
 	if (Gun->PullTrigger() == false)
 	{
@@ -98,18 +105,21 @@ void APTPlayerCharacter::StopAttack()
 
 }
 
+void APTPlayerCharacter::ReloadAction()
+{
+	Reloading();
+}
+
 void APTPlayerCharacter::Reloading()
 {
 	if (!bIsReloading)
 	{
 		bIsReloading = true;
 
-		Gun->OnCompleteReload.BindLambda(
-			[&]()
-			{
-				bIsReloading = false;			
-			}
-		);
+		Gun->OnCompleteReload.AddLambda(
+		[&](){
+			bIsReloading = false;			
+		});
 		
 		//TODO: 재장전가속 스텟 전달, 최종 시간 반환받기
 		float ReloadAccelerationRateStat = 0.f;
@@ -117,9 +127,6 @@ void APTPlayerCharacter::Reloading()
 	
 		//TODO: 재장전 애니메이션 재생, GunData.ReloadTime에 접근해서 재장전 애니메이션 속도 조절 필요
 
-
-
-		
 	}
 }
 
@@ -143,8 +150,19 @@ void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 	{
 		InHUDWidget->UpdateStat(StatComponent->GetBaseStat(), StatComponent->GetModifierStat());
 		InHUDWidget->UpdateHpBar(StatComponent->GetCurrentHp());
-
+		InHUDWidget->UpdateGunAmmo(Gun->GetCurrentAmmo(), Gun->GetMaxAmmo());
+		
 		StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
 		StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
+		Gun->OnChangeAmmo.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateGunAmmo);
+		Gun->OnStartReload.AddLambda(
+[this, InHUDWidget](){
+			InHUDWidget->UpdateGunReloadImg(true);
+		});
+		Gun->OnCompleteReload.AddLambda(
+		[this, InHUDWidget](){
+			InHUDWidget->UpdateGunReloadImg(false);
+		});
+		
 	}
 }

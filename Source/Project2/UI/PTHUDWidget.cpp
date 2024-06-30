@@ -4,6 +4,7 @@
 #include "UI/PTHUDWidget.h"
 #include "PTHpBarWidget.h"
 #include "PTCharacterStatWidget.h"
+#include "PTGunInfoWidget.h"
 #include "Interface/PTCharactHUDInterface.h"
 
 UPTHUDWidget::UPTHUDWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -21,6 +22,9 @@ void UPTHUDWidget::NativeConstruct()
 	CharacterStat = Cast<UPTCharacterStatWidget>(GetWidgetFromName("WidgetCharacterStat"));
 	ensure(CharacterStat);
 
+	GunInfo = Cast<UPTGunInfoWidget>(GetWidgetFromName("WidgetGunInfo"));
+	ensure(GunInfo);
+	
 	IPTCharactHUDInterface* HUDPawn = Cast<IPTCharactHUDInterface>(GetOwningPlayerPawn());
 	if (HUDPawn)
 	{
@@ -39,5 +43,15 @@ void UPTHUDWidget::UpdateStat(const FPTCharacterStat& BaseStat, const FPTCharact
 void UPTHUDWidget::UpdateHpBar(int NewCurrentHp)
 {
 	HpBar->UpdateHpBar(NewCurrentHp);
+}
+
+void UPTHUDWidget::UpdateGunAmmo(int NewCurAmmo, int NewMaxAmmo)
+{
+	GunInfo->UpdateBullet(NewCurAmmo, NewMaxAmmo);
+}
+
+void UPTHUDWidget::UpdateGunReloadImg(bool InVisibility)
+{
+	GunInfo->SetReloadingImg(InVisibility);
 }
 

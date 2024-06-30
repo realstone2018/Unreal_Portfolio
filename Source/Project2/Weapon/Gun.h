@@ -6,8 +6,9 @@
 #include "GameData/PTGunData.h"
 #include "Gun.generated.h"
 
-DECLARE_DELEGATE(FOnCompleteReloadDelegate);
-//TODO: 누르고있으면 자동 재장전할거면 델리게이트로
+DECLARE_MULTICAST_DELEGATE(FOnStartReloadDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnCompleteReloadDelegate);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnChangeAmmo, int /*CurrentAmmo*/, int /*MaxAmmo*/)
 
 UCLASS()
 class PROJECT2_API AGun : public AActor
@@ -20,12 +21,17 @@ public:
 	
 	FORCEINLINE void SetGunData(const FPTGunData& InGunData);
 
+	FOnChangeAmmo OnChangeAmmo;
+	
 private:
 	UPROPERTY(EditAnywhere, Category = "Stat", Meta = (AllowPrivateAccess = "true"))
 	FPTGunData GunData;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Stat")
-	int32 bullet;
+	int32 CurrentAmmo;
+
+	UPROPERTY(VisibleAnywhere, Category = "Stat")
+	int32 MaxAmmo;
 	
 	UPROPERTY(EditAnywhere, Category = "Stat")
 	float RecoilAmount; // 반동의 크기
@@ -41,28 +47,26 @@ public:
 	bool PullTrigger();
 	void StopTrigger();
 
+	FORCEINLINE int GetCurrentAmmo() { return CurrentAmmo; }
+	FORCEINLINE int GetMaxAmmo() { return MaxAmmo; }
+	
 private:
 	bool GunTrace(FHitResult& Hit, FVector& ShotDirection);
 	void Fire();
 	void ConsumeBullet();
 	void ApplyRecoil();
 	
-	FORCEINLINE void SetBullet(int InBullet)
-	{
-		UE_LOG(LogTemp, Display, TEXT("Gun::SetBullet() - %d"), InBullet);
-		bullet = InBullet;
-	}
-	
-	
 // Reload
 public:
 	float Reloading(float AccelerationRate);
 	void CancelReload(); //TODO: 구르기, 회피 등의 캐릭터의 다른 액션으로 캔슬
 
+	FOnStartReloadDelegate OnStartReload;
 	FOnCompleteReloadDelegate OnCompleteReload;
 
 private:
 	void CompleteReload(); //TODO: 보급 획득시 즉시 장전 -> 즉시 Reloading 함수 or Reloading 인자로 1.0 넘기기
+	void SetAmmo(int InCurrentAmmo, int InMaxAmmo);
 
 	
 private:

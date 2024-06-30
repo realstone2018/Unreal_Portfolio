@@ -224,6 +224,12 @@
     <ClInclude Include="..\..\Source\Project2\Interface\PTCharacterWidgetInterface.h">
       <Filter>Source\Project2\Interface</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\Interface\PTCharactHUDInterface.cpp">
+      <Filter>Source\Project2\Interface</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\Interface\PTCharactHUDInterface.h">
+      <Filter>Source\Project2\Interface</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Project2\Interface\PTPlayerInputInterface.cpp">
       <Filter>Source\Project2\Interface</Filter>
     </ClCompile>
@@ -302,10 +308,10 @@
     <ClInclude Include="..\..\Source\Project2\UI\PTCharacterStatWidget.h">
       <Filter>Source\Project2\UI</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\Source\Project2\UI\PTCharactHUDInterface.cpp">
+    <ClCompile Include="..\..\Source\Project2\UI\PTGunInfoWidget.cpp">
       <Filter>Source\Project2\UI</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\UI\PTCharactHUDInterface.h">
+    <ClInclude Include="..\..\Source\Project2\UI\PTGunInfoWidget.h">
       <Filter>Source\Project2\UI</Filter>
     </ClInclude>
     <ClCompile Include="..\..\Source\Project2\UI\PTHpBarWidget.cpp">

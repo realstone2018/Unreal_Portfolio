@@ -11,8 +11,6 @@
 
 APTMonster::APTMonster()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTMonster::APTMonster()"));
-
 	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTMONSTER);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
@@ -25,8 +23,6 @@ APTMonster::APTMonster()
 //TODO: 이거 타이밍이 어떻게 되더라
 void APTMonster::PostInitializeComponents()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTMonster::PostInitializeComponents()"));
-
 	Super::PostInitializeComponents();
 	
 // 	FPTCharacterStat CharacterStat = UPTGameDataSingleton::Get().GetCharacterStat(CurrentLevel);
@@ -38,8 +34,6 @@ void APTMonster::PostInitializeComponents()
 
 void APTMonster::Instantiate()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTMonster::Instantiate()"));
-
 	//TODO: 몬스터 Enum을 넘겨서 처리하도록 변경하기
 	MonsterStat->SetMonsterStat(FName("Scorch"));
 	
@@ -72,8 +66,6 @@ void APTMonster::Instantiate()
 
 void APTMonster::Dispose()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTMonster::Dispose()"));
-
 	OnDead.Unbind();
 	SetActorHiddenInGame(true);
 
@@ -106,15 +98,11 @@ void APTMonster::Dispose()
 
 UPTCharacterStatComponent* APTMonster::GetStatComponent()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTMonster::GetStatComponent()"));
-
 	return MonsterStat;
 }
 
 void APTMonster::PlayAttackMontage()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTMonster::PlayAttackMontage()"));
-	
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Play(AttackMontage, 1.0f);
 
@@ -126,8 +114,6 @@ void APTMonster::PlayAttackMontage()
 
 void APTMonster::OnNotifyAttack()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTMonster::OnNotifyAttack()"));
-
 	Super::OnNotifyAttack();
 
 	Attack();
@@ -188,8 +174,6 @@ void APTMonster::Attack()
 
 void APTMonster::Dead()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTMonster::Dead()"));
-
 	Super::Dead();
 
 	

@@ -28,7 +28,8 @@ AGun::AGun()
 void AGun::SetGunData(const FPTGunData& InGunData)
 {
 	GunData = InGunData;
-	bullet = GunData.MaxAmmo;
+	MaxAmmo = GunData.MaxAmmo;
+	CurrentAmmo = MaxAmmo;
 }
 
 bool AGun::PullTrigger()
@@ -36,7 +37,8 @@ bool AGun::PullTrigger()
 	//UE_LOG(LogTemp, Display, TEXT("Gun::PullTrigger() - %f"), UGameplayStatics::GetRealTimeSeconds(GetWorld()));
 
 	//TODO: 재장전중이거나 발사도중 재 입력이 들어오는등 PullTrigger가 연속으로 두번호출된다던가 이런류의 에러처리 필요, 꼬이지 않게 간결하고 정확한 코드 필요
-	if (bullet <= 0)
+	//TODO: 총알이 없을때 재장전 대신 딸각딸각 처리가 나을수도 
+	if (CurrentAmmo <= 0)
 	{
 		return false;
 	}
@@ -96,7 +98,7 @@ bool AGun::GunTrace(FHitResult& Hit, FVector& ShotDirection)
 	}
 
 
-	//DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
+	DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
 	
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
@@ -121,7 +123,7 @@ AController* AGun::GetOwnerController() const
 //TODO: 함수 분리 필요해보임
 void AGun::Fire()
 {
-	if (bullet <= 0)
+	if (CurrentAmmo <= 0)
 	{
 		StopTrigger();
 		return;
@@ -166,18 +168,17 @@ void AGun::Fire()
 		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactSound, Hit.Location);
 	}
 	
-	//DrawDebugPoint(GetWorld(), Hit.Location, 10, FColor::Red, true);
+	DrawDebugPoint(GetWorld(), Hit.Location, 10, FColor::Red, true);
 }
 
 void AGun::ConsumeBullet()
 {
-	bullet--;
-
-	UE_LOG(LogTemp, Display, TEXT("Gun::ConsumeBullet() bullet: %d"), bullet);
-
+	CurrentAmmo--;
+	SetAmmo(CurrentAmmo, MaxAmmo);
+	
 	//TODO:  탄피 애니메이션 && 가능하다면 총기 애니메이션도
 
-		
+
 }
 
 void AGun::ApplyRecoil()
@@ -209,6 +210,7 @@ void AGun::ApplyRecoil()
 	}
 }
 
+
 #pragma region Reload
 float AGun::Reloading(float AccelerationRate)
 {
@@ -226,6 +228,8 @@ float AGun::Reloading(float AccelerationRate)
 	GetWorld()->GetTimerManager().ClearTimer(ReloadingTimerHandle);
 	GetWorld()->GetTimerManager().SetTimer(ReloadingTimerHandle, this, &AGun::CompleteReload, result);
 
+	OnStartReload.Broadcast();
+	
 	return result;
 }
 
@@ -235,12 +239,17 @@ void AGun::CancelReload()
 
 void AGun::CompleteReload()
 {
-	SetBullet(GunData.MaxAmmo);
+	SetAmmo(MaxAmmo, MaxAmmo);
 	
-	if (OnCompleteReload.IsBound())
-	{
-		OnCompleteReload.Execute();
-	}
+	OnCompleteReload.Broadcast();
+}
+
+void AGun::SetAmmo(int InCurrentAmmo, int InMaxAmmo)
+{
+	CurrentAmmo = InCurrentAmmo;
+	MaxAmmo = InMaxAmmo;
+
+	OnChangeAmmo.Broadcast(CurrentAmmo, MaxAmmo);
 }
 #pragma endregion 
 

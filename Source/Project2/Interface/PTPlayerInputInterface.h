@@ -26,4 +26,6 @@ public:
 	virtual void StopAttack() = 0;
 
 	virtual void EvationAction() = 0;
+
+	virtual void ReloadAction() = 0;
 };

@@ -9,6 +9,8 @@
 #include "Weapon/Gun.h"
 #include "PTPlayerCharacter.generated.h"
 
+
+
 UCLASS()
 class PROJECT2_API APTPlayerCharacter : public APTCharacterBase, public IPTPlayerInputInterface, public IPTCharactHUDInterface
 {
@@ -17,10 +19,13 @@ class PROJECT2_API APTPlayerCharacter : public APTCharacterBase, public IPTPlaye
 public:
 	APTPlayerCharacter();
 
-protected:
+private:
+	virtual void PostInitializeComponents() override;
+
 	virtual void BeginPlay() override;
 	
 // Camera
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class USpringArmComponent> CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"));
@@ -29,25 +34,29 @@ protected:
 // Input
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<class UPTInputComponent> PlayerInputComponent;
-	
-// Stat
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
-
-	virtual UPTCharacterStatComponent* GetStatComponent() override;
 
 public:
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void Evation() override;
 	
-// IPTPlayerInputInterface
+	// IPTPlayerInputInterface
 	void StartAttack() override;
 	void StopAttack() override;
+
+	//TODO: AI의 Evation을 위해 이렇게 해둔거 같긴한데.. 필요한가?
 	void EvationAction() override { Evation(); }
+	void ReloadAction() override;
 
 	virtual void Dead() override;
 
+// Stat
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
+
+	virtual UPTCharacterStatComponent* GetStatComponent() override;
+	
 
 // Weapon
 private:
@@ -62,7 +71,7 @@ private:
 	bool bIsReloading;
 
 // UI Section
-protected:
+private:
 	// Widget
 	virtual bool GetShouldDisplayHpBar() override { return false; }
 	

@@ -23,6 +23,12 @@ UPTInputComponent::UPTInputComponent()
 	{
 		CharacterControlMap.Add(ECharacterControlType::Quater, QuaterDataRef.Object);	
 	}
+
+	static ConstructorHelpers::FObjectFinder<UPTCharacterControlData> ZoomDataRef(TEXT("/Script/Project2.PTCharacterControlData'/Game/Project2/Input/ControlData/PC_Zoom.PC_Zoom'"));
+	if (ZoomDataRef.Object)
+	{
+		CharacterControlMap.Add(ECharacterControlType::Zoom, ZoomDataRef.Object);
+	}
 	
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionShoulderMoveRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_ShoulderMove.IA_ShoulderMove'"));
 	if (nullptr != InputActionShoulderMoveRef.Object) {
@@ -50,21 +56,24 @@ UPTInputComponent::UPTInputComponent()
 	{
 		ShootAction = InputActionShootRef.Object;
 	}
-	
-}
 
-void UPTInputComponent::BeginPlay()
-{
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::BeginPlay()"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionReloadRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_Reload.IA_Reload'"));
+	if (nullptr != InputActionReloadRef.Object)
+	{
+		ReloadAction = InputActionReloadRef.Object;
+	}
 
-	Super::BeginPlay();
-	
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionZoomRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_Zoom.IA_Zoom'"));
+	if (nullptr != InputActionZoomRef.Object)
+	{
+		ZoomAction = InputActionZoomRef.Object;
+	}
 }
 
 void UPTInputComponent::Init(USpringArmComponent* SpringArm)
 {
-	PlayerCharacter = Cast<ACharacter>(GetOwner());
-	MovementComponent = PlayerCharacter->GetCharacterMovement();
+	Character = Cast<ACharacter>(GetOwner());
+	MovementComponent = Character->GetCharacterMovement();
 	SpringArmComponent = SpringArm;
 }
 
@@ -81,6 +90,10 @@ void UPTInputComponent::SetupPlayerInputComponent(UEnhancedInputComponent* Enhan
 	EnhancedInputComponent->BindAction(ShoulderLookAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnShoulderLookInput);
 	EnhancedInputComponent->BindAction(QuaterMoveAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnQuaterMoveInput);
 
+	EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnReloadInput);
+
+	EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Started, this, &UPTInputComponent::OnZoomInInput);
+	EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Completed, this, &UPTInputComponent::OnZoomOutInput);
 }
 
 void UPTInputComponent::SetCharacterControl(ECharacterControlType NewType)
@@ -90,7 +103,7 @@ void UPTInputComponent::SetCharacterControl(ECharacterControlType NewType)
 	
 	ApplyCharacterControlData(NewCharacterControlData);
 	
-	APlayerController* PlayerController = CastChecked<APlayerController>(PlayerCharacter->GetController());
+	APlayerController* PlayerController = CastChecked<APlayerController>(Character->GetController());
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
 		CurrentCharacterControlType = NewType;
@@ -107,7 +120,7 @@ void UPTInputComponent::SetCharacterControl(ECharacterControlType NewType)
 void UPTInputComponent::ApplyCharacterControlData(const UPTCharacterControlData* CharacterControlData)
 {
 	// Pawn
-	PlayerCharacter->bUseControllerRotationYaw = CharacterControlData->bUseControllerRotationYaw; //언체크 (체크)
+	Character->bUseControllerRotationYaw = CharacterControlData->bUseControllerRotationYaw; //언체크 (체크)
 	
 	// CharacterMovement
 	MovementComponent->bOrientRotationToMovement = CharacterControlData->bOrientRotationToMovement; //체크   (Shooter: 언체크)
@@ -124,13 +137,21 @@ void UPTInputComponent::ApplyCharacterControlData(const UPTCharacterControlData*
 	SpringArmComponent->bDoCollisionTest = CharacterControlData->bDoCollisionTest; //체크 (체크)
 }
 
-void UPTInputComponent::ChangeCharacterControl(const ULocalPlayer* LocalPlayer)
+void UPTInputComponent::ChangeCharacterControl(ECharacterControlType Type)
 {
-	if (CurrentCharacterControlType == ECharacterControlType::Quater) {
-		SetCharacterControl(ECharacterControlType::Shoulder);
-	}
-	else if (CurrentCharacterControlType == ECharacterControlType::Shoulder) {
-		SetCharacterControl(ECharacterControlType::Quater);
+	switch (Type)
+	{
+		case ECharacterControlType::Quater:
+			SetCharacterControl(ECharacterControlType::Quater);
+			return;
+
+		case ECharacterControlType::Zoom:
+			SetCharacterControl(ECharacterControlType::Zoom);
+			return;
+
+		case ECharacterControlType::Shoulder:
+			SetCharacterControl(ECharacterControlType::Shoulder);
+			return;
 	}
 }
 
@@ -140,14 +161,14 @@ void UPTInputComponent::OnShoulderMoveInput(const FInputActionValue& Value)
 	// 멀티에서는 서버에서 이를 조정, 로컬은 회전만 감도설정과 DeltaTime에 따라 조정하면 된다.  
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	
-	const FRotator Rotation = PlayerCharacter->GetControlRotation();
+	const FRotator Rotation = Character->GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
 	
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	
-	PlayerCharacter->AddMovementInput(ForwardDirection, MovementVector.X);
-	PlayerCharacter->AddMovementInput(RightDirection, MovementVector.Y);
+	Character->AddMovementInput(ForwardDirection, MovementVector.X);
+	Character->AddMovementInput(RightDirection, MovementVector.Y);
 }
 
 void UPTInputComponent::OnShoulderLookInput(const FInputActionValue& Value)
@@ -156,8 +177,8 @@ void UPTInputComponent::OnShoulderLookInput(const FInputActionValue& Value)
 	LookAxisVector *= RotationRate * GetWorld()->GetDeltaSeconds();
 	
 	// 반대로 움직이는 이유 찾지 못함, 일단 - 로 
-	PlayerCharacter->AddControllerYawInput(-LookAxisVector.X);
-	PlayerCharacter->AddControllerPitchInput(LookAxisVector.Y);
+	Character->AddControllerYawInput(-LookAxisVector.X);
+	Character->AddControllerPitchInput(LookAxisVector.Y);
 }
 
 void UPTInputComponent::OnQuaterMoveInput(const FInputActionValue& Value)
@@ -176,8 +197,8 @@ void UPTInputComponent::OnQuaterMoveInput(const FInputActionValue& Value)
 	}
 	
 	FVector MoveDirection = FVector(MovementVector.X, MovementVector.Y, 0.0f);
-	PlayerCharacter->GetController()->SetControlRotation(FRotationMatrix::MakeFromX(MoveDirection).Rotator());
-	PlayerCharacter->AddMovementInput(MoveDirection, MovementVectorSize);
+	Character->GetController()->SetControlRotation(FRotationMatrix::MakeFromX(MoveDirection).Rotator());
+	Character->AddMovementInput(MoveDirection, MovementVectorSize);
 }
 
 void UPTInputComponent::OnJumpInput()
@@ -185,7 +206,7 @@ void UPTInputComponent::OnJumpInput()
 	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnJumpInput()"));
 
 	//PlayerCharacter->Jump();
-	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(PlayerCharacter);	
+	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
 	{
 		PlayerInputInterface->EvationAction();
@@ -203,7 +224,7 @@ void UPTInputComponent::OnStartAttackInput()
 {
 	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnAttackInput()"));
 
-	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(PlayerCharacter);
+	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);
 	if (PlayerInputInterface)
 	{
 		PlayerInputInterface->StartAttack();
@@ -212,9 +233,34 @@ void UPTInputComponent::OnStartAttackInput()
 
 void UPTInputComponent::OnCompleteAttackInout()
 {
-	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(PlayerCharacter);	
+	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
 	{
 		PlayerInputInterface->StopAttack();
 	}
+}
+
+void UPTInputComponent::OnReloadInput()
+{
+	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnReloadInput()"));
+	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
+	if (PlayerInputInterface)
+	{
+		PlayerInputInterface->ReloadAction();
+	}
+
+}
+
+void UPTInputComponent::OnZoomInInput()
+{
+	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnZoomInInput()"));
+	
+	ChangeCharacterControl(ECharacterControlType::Zoom);
+}
+
+void UPTInputComponent::OnZoomOutInput()
+{
+	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnZoomOutInput()"));
+
+	ChangeCharacterControl(ECharacterControlType::Shoulder);
 }

@@ -20,10 +20,16 @@ public:
 	void UpdateStat(const FPTCharacterStat& BaseStat, const FPTCharacterStat& ModifierStat);
 	void UpdateHpBar(int NewCurrentHp);
 	
+	void UpdateGunAmmo(int NewCurAmmo, int NewMaxAmmo);
+	void UpdateGunReloadImg(bool InVisibility);
+	
 protected:
 	UPROPERTY()
 	TObjectPtr<class UPTHpBarWidget> HpBar;
 
 	UPROPERTY()
 	TObjectPtr<class UPTCharacterStatWidget> CharacterStat;
+
+	UPROPERTY()
+	TObjectPtr<class UPTGunInfoWidget> GunInfo;
 };

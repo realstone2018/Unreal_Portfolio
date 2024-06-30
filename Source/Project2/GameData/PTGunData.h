@@ -5,6 +5,14 @@
 #include "PTGunData.generated.h"
 
 UENUM(BlueprintType)
+enum class EGunType : uint8
+{
+	Rifle UMETA(DisplayName="Rifle"),		// 소총류
+	Launcher UMETA(DisplayName="Launcher"),	// 유탄류
+	Emitter UMETA(DisplayName="Emitter"),	// 방사기류
+};
+
+UENUM(BlueprintType)
 enum class EFireMode : uint8
 {
 	Single UMETA(DisplayName="Single"),		// 단발 
