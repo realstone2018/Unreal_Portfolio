@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameData/PTGunData.h"
+#include "PTComponent/Weapon/GunFireComponent.h"
 #include "Gun.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnStartReloadDelegate);
@@ -22,23 +23,28 @@ public:
 	FORCEINLINE void SetGunData(const FPTGunData& InGunData);
 
 	FOnChangeAmmo OnChangeAmmo;
-	
+
+	AController* GetOwnerController() const;
+
 private:
-	UPROPERTY(EditAnywhere, Category = "Stat", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = "true"))
 	FPTGunData GunData;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Stat")
+	UPROPERTY(VisibleAnywhere, Category = Stat)
 	int32 CurrentAmmo;
 
-	UPROPERTY(VisibleAnywhere, Category = "Stat")
+	UPROPERTY(VisibleAnywhere, Category = Stat)
 	int32 MaxAmmo;
 	
-	UPROPERTY(EditAnywhere, Category = "Stat")
+	UPROPERTY(EditAnywhere, Category = Stat)
 	float RecoilAmount; // 반동의 크기
 
-	UPROPERTY(EditAnywhere, Category = "Stat")
+	UPROPERTY(EditAnywhere, Category = Stat)
 	float RecoilResetSpeed; // 반동이 원래 위치로 돌아가는 속도
-
+	
+	UPROPERTY(VisibleAnywhere, Category = Component)
+	TObjectPtr<UGunFireComponent> GunFireComponent; 
+	
 	bool bIsFiring;
 	int FireCount;
 
@@ -51,10 +57,11 @@ public:
 	FORCEINLINE int GetMaxAmmo() { return MaxAmmo; }
 	
 private:
-	bool GunTrace(FHitResult& Hit, FVector& ShotDirection);
 	void Fire();
 	void ConsumeBullet();
 	void ApplyRecoil();
+
+	void PlayImpactEffectAndSound(FHitResult Hit, FVector ShotDirection);
 	
 // Reload
 public:
@@ -70,8 +77,6 @@ private:
 
 	
 private:
-	AController* GetOwnerController() const;
-	
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
 

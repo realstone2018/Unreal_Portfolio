@@ -200,9 +200,6 @@
     <ClInclude Include="..\..\Source\Project2\GameData\PTGameDataSingleton.h">
       <Filter>Source\Project2\GameData</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\Project2\GameData\PTGun.h">
-      <Filter>Source\Project2\GameData</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Source\Project2\GameData\PTGunData.h">
       <Filter>Source\Project2\GameData</Filter>
     </ClInclude>
@@ -298,6 +295,27 @@
     </ClCompile>
     <ClInclude Include="..\..\Source\Project2\PTComponent\Character\PTPlayerStatComponent.h">
       <Filter>Source\Project2\PTComponent\Character</Filter>
+    </ClInclude>
+    <Filter Include="Source\Project2\PTComponent\Weapon">
+      <UniqueIdentifier>{41774A12-2C81-3D01-8266-B2FD1E2B9E81}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\GunFirerComponent.cpp">
+      <Filter>Source\Project2\PTComponent\Weapon</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\GunFirerComponent.h">
+      <Filter>Source\Project2\PTComponent\Weapon</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFirerComponent.cpp">
+      <Filter>Source\Project2\PTComponent\Weapon</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFirerComponent.h">
+      <Filter>Source\Project2\PTComponent\Weapon</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\RifleFirerComponent.cpp">
+      <Filter>Source\Project2\PTComponent\Weapon</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\RifleFirerComponent.h">
+      <Filter>Source\Project2\PTComponent\Weapon</Filter>
     </ClInclude>
     <Filter Include="Source\Project2\UI">
       <UniqueIdentifier>{0ACE227A-9D57-3594-9799-35970EEE021F}</UniqueIdentifier>

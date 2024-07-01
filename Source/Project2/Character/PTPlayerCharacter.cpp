@@ -27,19 +27,21 @@ APTPlayerCharacter::APTPlayerCharacter()
 	
 	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTPLAYER);
 
-	PlayerInputComponent = CreateDefaultSubobject<UPTInputComponent>(TEXT("InputComponet"));
+	PlayerInputComponent = CreateDefaultSubobject<UPTInputComponent>(TEXT("InputComponet"));	
 	StatComponent = CreateDefaultSubobject<UPTPlayerStatComponent>(TEXT("PlayerStatComponent"));
 }
 
 void APTPlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	// 리소스에 붙어 있는 총 숨김
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 	
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
-	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	Gun->SetOwner(this);
-	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("Rifle"));
+	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseRifle"));
 }
 
 void APTPlayerCharacter::BeginPlay()
@@ -150,10 +152,10 @@ void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 	{
 		InHUDWidget->UpdateStat(StatComponent->GetBaseStat(), StatComponent->GetModifierStat());
 		InHUDWidget->UpdateHpBar(StatComponent->GetCurrentHp());
-		InHUDWidget->UpdateGunAmmo(Gun->GetCurrentAmmo(), Gun->GetMaxAmmo());
-		
 		StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
 		StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
+
+		InHUDWidget->UpdateGunAmmo(Gun->GetCurrentAmmo(), Gun->GetMaxAmmo());
 		Gun->OnChangeAmmo.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateGunAmmo);
 		Gun->OnStartReload.AddLambda(
 [this, InHUDWidget](){
@@ -163,6 +165,5 @@ void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 		[this, InHUDWidget](){
 			InHUDWidget->UpdateGunReloadImg(false);
 		});
-		
 	}
 }

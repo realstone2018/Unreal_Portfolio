@@ -32,7 +32,7 @@ protected:
 	TObjectPtr<class UCameraComponent> FollowCamera;
 	
 // Input
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	TObjectPtr<class UPTInputComponent> PlayerInputComponent;
 
 public:
@@ -52,7 +52,7 @@ public:
 
 // Stat
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
 
 	virtual UPTCharacterStatComponent* GetStatComponent() override;

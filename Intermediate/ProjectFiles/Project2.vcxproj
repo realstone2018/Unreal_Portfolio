@@ -409,6 +409,18 @@
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClInclude Include="..\..\Source\Project2\PTComponent\Character\PTPlayerStatComponent.h" />
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\GunFireComponent.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\GunFireComponent.h" />
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFireComponent.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFireComponent.h" />
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\RifleFireComponent.cpp">
+      <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\RifleFireComponent.h" />
     <ClCompile Include="..\..\Source\Project2\UI\PTCharacterStatWidget.cpp">
       <AdditionalIncludeDirectories>$(ClCompile_AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
