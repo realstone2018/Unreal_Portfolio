@@ -1,24 +1,16 @@
 #include "PTComponent/Weapon/RifleFireComponent.h"
 #include "Engine/DamageEvents.h"
 
-void URifleFireComponent::Init(AActor* InRifle)
-{
-	UE_LOG(LogTemp, Display, TEXT("URifleFireComponent::Init"));
-
-	Gun = InRifle;
-	GunOwner = Cast<APawn>(Gun->GetOwner());
-}
-
 //TODO: OwnerController 매개변수에서 제거 가능한지 알아보기
 // Gun을 넘길까?
 // Interface?
-bool URifleFireComponent::FireProcess(float Range, int Damage)
+bool URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int Damage)
 {
 	UE_LOG(LogTemp, Display, TEXT("URifleFireComponent::FireProcess"));
 
 	FHitResult Hit;
 	FVector ShotDirection;
-	bool bSuccess = GunTrace(Hit, ShotDirection, Range);
+	bool bSuccess = GunTrace(Hit, ShotDirection, SpawnPoint, Range);
 	if (!bSuccess)
 	{
 		return false;
@@ -40,7 +32,7 @@ bool URifleFireComponent::FireProcess(float Range, int Damage)
 	return false;
 }
 
-bool URifleFireComponent::GunTrace(FHitResult& Hit, FVector& ShotDirection, float Range)
+bool URifleFireComponent::GunTrace(FHitResult& Hit, FVector& ShotDirection, FVector SpawnPoint, float Range)
 {
 	UE_LOG(LogTemp, Display, TEXT("URifleFireComponent::GunTrace"));
 	

@@ -7,6 +7,7 @@
 #include "Engine/DamageEvents.h"
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
 #include "AI/Monster/PTScorchAIController.h"
+#include "PTComponent/PTFactionComponent.h"
 #include "PTComponent/Character/PTMonsterStatComponent.h"
 
 APTMonster::APTMonster()
@@ -30,6 +31,8 @@ void APTMonster::PostInitializeComponents()
 // 	
 // 	//TODO: Dirty 패턴 적용하기
 // 	SetHp(BaseStat.MaxHp);
+
+	FactionComponent->SetFaction(EFaction::Enemy);
 }
 
 void APTMonster::Instantiate()

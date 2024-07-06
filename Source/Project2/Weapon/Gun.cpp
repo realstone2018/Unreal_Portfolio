@@ -22,6 +22,9 @@ AGun::AGun()
 	RecoilAmount = 1.0f; // 기본 반동 크기
 	RecoilResetSpeed = 5.0f; // 기본 반동 복구 속도
 	FireCount = 0;
+
+	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPoint"));
+	ProjectileSpawnPoint->SetupAttachment(Mesh);
 }
 
 void AGun::SetGunData(const FPTGunData& InGunData)
@@ -46,7 +49,7 @@ void AGun::SetGunData(const FPTGunData& InGunData)
 
 	// 엔진에 생성한 컴포넌트를 인식
 	GunFireComponent->RegisterComponent();
-	GunFireComponent->Init(this);
+	GunFireComponent->Init(this, ProjectileClass);
 	GunFireComponent->OnHitTracing.BindUObject(this, &AGun::PlayImpactEffectAndSound);
 }
 
@@ -124,7 +127,7 @@ void AGun::Fire()
 		UGameplayStatics::SpawnSoundAttached(MuzzleFlashSound, Mesh, TEXT("MuzzleFlashSocket"));
 	}
 	
-	 GunFireComponent->FireProcess(GunData.Range, GunData.Damage);
+	 GunFireComponent->FireProcess(ProjectileSpawnPoint->GetComponentLocation(), GunData.Range, GunData.Damage);
 }
 
 void AGun::ConsumeBullet()

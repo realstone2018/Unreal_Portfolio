@@ -40,7 +40,7 @@ protected:
 
 #pragma region Battle
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation) 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation") 
 	TObjectPtr<class UAnimMontage> AttackMontage;
 
 	void PlayAttackMontage();

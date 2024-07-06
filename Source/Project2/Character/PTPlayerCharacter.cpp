@@ -13,6 +13,7 @@
 #include "SimpleShooterGameModeBase.h"
 #include "UI/PTHUDWidget.h"
 #include "PTComponent/Character/PTCharacterStatComponent.h"
+#include "PTComponent/PTFactionComponent.h"
 
 APTPlayerCharacter::APTPlayerCharacter()
 {
@@ -37,11 +38,14 @@ void APTPlayerCharacter::PostInitializeComponents()
 
 	// 리소스에 붙어 있는 총 숨김
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+
+	FactionComponent->SetFaction(EFaction::Ally);
 	
+	// 아이템 교체 후에 다시보기
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	Gun->SetOwner(this);
-	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseRifle"));
+	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseLauncher"));
 }
 
 void APTPlayerCharacter::BeginPlay()

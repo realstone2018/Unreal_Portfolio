@@ -10,8 +10,6 @@ class PROJECT2_API URifleFireComponent : public UGunFireComponent
 	GENERATED_BODY()
 
 public:
-	virtual void Init(AActor* InRifle) override;
-	
-	virtual bool FireProcess(float Range, int Damage) override;
-	virtual bool GunTrace(FHitResult& Hit, FVector& ShotDirection, float Range) override;
+	virtual bool FireProcess(FVector SpawnPoint, float Range, int Damage) override;
+	virtual bool GunTrace(FHitResult& Hit, FVector& ShotDirection, FVector SpawnPoint, float Range) override;
 };

@@ -24,7 +24,7 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAceess = "true"))
 	TObjectPtr<class UPTCharacterMoveComponent> MoveComponent;
-
+	
 	virtual UPTCharacterStatComponent* GetStatComponent();
 
 	// Widget
@@ -34,12 +34,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UPTUserWidget> HpBarWidgetClass;
 	
-	//virtual void SetupCharacterWidget(class UPTUserWidget* InUserWidget) override;	
-
 	virtual void SetupCharacterWidget(UPTUserWidget* InUserWidget) override;
 	virtual bool GetShouldDisplayHpBar() { return true; }
 	
-public:	
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	TObjectPtr<class UPTFactionComponent> FactionComponent;
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void Evation();

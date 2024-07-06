@@ -1,8 +1,9 @@
+#include "SimpleShooterGameModeBase.h"
+#include "Components/CapsuleComponent.h"
 #include "Character/PTCharacterBase.h"
 #include "PTComponent/Character/PTCharacterStatComponent.h"
-#include "SimpleShooterGameModeBase.h"
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
-#include "Components/CapsuleComponent.h"
+#include "PTComponent/PTFactionComponent.h"
 #include "UI/PTHpBarWidget.h"
 #include "UI/PTUserWidget.h"
 
@@ -15,6 +16,7 @@ APTCharacterBase::APTCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 	
 	MoveComponent = Cast<UPTCharacterMoveComponent>(GetMovementComponent());
+	FactionComponent = CreateDefaultSubobject<UPTFactionComponent>(TEXT("Faction"));
 
 	HpBar = CreateDefaultSubobject<UPTWidgetComponent>(TEXT("Widget"));
 	HpBar->SetupAttachment(GetMesh());

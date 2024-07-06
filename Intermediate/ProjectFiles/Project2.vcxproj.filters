@@ -65,6 +65,12 @@
     <ClInclude Include="..\..\Source\Project2\PTGameModeBase.h">
       <Filter>Source\Project2</Filter>
     </ClInclude>
+    <ClCompile Include="..\..\Source\Project2\PTProjectile.cpp">
+      <Filter>Source\Project2</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTProjectile.h">
+      <Filter>Source\Project2</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Project2\ShooterAIController.cpp">
       <Filter>Source\Project2</Filter>
     </ClCompile>
@@ -263,6 +269,12 @@
     <Filter Include="Source\Project2\PTComponent">
       <UniqueIdentifier>{245C2308-CB4A-33DB-AFC5-F341BCBA9B37}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Project2\PTComponent\PTFactionComponent.cpp">
+      <Filter>Source\Project2\PTComponent</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project2\PTComponent\PTFactionComponent.h">
+      <Filter>Source\Project2\PTComponent</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Project2\PTComponent\PTInputComponent.cpp">
       <Filter>Source\Project2\PTComponent</Filter>
     </ClCompile>
@@ -299,22 +311,22 @@
     <Filter Include="Source\Project2\PTComponent\Weapon">
       <UniqueIdentifier>{41774A12-2C81-3D01-8266-B2FD1E2B9E81}</UniqueIdentifier>
     </Filter>
-    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\GunFirerComponent.cpp">
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\GunFireComponent.cpp">
       <Filter>Source\Project2\PTComponent\Weapon</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\GunFirerComponent.h">
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\GunFireComponent.h">
       <Filter>Source\Project2\PTComponent\Weapon</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFirerComponent.cpp">
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFireComponent.cpp">
       <Filter>Source\Project2\PTComponent\Weapon</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFirerComponent.h">
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\LauncherFireComponent.h">
       <Filter>Source\Project2\PTComponent\Weapon</Filter>
     </ClInclude>
-    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\RifleFirerComponent.cpp">
+    <ClCompile Include="..\..\Source\Project2\PTComponent\Weapon\RifleFireComponent.cpp">
       <Filter>Source\Project2\PTComponent\Weapon</Filter>
     </ClCompile>
-    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\RifleFirerComponent.h">
+    <ClInclude Include="..\..\Source\Project2\PTComponent\Weapon\RifleFireComponent.h">
       <Filter>Source\Project2\PTComponent\Weapon</Filter>
     </ClInclude>
     <Filter Include="Source\Project2\UI">

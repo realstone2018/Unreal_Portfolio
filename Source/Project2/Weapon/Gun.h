@@ -42,8 +42,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = Stat)
 	float RecoilResetSpeed; // 반동이 원래 위치로 돌아가는 속도
 	
-	UPROPERTY(VisibleAnywhere, Category = Component)
+	UPROPERTY(VisibleAnywhere, Category = Components)
 	TObjectPtr<UGunFireComponent> GunFireComponent; 
+
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class APTProjectile> ProjectileClass;
 	
 	bool bIsFiring;
 	int FireCount;
@@ -55,6 +58,9 @@ public:
 
 	FORCEINLINE int GetCurrentAmmo() { return CurrentAmmo; }
 	FORCEINLINE int GetMaxAmmo() { return MaxAmmo; }
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	USceneComponent* ProjectileSpawnPoint;
 	
 private:
 	void Fire();
@@ -97,5 +103,5 @@ private:
 	
 	FTimerHandle FireRateTimerHandle;
 	FTimerHandle ReloadingTimerHandle;
-	
+
 };
