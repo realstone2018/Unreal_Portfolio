@@ -4,35 +4,31 @@
 //TODO: OwnerController 매개변수에서 제거 가능한지 알아보기
 // Gun을 넘길까?
 // Interface?
-bool URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int Damage)
+void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int Damage)
 {
 	UE_LOG(LogTemp, Display, TEXT("URifleFireComponent::FireProcess"));
 
-	FHitResult Hit;
+	FHitResult HitResult;
 	FVector ShotDirection;
-	bool bSuccess = GunTrace(Hit, ShotDirection, SpawnPoint, Range);
-	if (!bSuccess)
+	bool IsHit = GunTrace(HitResult, ShotDirection, SpawnPoint, Range);
+	if (!IsHit)
 	{
-		return false;
+		return;
 	}
 
-	OnHitTracing.Execute(Hit, ShotDirection);
-	
-	AActor* HitActor = Hit.GetActor();
+	OnHitTracing.Execute(HitResult, ShotDirection);
+
+	AActor* HitActor = HitResult.GetActor();
 	if (HitActor != nullptr)
 	{
-		FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
-		HitActor->TakeDamage(Damage, DamageEvent, GunOwner->GetController(), Gun);
-
-		return true;
+		FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+		HitActor->TakeDamage(Damage, DamageEvent, GunOwner->GetController(), Gun);;
 	}
-	
-	DrawDebugPoint(GetWorld(), Hit.Location, 10, FColor::Red, true);
 
-	return false;
+	DrawDebugPoint(GetWorld(), HitResult.Location, 10, FColor::Red, true);
 }
 
-bool URifleFireComponent::GunTrace(FHitResult& Hit, FVector& ShotDirection, FVector SpawnPoint, float Range)
+bool URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirection, FVector SpawnPoint, float Range)
 {
 	UE_LOG(LogTemp, Display, TEXT("URifleFireComponent::GunTrace"));
 	
@@ -53,5 +49,5 @@ bool URifleFireComponent::GunTrace(FHitResult& Hit, FVector& ShotDirection, FVec
 	DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
 
 	//어딘가에 부딪쳐야만 True반환
-	return GetWorld()->LineTraceSingleByChannel(Hit, OutLocation, End, ECC_GameTraceChannel1, Params);
+	return GetWorld()->LineTraceSingleByChannel(HitResult, OutLocation, End, ECC_GameTraceChannel1, Params);
 }

@@ -12,6 +12,12 @@ class PROJECT2_API UGunFireComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+public:
+	virtual void Init(AActor* InRifle, TSubclassOf<class APTProjectile> InProjectileClass);
+	virtual void FireProcess(FVector SpawnPoint, float Range, int Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
+
+	FOnHitTracing OnHitTracing;
+	
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AActor> Gun;
@@ -21,11 +27,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TSubclassOf<class APTProjectile> ProjectileClass;
-
-public:
-	virtual void Init(AActor* InRifle, TSubclassOf<APTProjectile> InProjectileClass);
-	virtual bool FireProcess(FVector SpawnPoint, float Range, int Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, return false;);
-	virtual bool GunTrace(FHitResult& Hit, FVector& ShotDirection, FVector SpawnPoint, float Range) PURE_VIRTUAL(UGunFireComponent::GunTrace, return false;);
-
-	FOnHitTracing OnHitTracing;
 };

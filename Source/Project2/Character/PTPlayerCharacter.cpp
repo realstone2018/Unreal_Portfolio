@@ -46,6 +46,7 @@ void APTPlayerCharacter::PostInitializeComponents()
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	Gun->SetOwner(this);
 	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseLauncher"));
+	//Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseRifle"));
 }
 
 void APTPlayerCharacter::BeginPlay()

@@ -27,12 +27,6 @@ APTProjectile::APTProjectile()
 
 }
 
-void APTProjectile::Init(AActor* InOwner)
-{
-	SetOwner(InOwner);
-	CompleteInit = true;
-}
-
 void APTProjectile::BeginPlay()
 {
 	UE_LOG(LogTemp, Display, TEXT("APTProjectile::BeginPlay()"));
@@ -47,18 +41,28 @@ void APTProjectile::BeginPlay()
 	}
 }
 
+void APTProjectile::Init(AActor* GunOwner)
+{
+	SetOwner(GunOwner);
+
+	//TODO: Projectile 오브젝트 풀링 준비
+	ProjectileMesh->SetHiddenInGame(false);
+	SetActorEnableCollision(true);
+	
+	CompleteInit = true;
+}
+
 void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Display, TEXT("APTProjectile::OnOverlapBegin() - OtherActor: %s"), *OtherActor->GetName());
 
-	if (!CompleteInit)
+	if (!CompleteInit || GetOwner() == OtherActor)
 	{
 		return;
 	}
 	
-	AActor* MyOwner = GetOwner();
-	if (MyOwner == nullptr)
+	if (GetOwner() == nullptr)
 	{
 		UE_LOG(LogTemp, Display, TEXT("APTProjectile::OnOverlapBegin() - MyOwner is Null"));
 
@@ -66,36 +70,26 @@ void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 		return;
 	}
 
-	if (OtherActor == MyOwner)
-	{
-		return;
-	}
+	Explosion();
 
+	//TODO: Projectile 오브젝트 풀링 준비
+	ProjectileMesh->SetHiddenInGame(true);
+	SetActorEnableCollision(false);
+	
+	Destroy();
+}
+
+void APTProjectile::Explosion()
+{
 	FVector Location = GetActorLocation();
-	TArray<AActor*> OverlappedActors;
+	
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(GetOwner());
+	
+	TArray<FOverlapResult> OutOverlapResults;
+	GetWorld()->OverlapMultiByChannel(OutOverlapResults, Location, FQuat::Identity, CCHANNEL_PTBULLET, FCollisionShape::MakeSphere(ExplosionRadius), Params);	
 
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
-	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(CCHANNEL_PTBULLET));
-	
-	UKismetSystemLibrary::SphereOverlapActors(
-		 GetWorld(),
-		 Location,
-		 ExplosionRadius,
-		 ObjectTypes,
-		 APTCharacterBase::StaticClass(),
-		 TArray<AActor*>(),  // Actors to ignore
-		 OverlappedActors
-	 );
-	
-	DrawDebugSphere(
-		GetWorld(),
-		Location,
-		ExplosionRadius,
-		12,
-		FColor::Red,
-		false,
-		3.f
-	);
+	OnExplosion.Execute(GetOwner(), OutOverlapResults);
 
 	if (ExplosionParticles)
 	{
@@ -111,8 +105,14 @@ void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 	{
 		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 	}
-
-	OnHitArea.Execute(GetOwner(), OverlappedActors);
 	
-	Destroy();
+	DrawDebugSphere(
+		GetWorld(),
+		Location,
+		ExplosionRadius,
+		12,
+		FColor::Red,
+		false,
+		3.f
+	);
 }

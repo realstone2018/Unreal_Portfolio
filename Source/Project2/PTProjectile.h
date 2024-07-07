@@ -5,7 +5,7 @@
 #include "Character/PTCharacterBase.h"
 #include "PTProjectile.generated.h"
 
-DECLARE_DELEGATE_TwoParams(FOnHitEnemies, AActor* /*Owner*/, const TArray<AActor*>& /*targets*/)
+DECLARE_DELEGATE_TwoParams(FOnExplosion, AActor* /*Owner*/, const TArray<FOverlapResult>& /*targets*/)
 
 UCLASS()
 class PROJECT2_API APTProjectile : public AActor
@@ -15,19 +15,26 @@ class PROJECT2_API APTProjectile : public AActor
 public:	
 	APTProjectile();
 
-	void Init(AActor* Owner);
-	
-	FOnHitEnemies OnHitArea;
+	FOnExplosion OnExplosion;
 
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	void Init(AActor* Owner);
+	
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	void Explosion();
+	
 private:
 	UPROPERTY()
 	bool CompleteInit = false;
-	
+
+	//TODO: 데이터로 옮기기 
 	UPROPERTY(EditAnywhere)
-	float ExplosionRadius = 10.0f;
+	float ExplosionRadius = 200.0f;
 	
 private:
 	UPROPERTY(EditDefaultsOnly, category = "Component")
@@ -44,19 +51,14 @@ private:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
-	class USoundBase* LaunchSound;
+	TObjectPtr<class USoundBase> LaunchSound;
 
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
-	class UParticleSystem* ExplosionParticles;
+	TObjectPtr<class UParticleSystem> ExplosionParticles;
 
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
-	class USoundBase* ExplosionSound;
+	TObjectPtr<class USoundBase> ExplosionSound;
  
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
 	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
-
-public:
-	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-	
 };
