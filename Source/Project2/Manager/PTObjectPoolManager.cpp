@@ -7,12 +7,10 @@
 
 UPTObjectPoolManager::UPTObjectPoolManager()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTObjectPoolManager::UPTObjectPoolManager"));
 }
 
 void UPTObjectPoolManager::Init(UWorld* World)
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTObjectPoolManager::Init"));
 	WorldContext = World;
 
 	// UAssetManager& Manager = UAssetManager::Get();
@@ -33,8 +31,6 @@ void UPTObjectPoolManager::Init(UWorld* World)
 template <typename T, typename>
 void UPTObjectPoolManager::InitializePool(EPoolListType PoolType, TSubclassOf<T> ObjectClass, int32 InitialSize)
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTObjectPoolManager::InitializePool()"));
-
 	FString ParentName = UEnum::GetValueAsString(PoolType);
 
 	//TODO: Path는 Data에서 Size와 Class와 같이 받아서 사용하기 

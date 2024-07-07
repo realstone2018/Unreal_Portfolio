@@ -9,13 +9,10 @@
 
 APTScorchAIController::APTScorchAIController()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTScorchAIController::APTScorchAIController()"));
 }
 
 void APTScorchAIController::RunAI()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTScorchAIController::RunAI()"));
-
 	UBlackboardComponent* BlackboardPtr = Blackboard.Get();
 	//블랙보드 구동
 	if (UseBlackboard(BBAsset, BlackboardPtr))
@@ -43,8 +40,6 @@ void APTScorchAIController::StopAI()
 // 이게 없었음 
 void APTScorchAIController::OnPossess(APawn* InPawn)
 {
-	UE_LOG(LogTemp, Display, TEXT("PTScorchAIController::OnPossess()"));
-
 	Super::OnPossess(InPawn);
 
 	RunAI();

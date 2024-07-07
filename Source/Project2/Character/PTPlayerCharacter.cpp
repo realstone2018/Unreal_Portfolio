@@ -59,16 +59,12 @@ void APTPlayerCharacter::BeginPlay()
 
 UPTCharacterStatComponent* APTPlayerCharacter::GetStatComponent()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTPlayerCharacter::GetStatComponent()"));
-
 	return StatComponent;
 }
 
 // BeginPlay보다 먼저 호출됨
 void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 {
-	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter.SetupPlayerInputComponent()"));
-
 	Super::SetupPlayerInputComponent(Component);
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(Component);
@@ -78,12 +74,9 @@ void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 void APTPlayerCharacter::Evation()
 {
 	//TODO: 회피중엔 재장전 캔슬
-
 	
 	Super::Evation();
-
-	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter::Evation()"));
-
+	
 	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
 		MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
 	
@@ -92,7 +85,6 @@ void APTPlayerCharacter::Evation()
 
 void APTPlayerCharacter::StartAttack()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter.Attack()"));
 	if (bIsReloading)
 	{
 		return;
@@ -106,8 +98,6 @@ void APTPlayerCharacter::StartAttack()
 
 void APTPlayerCharacter::StopAttack()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTPlayerCharacter.StopAttack()"));
-
 	Gun->StopTrigger();
 
 }

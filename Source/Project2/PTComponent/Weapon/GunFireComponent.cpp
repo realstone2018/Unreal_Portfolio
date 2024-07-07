@@ -3,8 +3,6 @@
 
 void UGunFireComponent::Init(AActor* InRifle, TSubclassOf<APTProjectile> InProjectileClass)
 {
-	UE_LOG(LogTemp, Display, TEXT("UGunFireComponent::Init"));
-
 	Gun = InRifle;
 	GunOwner = Cast<APTCharacterBase>(Gun->GetOwner());
 

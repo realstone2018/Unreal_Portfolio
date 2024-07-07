@@ -196,6 +196,5 @@ void APTMonster::Dead()
 
 void APTMonster::EndAttackMontage(UAnimMontage* TargetMontage, bool IsProperlyEnded)
 {
-	UE_LOG(LogTemp, Display, TEXT("PTMonster::EndAttackMontage()"));
 	
 }

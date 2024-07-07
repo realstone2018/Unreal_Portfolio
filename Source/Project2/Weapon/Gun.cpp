@@ -79,15 +79,10 @@ bool AGun::PullTrigger()
 
 void AGun::StopTrigger()
 {
-	UE_LOG(LogTemp, Display, TEXT("Gun::StopTrriger() - %f"), UGameplayStatics::GetRealTimeSeconds(GetWorld()));
-	UE_LOG(LogTemp, Display, TEXT("Gun::StopTrriger() - %s"), bIsFiring ? TEXT("True") : TEXT("False"));
-	
 	if (bIsFiring)
 	{
 		bIsFiring = false;
 		GetWorld()->GetTimerManager().ClearTimer(FireRateTimerHandle);
-
-		UE_LOG(LogTemp, Display, TEXT("Gun::StopTrriger() - ClearTimer"));
 	}
 }
 
@@ -157,9 +152,6 @@ void AGun::ApplyRecoil()
 		// 이동 속도에 따른 증가량 
 		auto CurrentVelocity = PlayerController->GetCharacter()->GetVelocity().Length();
 		float VelocityAmp = (CurrentVelocity < 300) ? 0.f : 0.5f;
-
-		UE_LOG(LogTemp, Display, TEXT("Gun::ApplyRecoil() - YawRecoil: %f  FireCountAmp: %f   VelocityAmp: %f"), YawRecoil, FireCountAmp, VelocityAmp);
-
 		
 		FRotator NewRotation = PlayerController->GetControlRotation();
 		NewRotation.Yaw += (FMath::Sin(FMath::FRand() * 25.0f) + 0.5f) * (YawRecoil + FireCountAmp + VelocityAmp);
@@ -189,8 +181,6 @@ float AGun::Reloading(float AccelerationRate)
 {
 	FireCount = 0;
 	
-	UE_LOG(LogTemp, Display, TEXT("Gun::Reloading()"));
-
 	float MaxAccelerationRate = 0.5f; // 최대 50% 감소, GameConst값으로 빼기 or 캐릭터 스탯에서 제어
 	AccelerationRate = FMath::Min(AccelerationRate, MaxAccelerationRate);
 	

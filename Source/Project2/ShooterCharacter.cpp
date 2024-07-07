@@ -106,9 +106,6 @@ void AShooterCharacter::MoveCallback(const FInputActionValue& Value)
 
 void AShooterCharacter::LookCallback(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Display, TEXT("LookAxisVector.X"));
-
-	
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 	LookAxisVector *= RotationRate * GetWorld()->GetDeltaSeconds();
 	
@@ -136,7 +133,6 @@ float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	float DamageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	DamageToApply = FMath::Min(Health, DamageToApply);
 	Health -= DamageToApply;
-	UE_LOG(LogTemp, Display, TEXT("Health: %f"), Health);
 
 	if (IsDead())
 	{

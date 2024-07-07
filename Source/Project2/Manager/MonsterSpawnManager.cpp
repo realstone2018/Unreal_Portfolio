@@ -4,8 +4,6 @@
 
 UMonsterSpawnManager::UMonsterSpawnManager()
 {
-	UE_LOG(LogTemp, Display, TEXT("UMonsterSpawnManager::UMonsterSpawnManager"));
-
 	// static ConstructorHelpers::FClassFinder<APTMonster> ScorchClassRef(TEXT("/Game/Project2/Character/BP_Monster.BP_Monster_C"));
 	// if (ScorchClassRef.Class) {
 	// 	MonsterClass = ScorchClassRef.Class;

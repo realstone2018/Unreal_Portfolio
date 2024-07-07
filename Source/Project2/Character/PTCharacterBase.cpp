@@ -9,8 +9,6 @@
 
 APTCharacterBase::APTCharacterBase()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTCharacterBase::APTCharacterBase()"));
-
 	PrimaryActorTick.bCanEverTick = true;
 	
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
@@ -47,8 +45,6 @@ void APTCharacterBase::PostInitializeComponents()
 
 UPTCharacterStatComponent* APTCharacterBase::GetStatComponent()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTCharacterBase::GetStatComponent()"));
-
 	return nullptr;
 }
 
@@ -87,7 +83,6 @@ void APTCharacterBase::Evation()
 
 void APTCharacterBase::OnNotifyAttack()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTCharacterBase::OnNotifyAttack()"));
 
 }
 

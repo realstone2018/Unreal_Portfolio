@@ -23,19 +23,13 @@ void UPTCharacterMoveComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		float Alpha = FMath::Min(ElapsedTime / MoveDuration, 1.0f);
 		FVector NewLocation = FMath::Lerp(StartLocation, TargetLocation, Alpha);
 		
-		UE_LOG(LogTemp, Display,
-			TEXT("PTCharacterMoveComponent::TickComponent() - Alpha: %f   StartLocation: %s   TargetLocation: %s   NewLocation: %s"),
-			Alpha, *StartLocation.ToString(), *TargetLocation.ToString(), *NewLocation.ToString());
-		
 		GetOwner()->SetActorLocation(NewLocation);
 		
 		if (Alpha >= 1.0f)
 		{
 			bIsMoving = false;
 			StopMovementImmediately();
-			
-			UE_LOG(LogTemp, Display, TEXT("PTCharacterMoveComponent::TickComponent() - GetActorLocation: %s"), *GetActorLocation().ToString());
-		}
+					}
 	}
 	else if (bIsMovingUseInput)
 	{

@@ -5,9 +5,7 @@ void UAnimNotifyState_AttackHitCheck::NotifyTick(USkeletalMeshComponent* MeshCom
 	float FrameDeltaTime)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
-
-	UE_LOG(LogTemp, Display, TEXT("AttackHitCheck::NotifyTick()"));
-
+	
 	if (MeshComp) {
 		//노타파이의 대상이 인터페이스를 상속받았는지 체크
 		IPTAnimationAttackInterface* AttackPawn = Cast<IPTAnimationAttackInterface>(MeshComp->GetOwner());	

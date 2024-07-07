@@ -8,9 +8,6 @@
 
 APTGameModeBase::APTGameModeBase()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTGameModeBase::APTGameModeBase"));
-
-	
 	//TODO: Wave타이머 가동 
 
 	MonsterSpawnManager = NewObject<UMonsterSpawnManager>();
@@ -18,12 +15,10 @@ APTGameModeBase::APTGameModeBase()
 	static ConstructorHelpers::FClassFinder<APTMonster> ScorchClassRef(TEXT("/Game/Project2/Character/BP_Monster.BP_Monster_C"));
 	if (ScorchClassRef.Class) {
 		MonsterClass = ScorchClassRef.Class;
-		
-		UE_LOG(LogTemp, Log, TEXT("Monster class found: %s"), *MonsterClass->GetName());
 	}
 	else
 	{
-		UE_LOG(LogTemp, Display, TEXT("MonsterSpawnManager::UMonsterSpawnManager() - Fail Class Find!"));
+		UE_LOG(LogTemp, Error, TEXT("MonsterSpawnManager::UMonsterSpawnManager() - Fail Class Find!"));
 	}
 
 	PoolManager = CreateDefaultSubobject<UPTObjectPoolManager>(TEXT("ObjectPoolManager"));
@@ -71,8 +66,6 @@ void APTGameModeBase::TimerStart()
 
 void APTGameModeBase::TimerEnd()
 {
-	UE_LOG(LogTemp, Display, TEXT("PTGameModeBase::TimerEnd"));
-	
 	SpawnMonster(1);
 }
 
@@ -116,8 +109,6 @@ void APTGameModeBase::SpawnMonster(int num)
 	if (SpawnedMonster)
 	{
 		SpawnedMonster->OnDead.BindUObject(this, &APTGameModeBase::RemoveMonster);
-		
-		UE_LOG(LogTemp, Log, TEXT("Monster spawned successfully."));
 	}
 	else
 	{

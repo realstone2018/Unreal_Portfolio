@@ -29,8 +29,6 @@ APTProjectile::APTProjectile()
 
 void APTProjectile::BeginPlay()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTProjectile::BeginPlay()"));
-	
 	Super::BeginPlay();
 
 	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &APTProjectile::OnOverlapBegin);
@@ -55,8 +53,6 @@ void APTProjectile::Init(AActor* GunOwner)
 void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Display, TEXT("APTProjectile::OnOverlapBegin() - OtherActor: %s"), *OtherActor->GetName());
-
 	if (!CompleteInit || GetOwner() == OtherActor)
 	{
 		return;
@@ -64,8 +60,6 @@ void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 	
 	if (GetOwner() == nullptr)
 	{
-		UE_LOG(LogTemp, Display, TEXT("APTProjectile::OnOverlapBegin() - MyOwner is Null"));
-
 		Destroy();
 		return;
 	}

@@ -9,8 +9,6 @@
 
 UPTInputComponent::UPTInputComponent()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::UPTInputComponent()"));
-	
 	CurrentCharacterControlType = ECharacterControlType::Shoulder;
 
 	static ConstructorHelpers::FObjectFinder<UPTCharacterControlData> ShoulderDataRef(TEXT("/Script/Project2.PTCharacterControlData'/Game/Project2/Input/ControlData/PC_Shoulder.PC_Shoulder'"));
@@ -79,8 +77,6 @@ void UPTInputComponent::Init(USpringArmComponent* SpringArm)
 
 void UPTInputComponent::SetupPlayerInputComponent(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::SetupPlayerInputComponent()"));
-
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnJumpInput);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &UPTInputComponent::OnJumpStopInput);
 	EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &UPTInputComponent::OnStartAttackInput);
@@ -203,8 +199,6 @@ void UPTInputComponent::OnQuaterMoveInput(const FInputActionValue& Value)
 
 void UPTInputComponent::OnJumpInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnJumpInput()"));
-
 	//PlayerCharacter->Jump();
 	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
@@ -215,15 +209,11 @@ void UPTInputComponent::OnJumpInput()
 
 void UPTInputComponent::OnJumpStopInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnJumpStopInput()"));
-
 	//PlayerCharacter->StopJumping();
 }
 
 void UPTInputComponent::OnStartAttackInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnAttackInput()"));
-
 	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);
 	if (PlayerInputInterface)
 	{
@@ -242,7 +232,6 @@ void UPTInputComponent::OnCompleteAttackInout()
 
 void UPTInputComponent::OnReloadInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnReloadInput()"));
 	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
 	{
@@ -253,14 +242,10 @@ void UPTInputComponent::OnReloadInput()
 
 void UPTInputComponent::OnZoomInInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnZoomInInput()"));
-	
 	ChangeCharacterControl(ECharacterControlType::Zoom);
 }
 
 void UPTInputComponent::OnZoomOutInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnZoomOutInput()"));
-
 	ChangeCharacterControl(ECharacterControlType::Shoulder);
 }

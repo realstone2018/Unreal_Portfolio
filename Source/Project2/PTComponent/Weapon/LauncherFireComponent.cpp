@@ -5,9 +5,7 @@
 #include "PTComponent/PTFactionComponent.h"
 
 void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int Damage)
-{
-	UE_LOG(LogTemp, Display, TEXT("URifleFireComponent::FireProcess"));
-	
+{	
 	// 폰이 보고있는 시야의 시작 위치와 회전방향을 가져온다. (카메라가 붙어있는 경우 카메라 베이스로, 없는 경우는 모르겠다.)
 	FVector OutLocation;
 	FRotator OutRotation;
@@ -27,8 +25,6 @@ void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int Da
 
 void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults, int Damage)
 {
-	UE_LOG(LogTemp, Display, TEXT("ULauncherFireComponent::ApplyDamageToEnemies - Damage: %d"), Damage);
-
 	APTCharacterBase* OwnerCharacter = Cast<APTCharacterBase>(ProjectileOwner);	
 
 	for (FOverlapResult Target : OverlapResults)
@@ -45,9 +41,7 @@ void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const
 		{
 			continue;
 		}
-				
-		UE_LOG(LogTemp, Display, TEXT("ULauncherFireComponent::GunTrace - Target: %s"), *TargetCharacter->GetName());
-				
+		
 		UClass* DamageTypeClass = UDamageType::StaticClass();
 		UGameplayStatics::ApplyDamage(TargetCharacter, Damage, OwnerCharacter->GetController(), Gun, DamageTypeClass);
 	}
