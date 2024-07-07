@@ -23,7 +23,7 @@ APTCharacterBase::APTCharacterBase()
 	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 180.f));
 	HpBar->SetHiddenInGame(true);
 
-	static ConstructorHelpers::FClassFinder<UPTUserWidget> HpBarWidgetRef(TEXT("/Game/Project2/Character/UI/WBP_HpBar.WBP_HpBar_C"));
+	static ConstructorHelpers::FClassFinder<UPTUserWidget> HpBarWidgetRef(TEXT("/Game/Project2/UI/WBP_HpBar.WBP_HpBar_C"));
 	if (HpBarWidgetRef.Class)
 	{
 		HpBarWidgetClass = HpBarWidgetRef.Class;
