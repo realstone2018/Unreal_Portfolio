@@ -4,8 +4,8 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/RandomStream.h"
-#include "PTComponent/Weapon/RifleFireComponent.h"
-#include "PTComponent/Weapon/LauncherFireComponent.h"
+#include "PTComponent/Equipment//RifleFireComponent.h"
+#include "PTComponent/Equipment//LauncherFireComponent.h"
 
 AGun::AGun()
 {

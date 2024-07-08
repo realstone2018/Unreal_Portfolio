@@ -43,25 +43,33 @@ protected:
 	
 	ECharacterControlType CurrentCharacterControlType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> ShoulderMoveAction;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> ShoulderLookAction;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> QuaterMoveAction;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> JumpAction;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> ShootAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> ReloadAction;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"));
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> ZoomAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
+	TObjectPtr<class UInputAction> EuqipMainAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
+	TObjectPtr<class UInputAction> EuqipSubAction;
 	
 	void OnShoulderMoveInput(const FInputActionValue& Value);
 	void OnShoulderLookInput(const FInputActionValue& Value);
@@ -74,9 +82,12 @@ protected:
 	void OnCompleteAttackInout();
 
 	void OnReloadInput();
+	
 	void OnZoomInInput();
 	void OnZoomOutInput();
-	
+
+	void OnEquipMainInput();
+	void OnEquipSubInput();
 	
 	//TODO: 옵션에서 감도 설정할 수 있게
 	UPROPERTY(EditAnywhere)

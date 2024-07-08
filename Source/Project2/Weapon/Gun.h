@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameData/PTGunData.h"
-#include "PTComponent/Weapon/GunFireComponent.h"
+#include "PTComponent/Equipment/GunFireComponent.h"
 #include "Gun.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnStartReloadDelegate);
@@ -56,6 +56,7 @@ public:
 	bool PullTrigger();
 	void StopTrigger();
 
+	FORCEINLINE bool GetIsFiring() { return bIsFiring; }
 	FORCEINLINE int GetCurrentAmmo() { return CurrentAmmo; }
 	FORCEINLINE int GetMaxAmmo() { return MaxAmmo; }
 

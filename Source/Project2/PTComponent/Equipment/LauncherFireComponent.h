@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PTComponent/Weapon/GunFireComponent.h"
+#include "PTComponent/Equipment/GunFireComponent.h"
 #include "Engine/OverlapResult.h"
 #include "LauncherFireComponent.generated.h"
 

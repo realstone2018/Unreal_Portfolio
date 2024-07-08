@@ -14,6 +14,7 @@
 #include "UI/PTHUDWidget.h"
 #include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "PTComponent/PTFactionComponent.h"
+#include "PTComponent/Equipment/PTEquipmentComponent.h"
 
 APTPlayerCharacter::APTPlayerCharacter()
 {
@@ -30,6 +31,7 @@ APTPlayerCharacter::APTPlayerCharacter()
 
 	PlayerInputComponent = CreateDefaultSubobject<UPTInputComponent>(TEXT("InputComponet"));	
 	StatComponent = CreateDefaultSubobject<UPTPlayerStatComponent>(TEXT("PlayerStatComponent"));
+	EquipmentComponent = CreateDefaultSubobject<UPTEquipmentComponent>(TEXT("EquipmentComponent"));
 }
 
 void APTPlayerCharacter::PostInitializeComponents()
@@ -40,13 +42,6 @@ void APTPlayerCharacter::PostInitializeComponents()
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 
 	FactionComponent->SetFaction(EFaction::Ally);
-	
-	// 아이템 교체 후에 다시보기
-	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
-	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-	Gun->SetOwner(this);
-	Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseLauncher"));
-	//Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseRifle"));
 }
 
 void APTPlayerCharacter::BeginPlay()
@@ -55,6 +50,8 @@ void APTPlayerCharacter::BeginPlay()
 
 	PlayerInputComponent->Init(CameraBoom);
 	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
+
+	EquipmentComponent->Init();
 }
 
 UPTCharacterStatComponent* APTPlayerCharacter::GetStatComponent()
@@ -85,20 +82,21 @@ void APTPlayerCharacter::Evation()
 
 void APTPlayerCharacter::StartAttack()
 {
-	if (bIsReloading)
+	if (IsReloading)
 	{
 		return;
 	}
 	
-	if (Gun->PullTrigger() == false)
+	if (EquipmentComponent->GetCurrentGun()->PullTrigger() == false)
 	{
-		Reloading();	
-	} 
+		Reloading();
+		return;
+	}
 }
 
 void APTPlayerCharacter::StopAttack()
 {
-	Gun->StopTrigger();
+	EquipmentComponent->GetCurrentGun()->StopTrigger();
 
 }
 
@@ -107,20 +105,32 @@ void APTPlayerCharacter::ReloadAction()
 	Reloading();
 }
 
+void APTPlayerCharacter::EquipInput(EEquipType EquipType)
+{
+	if (IsReloading || EquipmentComponent->GetCurrentGun()->GetIsFiring())
+	{
+		return;
+	}
+	
+	EquipmentComponent->ChangeEquipment(EquipType);
+}
+
 void APTPlayerCharacter::Reloading()
 {
-	if (!bIsReloading)
-	{
-		bIsReloading = true;
+	AGun* CurrentGun = EquipmentComponent->GetCurrentGun();
 
-		Gun->OnCompleteReload.AddLambda(
+	if (!IsReloading && !CurrentGun->GetIsFiring())
+	{
+		IsReloading = true;
+
+		CurrentGun->OnCompleteReload.AddLambda(
 		[&](){
-			bIsReloading = false;			
+			IsReloading = false;			
 		});
 		
 		//TODO: 재장전가속 스텟 전달, 최종 시간 반환받기
 		float ReloadAccelerationRateStat = 0.f;
-		float ReloadTime = Gun->Reloading(ReloadAccelerationRateStat);
+		float ReloadTime = CurrentGun->Reloading(ReloadAccelerationRateStat);
 	
 		//TODO: 재장전 애니메이션 재생, GunData.ReloadTime에 접근해서 재장전 애니메이션 속도 조절 필요
 
@@ -130,6 +140,8 @@ void APTPlayerCharacter::Reloading()
 void APTPlayerCharacter::Dead()
 {	
 	Super::Dead();
+
+	StopAttack();
 	
 	ASimpleShooterGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>();
 	if (GameMode != nullptr)
@@ -143,22 +155,29 @@ void APTPlayerCharacter::Dead()
 
 void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 {
-	if (InHUDWidget)
+	if (!InHUDWidget)
 	{
-		InHUDWidget->UpdateStat(StatComponent->GetBaseStat(), StatComponent->GetModifierStat());
-		InHUDWidget->UpdateHpBar(StatComponent->GetCurrentHp());
-		StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
-		StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
+		return;
+	}
+	
+	InHUDWidget->UpdateStat(StatComponent->GetBaseStat(), StatComponent->GetModifierStat());
+	InHUDWidget->UpdateHpBar(StatComponent->GetCurrentHp());
+	StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
+	StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
+	
+	EquipmentComponent->OnChangeEquip.BindLambda([this, InHUDWidget](AGun* NewEquipment){
+		InHUDWidget->UpdateGunAmmo(NewEquipment->GetCurrentAmmo(), NewEquipment->GetMaxAmmo());
 
-		InHUDWidget->UpdateGunAmmo(Gun->GetCurrentAmmo(), Gun->GetMaxAmmo());
-		Gun->OnChangeAmmo.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateGunAmmo);
-		Gun->OnStartReload.AddLambda(
-[this, InHUDWidget](){
+		NewEquipment->OnChangeAmmo.Clear();
+		NewEquipment->OnStartReload.Clear();
+		NewEquipment->OnCompleteReload.Clear();
+		
+		NewEquipment->OnChangeAmmo.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateGunAmmo);
+		NewEquipment->OnStartReload.AddLambda([this, InHUDWidget](){
 			InHUDWidget->UpdateGunReloadImg(true);
 		});
-		Gun->OnCompleteReload.AddLambda(
-		[this, InHUDWidget](){
+		NewEquipment->OnCompleteReload.AddLambda([this, InHUDWidget](){
 			InHUDWidget->UpdateGunReloadImg(false);
 		});
-	}
+	});
 }

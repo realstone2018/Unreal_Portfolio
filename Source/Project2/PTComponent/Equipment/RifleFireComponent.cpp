@@ -1,4 +1,4 @@
-#include "PTComponent/Weapon/RifleFireComponent.h"
+#include "PTComponent/Equipment//RifleFireComponent.h"
 #include "Engine/DamageEvents.h"
 
 //TODO: OwnerController 매개변수에서 제거 가능한지 알아보기

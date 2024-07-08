@@ -1,4 +1,4 @@
-#include "PTComponent/Weapon/LauncherFireComponent.h"
+#include "PTComponent/Equipment//LauncherFireComponent.h"
 #include "PTProjectile.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"

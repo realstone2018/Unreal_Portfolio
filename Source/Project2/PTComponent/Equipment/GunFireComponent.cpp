@@ -1,4 +1,4 @@
-#include "PTComponent/Weapon/GunFireComponent.h"
+#include "PTComponent/Equipment//GunFireComponent.h"
 #include "PTProjectile.h"
 
 void UGunFireComponent::Init(AActor* InRifle, TSubclassOf<APTProjectile> InProjectileClass)

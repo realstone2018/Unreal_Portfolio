@@ -9,8 +9,6 @@
 #include "Weapon/Gun.h"
 #include "PTPlayerCharacter.generated.h"
 
-
-
 UCLASS()
 class PROJECT2_API APTPlayerCharacter : public APTCharacterBase, public IPTPlayerInputInterface, public IPTCharactHUDInterface
 {
@@ -26,13 +24,13 @@ private:
 	
 // Camera
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class USpringArmComponent> CameraBoom;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UCameraComponent> FollowCamera;
 	
 // Input
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	TObjectPtr<class UPTInputComponent> PlayerInputComponent;
 
 public:
@@ -40,7 +38,7 @@ public:
 
 	virtual void Evation() override;
 	
-	// IPTPlayerInputInterface
+// Battle
 	void StartAttack() override;
 	void StopAttack() override;
 
@@ -48,27 +46,26 @@ public:
 	void EvationAction() override { Evation(); }
 	void ReloadAction() override;
 
+	void EquipInput(EEquipType EquipType) override;
+	
 	virtual void Dead() override;
 
 // Stat
 private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component, Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
 
 	virtual UPTCharacterStatComponent* GetStatComponent() override;
 	
-
 // Weapon
 private:
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AGun> GunClass;
-
-	UPROPERTY()
-	AGun* Gun;
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	TObjectPtr<class UPTEquipmentComponent> EquipmentComponent;
 
 	void Reloading();
 	
-	bool bIsReloading;
+	UPROPERTY()
+	bool IsReloading;
 
 // UI Section
 private:
@@ -77,5 +74,7 @@ private:
 	
 	// IPTCharacterHUDInterface
 	virtual void SetupHUDWidget(UPTHUDWidget* InHUDWidget) override;
+
+	
 	
 };

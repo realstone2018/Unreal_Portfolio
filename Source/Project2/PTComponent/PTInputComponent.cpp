@@ -66,6 +66,18 @@ UPTInputComponent::UPTInputComponent()
 	{
 		ZoomAction = InputActionZoomRef.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> EuqipMainActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_EuqipMain.IA_EuqipMain'"));
+	if (nullptr != EuqipMainActionRef.Object)
+	{
+		EuqipMainAction = EuqipMainActionRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> EuqipSubActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_EuqipSub.IA_EuqipSub'"));
+	if (nullptr != EuqipSubActionRef.Object)
+	{
+		EuqipSubAction = EuqipSubActionRef.Object;
+	}
 }
 
 void UPTInputComponent::Init(USpringArmComponent* SpringArm)
@@ -90,6 +102,9 @@ void UPTInputComponent::SetupPlayerInputComponent(UEnhancedInputComponent* Enhan
 
 	EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Started, this, &UPTInputComponent::OnZoomInInput);
 	EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Completed, this, &UPTInputComponent::OnZoomOutInput);
+
+	EnhancedInputComponent->BindAction(EuqipMainAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnEquipMainInput);
+	EnhancedInputComponent->BindAction(EuqipSubAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnEquipSubInput);
 }
 
 void UPTInputComponent::SetCharacterControl(ECharacterControlType NewType)
@@ -237,7 +252,6 @@ void UPTInputComponent::OnReloadInput()
 	{
 		PlayerInputInterface->ReloadAction();
 	}
-
 }
 
 void UPTInputComponent::OnZoomInInput()
@@ -248,4 +262,26 @@ void UPTInputComponent::OnZoomInInput()
 void UPTInputComponent::OnZoomOutInput()
 {
 	ChangeCharacterControl(ECharacterControlType::Shoulder);
+}
+
+void UPTInputComponent::OnEquipMainInput()
+{
+	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnEquipMainInput"));
+	
+	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
+	if (PlayerInputInterface)
+	{
+		PlayerInputInterface->EquipInput(EEquipType::Main);
+	}		
+}
+
+void UPTInputComponent::OnEquipSubInput()
+{
+	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnEquipSubInput"));
+	
+	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
+	if (PlayerInputInterface)
+	{
+		PlayerInputInterface->EquipInput(EEquipType::Sub);
+	}			
 }
