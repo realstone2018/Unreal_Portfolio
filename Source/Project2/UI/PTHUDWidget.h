@@ -22,6 +22,8 @@ public:
 	
 	void UpdateGunAmmo(int NewCurAmmo, int NewMaxAmmo);
 	void UpdateGunReloadImg(bool InVisibility);
+
+	void UpdateEquipWeapon(bool IsEquipMain);
 	
 protected:
 	UPROPERTY()
@@ -32,4 +34,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UPTGunInfoWidget> GunInfo;
+
+	UPROPERTY()
+	TObjectPtr<class UPTEquipWeaponWidget> EquipWeapon;
 };

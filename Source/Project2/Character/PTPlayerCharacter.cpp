@@ -162,12 +162,15 @@ void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 	
 	InHUDWidget->UpdateStat(StatComponent->GetBaseStat(), StatComponent->GetModifierStat());
 	InHUDWidget->UpdateHpBar(StatComponent->GetCurrentHp());
+	InHUDWidget->UpdateEquipWeapon(true);
+	
 	StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
 	StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
 	
-	EquipmentComponent->OnChangeEquip.BindLambda([this, InHUDWidget](AGun* NewEquipment){
+	EquipmentComponent->OnChangeEquip.BindLambda([this, InHUDWidget](EEquipType NewEquipType, AGun* NewEquipment){
 		InHUDWidget->UpdateGunAmmo(NewEquipment->GetCurrentAmmo(), NewEquipment->GetMaxAmmo());
-
+		InHUDWidget->UpdateEquipWeapon(NewEquipType == EEquipType::Main);
+		
 		NewEquipment->OnChangeAmmo.Clear();
 		NewEquipment->OnStartReload.Clear();
 		NewEquipment->OnCompleteReload.Clear();

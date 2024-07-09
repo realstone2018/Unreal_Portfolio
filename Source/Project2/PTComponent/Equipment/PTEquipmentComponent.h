@@ -14,7 +14,7 @@ enum class EEquipType : uint8
 	
 };
 
-DECLARE_DELEGATE_OneParam(FOnChangeEquip, AGun* /* NewEquipment */)
+DECLARE_DELEGATE_TwoParams(FOnChangeEquip, EEquipType /* NewEquipType */, AGun* /* NewEquipment */)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT2_API UPTEquipmentComponent : public UActorComponent

@@ -11,7 +11,7 @@ class PROJECT2_API UPTHpBarWidget : public UPTUserWidget
 
 public:
 	UPTHpBarWidget();
-		 
+
 protected:
 	//해당 함수가 호출되는 타이밍은 UI관련된 모든 기능들이 거의 초기화 완료 
 	virtual void NativeConstruct() override;

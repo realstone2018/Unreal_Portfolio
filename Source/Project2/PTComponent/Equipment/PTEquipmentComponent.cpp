@@ -58,7 +58,7 @@ void UPTEquipmentComponent::ChangeEquipment(EEquipType NewEquipType)
 
 	if (OnChangeEquip.IsBound())
 	{
-		OnChangeEquip.Execute(CurrentGun);
+		OnChangeEquip.Execute(CurrentEquipType, CurrentGun);
 	}
 	
 	for (const TPair<EEquipType, AGun*>& Pair : EquipGuns)

@@ -4,6 +4,7 @@
 #include "UI/PTHUDWidget.h"
 #include "PTHpBarWidget.h"
 #include "PTCharacterStatWidget.h"
+#include "PTEquipWeaponWidget.h"
 #include "PTGunInfoWidget.h"
 #include "Interface/PTCharactHUDInterface.h"
 
@@ -24,6 +25,9 @@ void UPTHUDWidget::NativeConstruct()
 
 	GunInfo = Cast<UPTGunInfoWidget>(GetWidgetFromName("WidgetGunInfo"));
 	ensure(GunInfo);
+
+	EquipWeapon = Cast<UPTEquipWeaponWidget>(GetWidgetFromName("WidgetEquipWeapon"));
+	ensure(EquipWeapon);
 	
 	IPTCharactHUDInterface* HUDPawn = Cast<IPTCharactHUDInterface>(GetOwningPlayerPawn());
 	if (HUDPawn)
@@ -53,5 +57,10 @@ void UPTHUDWidget::UpdateGunAmmo(int NewCurAmmo, int NewMaxAmmo)
 void UPTHUDWidget::UpdateGunReloadImg(bool InVisibility)
 {
 	GunInfo->SetReloadingImg(InVisibility);
+}
+
+void UPTHUDWidget::UpdateEquipWeapon(bool IsEquipMain)
+{
+	IsEquipMain ? EquipWeapon->EquipMainWeapon() : EquipWeapon->EquipSubWeapon();
 }
 
