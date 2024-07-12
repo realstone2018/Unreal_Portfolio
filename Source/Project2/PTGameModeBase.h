@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PTProjectile.h"
 #include "GameFramework/GameModeBase.h"
 #include "Manager/MonsterSpawnManager.h"
 #include "Manager/PTObjectPoolManager.h"
@@ -18,11 +19,11 @@ public:
 	void PawnDead(APawn* Victim);
 
 	UPROPERTY(EditAnywhere)
-	UMonsterSpawnManager* MonsterSpawnManager;
+	TObjectPtr<UMonsterSpawnManager> MonsterSpawnManager;
 
-	UPROPERTY()
-	UPTObjectPoolManager* PoolManager;
-	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPTObjectPoolManager> PoolManager;
+
 private:
 
 #pragma region Timer 
@@ -43,18 +44,17 @@ private:
 
 #pragma endregion
 
-private:
+#pragma region Object Pool
+public:
 	UFUNCTION()
-	void SpawnMonster(int num);
+	void SpawnMonster();
 
 	UFUNCTION()
-	void RemoveMonster(AActor* DeadActor);
+	void ReturnPoolMonster(AActor* Monster);
 	
-	UPROPERTY()
-	APTMonster* Monster;
-
-	UPROPERTY(EditAnywhere, Category = "Spawning")
-	TSubclassOf<class APTMonster> MonsterClass;
+	UFUNCTION()
+	APTProjectile* SpawnProjectile(int ProjectileCode, FVector SpawnPosition, FRotator SpawnRotator);
+#pragma endregion
 	
 };
 

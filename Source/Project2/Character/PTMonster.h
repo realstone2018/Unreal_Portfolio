@@ -12,7 +12,7 @@ enum class MonsterType : uint8
 	Scorch,
 };
 
-DECLARE_DELEGATE_OneParam(FOnDeadDelegate, AActor*);
+DECLARE_DELEGATE_OneParam(FOnDeadDelegate, AActor* /*this*/);
 
 UCLASS()
 class PROJECT2_API APTMonster : public APTCharacterBase, public IPTPullingObjectInterface
@@ -24,8 +24,8 @@ public:
 	
 	virtual void PostInitializeComponents() override;
 	
-	virtual void Instantiate() override;
-	virtual void Dispose() override;
+	virtual void Initialize() override;
+	virtual void Terminate() override;
 
 // Stat
 protected:

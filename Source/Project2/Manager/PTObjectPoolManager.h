@@ -8,26 +8,18 @@
 #include "Containers/Array.h"
 #include "PTObjectPoolManager.generated.h"
 
-UENUM(BlueprintType)
-enum class EPoolListType : uint8
-{
-    None = 0,
-    Monster UMETA(DisplayName = "Monster"),
-};
-
 USTRUCT(BlueprintType)
 struct FPoolArray
 {
     GENERATED_BODY()
 
-    FPoolArray() : ParentActor(nullptr) {}
-    FPoolArray(AActor* Parent) : ParentActor(Parent) {}
-    
-    UPROPERTY()
-    TArray<class AActor*> PoolArray;
+    FPoolArray(){ }
 
     UPROPERTY()
-    AActor* ParentActor;
+    TArray<AActor*> ActiveArray;
+
+    UPROPERTY()
+    TArray<AActor*> DeactiveArray;
 };
 
 UCLASS()
@@ -41,25 +33,22 @@ public:
     void Init(UWorld* World);
  
     template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
-    void InitializePool(EPoolListType PoolType, TSubclassOf<T> ObjectClass, int32 InitialSize);
+    void SetUpPool(EPoolType PoolType, /*TSubclassOf<T> ObjectClass,*/ int32 SetUpSize = 0);
 
     template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
-    T* GetPooledObject(EPoolListType PoolType, FTransform const& Trans);
+    T* GetPooledObject(EPoolType PoolType, FTransform const& Trans);
 
     UFUNCTION()
-    void ReturnPooledObject(AActor* Object);
-    
-    UPROPERTY()
-    TMap<EPoolListType, FPoolArray> PoolMap;
-        
-    UPROPERTY()
-    TSubclassOf<AActor> PooledObjectClass;
+    void ReturnPooledObject(EPoolType PoolType, AActor* Object);
 
     UPROPERTY()
     UWorld* WorldContext;
 
     UPROPERTY()
     TObjectPtr<class UObjectPoolData> PoolData;
+
+    UPROPERTY()
+    TMap<EPoolType, FPoolArray> PoolMap;
 };
 
 

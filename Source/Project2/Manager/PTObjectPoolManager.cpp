@@ -7,11 +7,21 @@
 
 UPTObjectPoolManager::UPTObjectPoolManager()
 {
+	static ConstructorHelpers::FObjectFinder<UObjectPoolData> PoolDataRef(TEXT("/Script/Project2.ObjectPoolData'/Game/Project2/GameData/ObjectPoolDataAsset.ObjectPoolDataAsset'"));
+	ensure(PoolDataRef.Object);
+	if (PoolDataRef.Object)
+	{
+		PoolData = PoolDataRef.Object;
+	}
+	const FPoolData Data = PoolData->GetPoolData(EPoolType::Monster);
+	UE_LOG(LogTemp, Display, TEXT("SetupCount: %d"), Data.SetupSize);
+		
 }
 
 void UPTObjectPoolManager::Init(UWorld* World)
 {
 	WorldContext = World;
+
 
 	// UAssetManager& Manager = UAssetManager::Get();
 	//
@@ -29,91 +39,74 @@ void UPTObjectPoolManager::Init(UWorld* World)
 }
 
 template <typename T, typename>
-void UPTObjectPoolManager::InitializePool(EPoolListType PoolType, TSubclassOf<T> ObjectClass, int32 InitialSize)
+void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> ObjectClass,*/ int32 SetUpSize)
 {
-	FString ParentName = UEnum::GetValueAsString(PoolType);
-
 	//TODO: Path는 Data에서 Size와 Class와 같이 받아서 사용하기 
+	FString ParentName = UEnum::GetValueAsString(PoolType);
 	FString ParentPath = "ObjectPool/" + ParentName;
 	
-	if (PoolMap.IsEmpty() || !PoolMap.Contains(PoolType))
+	if (!PoolMap.Contains(PoolType))
 	{
-		AActor*  ParentActor = GetWorld()->SpawnActor<AActor>();
-
-		if (ParentActor) {
-			ParentActor->SetFolderPath(TEXT("ObjectPool"));
-			ParentActor->SetActorLabel(ParentName);
-			
-			PoolMap.Add(PoolType, FPoolArray(ParentActor));
-		}
+		PoolMap.Add(PoolType, FPoolArray());
 	}
+
+	ensure(PoolData);
+	const FPoolData Data = PoolData->GetPoolData(PoolType);
+	int Size = SetUpSize != 0 ? SetUpSize : Data.SetupSize;
 	
-	for (int32 i = 0; i < InitialSize; ++i)
+	for (int32 i = 0; i < Size; i++)
 	{
-		AActor* NewObject = WorldContext->SpawnActor<AActor>(ObjectClass);
-		if (NewObject == nullptr)
-		{
-			return;
-		}
+		AActor* NewObject = WorldContext->SpawnActor<T>(Data.PoolClass);
+		check(NewObject);
 		
 		NewObject->SetFolderPath(*ParentPath);
-
-		//TODO: 인터페이스 사용 방식 검토 
 		if (IPTPullingObjectInterface* PoolableObject = Cast<IPTPullingObjectInterface>(NewObject))
 		{
-			PoolableObject->Dispose();
-			PoolMap[PoolType].PoolArray.Add(NewObject);
+			PoolableObject->Terminate();
+			PoolMap[PoolType].DeactiveArray.Add(NewObject);
 		}
 	}
 }
 
 template <typename T, typename>
-T* UPTObjectPoolManager::GetPooledObject(EPoolListType PoolType, FTransform const& Trans)
+T* UPTObjectPoolManager::GetPooledObject(EPoolType PoolType, FTransform const& Trans)
 {
 	if (!PoolMap.Contains(PoolType))
 	{
 		return nullptr;
 	}
-	
-	for (AActor* Object : PoolMap[PoolType].PoolArray)
+
+	if (PoolMap[PoolType].DeactiveArray.Num() <= 0)
 	{
-		if (!Object->IsHidden())
-		{
-			continue;
-		}
-
-		if (IPTPullingObjectInterface* InterfaceObject = Cast<IPTPullingObjectInterface>(Object))
-		{
-			InterfaceObject->Instantiate();
-
-			T* PoolableObject = Cast<T>(Object);
-			if (PoolableObject)
-			{
-				Object->SetActorTransform(Trans);
-				return PoolableObject;
-			}
-		}
+		UE_LOG(LogTemp, Error, TEXT("%s PoolType is Full, Increase Pull Size"), *UEnum::GetValueAsString(PoolType));
+		
+		SetUpPool<T>(PoolType, PoolMap[PoolType].ActiveArray.Num() / 2);
 	}
+	
+	AActor* Object = PoolMap[PoolType].DeactiveArray[0];
+	PoolMap[PoolType].DeactiveArray.RemoveAt(0);
+	PoolMap[PoolType].ActiveArray.Add(Object);
 
-	//TODO: 풀링해둔게 모자라면 하나씩하는게 아니고 여유분을 한번에 
-	// // If no inactive object is found, spawn a new one
-	// T* NewObject = WorldContext->SpawnActor<T>(PooledObjectClass);
-	// if (NewObject)
-	// {
-	// 	NewObject->Activate();
-	// 	PoolMap[PoolType].PoolArray(NewObject);
-	// 	return NewObject;
-	// }
+	Object->SetActorTransform(Trans);
 
-	return nullptr;
+	IPTPullingObjectInterface* InterfaceObject = Cast<IPTPullingObjectInterface>(Object);
+	InterfaceObject->Initialize();
+
+	T* PoolableObject = Cast<T>(Object);
+	check(PoolableObject);
+	
+	return PoolableObject;
 }
 
-void UPTObjectPoolManager::ReturnPooledObject(AActor* Object)
+void UPTObjectPoolManager::ReturnPooledObject(EPoolType PoolType, AActor* Object)
 {
 	if (IPTPullingObjectInterface* PoolableObject = Cast<IPTPullingObjectInterface>(Object))
 	{
 		UE_LOG(LogTemp, Log, TEXT("UPTObjectPoolManager::ReturnPooledObject - Dispose %s"), *Object->GetActorNameOrLabel());
 
-		PoolableObject->Dispose();
+		PoolableObject->Terminate();
+
+		PoolMap[PoolType].DeactiveArray.Add(Object);
+		PoolMap[PoolType].ActiveArray.Remove(Object);
 	}
 }

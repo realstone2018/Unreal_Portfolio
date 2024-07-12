@@ -15,6 +15,6 @@ class PROJECT2_API IPTPullingObjectInterface
 	GENERATED_BODY()
 
 public:
-	virtual void Instantiate() = 0;
-	virtual void Dispose() = 0;
+	virtual void Initialize() = 0;
+	virtual void Terminate() = 0;
 };

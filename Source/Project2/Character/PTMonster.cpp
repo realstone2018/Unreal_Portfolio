@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Character/PTMonster.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/PTCollision.h"
@@ -35,17 +32,16 @@ void APTMonster::PostInitializeComponents()
 	FactionComponent->SetFaction(EFaction::Enemy);
 }
 
-void APTMonster::Instantiate()
+void APTMonster::Initialize()
 {
 	//TODO: 몬스터 Enum을 넘겨서 처리하도록 변경하기
 	MonsterStat->SetMonsterStat(FName("Scorch"));
 	
 	SetActorHiddenInGame(false);
-
-	SetActorEnableCollision(true);
-	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTMONSTER);
-	
 	SetActorTickEnabled(true);
+	
+	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTMONSTER);
+	SetActorEnableCollision(true);
 	
 	// 애니메이션 활성화
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
@@ -67,7 +63,7 @@ void APTMonster::Instantiate()
 	HpBar->SetHiddenInGame(false);
 }
 
-void APTMonster::Dispose()
+void APTMonster::Terminate()
 {
 	OnDead.Unbind();
 	SetActorHiddenInGame(true);
@@ -178,7 +174,6 @@ void APTMonster::Attack()
 void APTMonster::Dead()
 {
 	Super::Dead();
-
 	
 	//SetActorEnableCollision(false);
 	SetActorTickEnabled(false);

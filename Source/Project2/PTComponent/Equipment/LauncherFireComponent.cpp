@@ -1,4 +1,5 @@
 #include "PTComponent/Equipment//LauncherFireComponent.h"
+#include "PTGameModeBase.h"
 #include "PTProjectile.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
@@ -11,14 +12,12 @@ void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int Da
 	FRotator OutRotation;
 	GunOwner->GetController()->GetPlayerViewPoint(OutLocation, OutRotation);
 	
-	APTProjectile* Projectile =  GetWorld()->SpawnActor<APTProjectile>(ProjectileClass, SpawnPoint, OutRotation);
-	if (!Projectile)
-	{
-		return;
-	}
-	
-	Projectile->Init(GunOwner);
-	Projectile->OnExplosion.BindLambda([this, Damage](AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults){
+	APTGameModeBase* GameMode = Cast<APTGameModeBase>(GetWorld()->GetAuthGameMode());
+	APTProjectile* Projectile2 =  GameMode->SpawnProjectile(0, SpawnPoint, OutRotation);
+	ensure(Projectile2);
+
+	Projectile2->Init(GunOwner);
+	Projectile2->OnExplosion.BindLambda([this, Damage](AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults){
 		ApplyDamageToEnemies(ProjectileOwner, OverlapResults, Damage);
 	});	
 }

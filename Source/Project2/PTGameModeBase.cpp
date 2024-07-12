@@ -1,26 +1,17 @@
 #include "PTGameModeBase.h"
+#include "PTProjectile.h"
 #include "Engine/World.h"
-#include "UObject/ConstructorHelpers.h"
 #include "Manager/MonsterSpawnManager.h"
 #include "UObject/UObjectGlobals.h"
 #include "Manager/PTObjectPoolManager.h"
-#include "Character/PTMonster.h"	
+#include "Character/PTMonster.h"
+#include "GameData/ObjectPoolData.h"
 
 APTGameModeBase::APTGameModeBase()
 {
 	//TODO: Wave타이머 가동 
 
 	MonsterSpawnManager = NewObject<UMonsterSpawnManager>();
-
-	static ConstructorHelpers::FClassFinder<APTMonster> ScorchClassRef(TEXT("/Game/Project2/Character/BP_Monster.BP_Monster_C"));
-	if (ScorchClassRef.Class) {
-		MonsterClass = ScorchClassRef.Class;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("MonsterSpawnManager::UMonsterSpawnManager() - Fail Class Find!"));
-	}
-
 	PoolManager = CreateDefaultSubobject<UPTObjectPoolManager>(TEXT("ObjectPoolManager"));
 
 	// // 예제: 몬스터 풀에서 객체 가져오기
@@ -37,8 +28,9 @@ void APTGameModeBase::BeginPlay()
 
 	//TODO: 풀링 DataAsset을 받아서 로드 
 	PoolManager->Init(GetWorld());
-	PoolManager->InitializePool<APTMonster>(EPoolListType::Monster, MonsterClass, 3);
-
+	PoolManager->SetUpPool<APTMonster>(EPoolType::Monster);
+	PoolManager->SetUpPool<APTProjectile>(EPoolType::Projectile);
+	
 	TimerStart();
 }
 
@@ -66,7 +58,7 @@ void APTGameModeBase::TimerStart()
 
 void APTGameModeBase::TimerEnd()
 {
-	SpawnMonster(1);
+	SpawnMonster();
 }
 
 bool APTGameModeBase::WinCondition()
@@ -101,28 +93,38 @@ void APTGameModeBase::EndGame()
 	
 }
 
-void APTGameModeBase::SpawnMonster(int num)
+void APTGameModeBase::SpawnMonster()
 {
 	const FTransform SpawnTransform(FVector(4500.f, 0.f, -200.f));
 
-	APTMonster* SpawnedMonster = PoolManager->GetPooledObject<APTMonster>(EPoolListType::Monster, SpawnTransform);
-	if (SpawnedMonster)
-	{
-		SpawnedMonster->OnDead.BindUObject(this, &APTGameModeBase::RemoveMonster);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to spawn monster."));
-	}
+	// ReturnPool부분 
+	APTMonster* SpawnedMonster = PoolManager->GetPooledObject<APTMonster>(EPoolType::Monster, SpawnTransform);
+	ensure(SpawnedMonster);
+
+	SpawnedMonster->OnDead.BindUObject(this, &APTGameModeBase::ReturnPoolMonster);
 }
 
-void APTGameModeBase::RemoveMonster(AActor* DeadActor)
+void APTGameModeBase::ReturnPoolMonster(AActor* Monster)
 {
 	FTimerHandle DeadTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(DeadTimerHandle, FTimerDelegate::CreateLambda(
-		[this, DeadActor]()
-		{
-			PoolManager->ReturnPooledObject(DeadActor);
+	GetWorld()->GetTimerManager().SetTimer(DeadTimerHandle,
+		FTimerDelegate::CreateLambda([this, Monster](){
+			PoolManager->ReturnPooledObject(EPoolType::Monster, Monster);
 		}
 	), 5.0f, false);
+}
+
+APTProjectile* APTGameModeBase::SpawnProjectile(int ProjectileCode, FVector SpawnPosition, FRotator SpawnRotator)
+{
+	const FTransform SpawnTransform(SpawnRotator, SpawnPosition);
+
+	APTProjectile* SpawnedProjectile = PoolManager->GetPooledObject<APTProjectile>(EPoolType::Projectile, SpawnTransform);
+	ensure(SpawnedProjectile);
+
+	SpawnedProjectile->OnDead.BindLambda([&](AActor* Projectile)
+	{
+		PoolManager->ReturnPooledObject(EPoolType::Projectile, Projectile);
+	});
+
+	return SpawnedProjectile;
 }

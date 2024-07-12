@@ -1,11 +1,30 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Character/PTMonster.h"
 #include "Engine/DataAsset.h"
 #include "ObjectPoolData.generated.h"
+
+UENUM(BlueprintType)
+enum class EPoolType : uint8
+{
+	None = 0,
+	Monster UMETA(DisplayName = "Monster"),
+	Projectile UMETA(DisplayName = "Projectile"),
+};
+
+USTRUCT()
+struct FPoolData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> PoolClass;
+
+	UPROPERTY(EditAnywhere)
+	int SetupSize;
+	FPoolData operator*();
+};
 
 UCLASS()
 class PROJECT2_API UObjectPoolData : public UPrimaryDataAsset
@@ -18,6 +37,9 @@ public:
 		return FPrimaryAssetId("PTPoolData", GetFName());
 	}
 
+	const FPoolData& GetPoolData(EPoolType PoolType);
+
 	UPROPERTY(EditAnywhere)
-	TMap<TSoftClassPtr<APTMonster>, int32> PoolData;
+	TMap<EPoolType, FPoolData> PoolData;
+
 };

@@ -2,7 +2,6 @@
 
 #include "Character/PTMonster.h"
 #include "GameFramework/ProjectileMovementComponent.h" //
-#include "GameFramework/DamageType.h" // for UDamageType::StaticClass()
 #include "Kismet/GameplayStatics.h" // UGameplayStatics::ApplyDamage()
 #include "Particles/ParticleSystemComponent.h"
 #include "Physics/PTCollision.h"
@@ -22,9 +21,9 @@ APTProjectile::APTProjectile()
 	TrailParticles->SetupAttachment(RootComponent);
 	
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
-	ProjectileMovementComponent->MaxSpeed = 2000.f;
+	//ProjectileMovementComponent->bUpdateOnlyIfRendered = true;
 	ProjectileMovementComponent->InitialSpeed = 2000.f;
-
+	ProjectileMovementComponent->MaxSpeed = 2000.f;
 }
 
 void APTProjectile::BeginPlay()
@@ -32,10 +31,55 @@ void APTProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &APTProjectile::OnOverlapBegin);
+}
+
+void APTProjectile::Initialize()
+{
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	SetActorTickEnabled(true);
+
+	ProjectileMovementComponent->Activate(true);
+	FVector Velocity(2000.f, 0.f, 0.f);
+	ProjectileMovementComponent->SetVelocityInLocalSpace(Velocity);
+
+	TrailParticles->Activate();
 	
+	// 애니메이션 활성화
+	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
+	GetComponents(SkeletalMeshComponents);
+	
+	for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
+	{
+		SkeletalMeshComponent->SetComponentTickEnabled(true);
+	}
+
 	if (LaunchSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
+	}
+}
+
+void APTProjectile::Terminate()
+{
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
+
+	ProjectileMovementComponent->Deactivate();
+	TrailParticles->DeactivateImmediate();
+	
+	// 애니메이션 비활성화
+	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
+	GetComponents(SkeletalMeshComponents);
+	
+	for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
+	{
+		SkeletalMeshComponent->SetComponentTickEnabled(false);
+		if (UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance())
+		{
+			AnimInstance->StopAllMontages(0.0f);
+		}
 	}
 }
 
@@ -60,17 +104,12 @@ void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 	
 	if (GetOwner() == nullptr)
 	{
-		Destroy();
+		Dead();
 		return;
 	}
 
 	Explosion();
-
-	//TODO: Projectile 오브젝트 풀링 준비
-	ProjectileMesh->SetHiddenInGame(true);
-	SetActorEnableCollision(false);
-	
-	Destroy();
+	Dead();
 }
 
 void APTProjectile::Explosion()
@@ -109,4 +148,9 @@ void APTProjectile::Explosion()
 		false,
 		3.f
 	);
+}
+
+void APTProjectile::Dead()
+{
+	OnDead.Execute(this);
 }
