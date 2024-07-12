@@ -13,35 +13,16 @@ UPTObjectPoolManager::UPTObjectPoolManager()
 	{
 		PoolData = PoolDataRef.Object;
 	}
-	const FPoolData Data = PoolData->GetPoolData(EPoolType::Monster);
-	UE_LOG(LogTemp, Display, TEXT("SetupCount: %d"), Data.SetupSize);
-		
 }
 
 void UPTObjectPoolManager::Init(UWorld* World)
 {
 	WorldContext = World;
-
-
-	// UAssetManager& Manager = UAssetManager::Get();
-	//
-	// TArray<FPrimaryAssetId> Assets;
-	// Manager.GetPrimaryAssetIdList(TEXT("PTPoolData"), Assets);
-	// ensure(0 < Assets.Num());
-	// FSoftObjectPtr AssetPtr(Manager.GetPrimaryAssetPath(Assets[0]));
-	//
-	// //애셋이 로드되어 있지 않다면 로드 
-	// {
-	// 	AssetPtr.LoadSynchronous();
-	// }
-	//
-	// PoolData = Cast<UObjectPoolData>(AssetPtr.Get());
 }
 
 template <typename T, typename>
 void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> ObjectClass,*/ int32 SetUpSize)
 {
-	//TODO: Path는 Data에서 Size와 Class와 같이 받아서 사용하기 
 	FString ParentName = UEnum::GetValueAsString(PoolType);
 	FString ParentPath = "ObjectPool/" + ParentName;
 	
@@ -78,9 +59,8 @@ T* UPTObjectPoolManager::GetPooledObject(EPoolType PoolType, FTransform const& T
 
 	if (PoolMap[PoolType].DeactiveArray.Num() <= 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s PoolType is Full, Increase Pull Size"), *UEnum::GetValueAsString(PoolType));
-		
 		SetUpPool<T>(PoolType, PoolMap[PoolType].ActiveArray.Num() / 2);
+		UE_LOG(LogTemp, Error, TEXT("%s PoolType is Full, Increase Pull Size"), *UEnum::GetValueAsString(PoolType));
 	}
 	
 	AActor* Object = PoolMap[PoolType].DeactiveArray[0];
@@ -102,8 +82,6 @@ void UPTObjectPoolManager::ReturnPooledObject(EPoolType PoolType, AActor* Object
 {
 	if (IPTPullingObjectInterface* PoolableObject = Cast<IPTPullingObjectInterface>(Object))
 	{
-		UE_LOG(LogTemp, Log, TEXT("UPTObjectPoolManager::ReturnPooledObject - Dispose %s"), *Object->GetActorNameOrLabel());
-
 		PoolableObject->Terminate();
 
 		PoolMap[PoolType].DeactiveArray.Add(Object);

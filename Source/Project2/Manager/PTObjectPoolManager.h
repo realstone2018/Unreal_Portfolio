@@ -41,6 +41,7 @@ public:
     UFUNCTION()
     void ReturnPooledObject(EPoolType PoolType, AActor* Object);
 
+private:
     UPROPERTY()
     UWorld* WorldContext;
 
