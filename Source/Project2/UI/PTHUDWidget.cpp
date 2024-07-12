@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/PTHUDWidget.h"
 #include "PTHpBarWidget.h"
 #include "PTCharacterStatWidget.h"
