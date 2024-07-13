@@ -14,15 +14,8 @@ void UPTGunInfoWidget::NativeConstruct()
 
 void UPTGunInfoWidget::UpdateBullet(int NewCurAmount, int NewMaxAmount)
 {
-	if (CurrentAmountTxt)
-	{
-		CurrentAmountTxt->SetText(FText::FromString(FString::FromInt(NewCurAmount)));
-	}
-
-	if (MaxAmountTxt)
-	{
-		MaxAmountTxt->SetText(FText::FromString(FString::FromInt(NewMaxAmount)));
-	}
+	CurrentAmountTxt->SetText(FText::FromString(FString::FromInt(NewCurAmount)));
+	MaxAmountTxt->SetText(FText::FromString(FString::FromInt(NewMaxAmount)));
 }
 
 void UPTGunInfoWidget::SetReloadingImg(bool InVisibility)

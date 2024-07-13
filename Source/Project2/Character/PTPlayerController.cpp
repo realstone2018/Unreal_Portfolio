@@ -17,11 +17,4 @@ void APTPlayerController::BeginPlay()
 	// 마우스를 뷰포트 안으로 
 	FInputModeGameOnly GameOnlyInputMode;
 	SetInputMode(GameOnlyInputMode);
-
-	//TODO: 블루프린트로 대체 (15강) 
-	HUD = CreateWidget<UPTHUDWidget>(this, HUDClass);
-	if (HUD)
-	{
-		HUD->AddToViewport();
-	}
 }

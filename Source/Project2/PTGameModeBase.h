@@ -15,9 +15,7 @@ class PROJECT2_API APTGameModeBase : public AGameModeBase
 public:
 	APTGameModeBase();
 	virtual void BeginPlay() override;
-
-	void PawnDead(APawn* Victim);
-
+	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UMonsterSpawnManager> MonsterSpawnManager;
 
@@ -26,7 +24,10 @@ public:
 
 private:
 
-#pragma region Timer 
+#pragma region Timer
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stage", meta=(AllowPrivateAccess))
+	float StageClearTime = 300.f;
+	
 	void TimerStart();
 
 	UFUNCTION()
@@ -36,6 +37,8 @@ private:
 #pragma endregion
 
 #pragma region Result
+	void PawnDead(APawn* Victim);
+
 	bool WinCondition();
 	bool LoseCondition(APawn* PawnKilled);
 	void StageWin();

@@ -6,44 +6,21 @@
 #include "Manager/PTObjectPoolManager.h"
 #include "Character/PTMonster.h"
 #include "GameData/ObjectPoolData.h"
+#include "Character/PTPlayerController.h"
 
 APTGameModeBase::APTGameModeBase()
 {
-	//TODO: Wave타이머 가동 
-
 	MonsterSpawnManager = NewObject<UMonsterSpawnManager>();
 	PoolManager = CreateDefaultSubobject<UPTObjectPoolManager>(TEXT("ObjectPoolManager"));
-
-	// // 예제: 몬스터 풀에서 객체 가져오기
-	// AActor* Monster = PoolManager->GetPooledObject();
-	// if (Monster)
-	// {
-	// 	UE_LOG(LogTemp, Log, TEXT("Monster spawned from pool."));
-	// }
 }
 
 void APTGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//TODO: 풀링 DataAsset을 받아서 로드 
 	PoolManager->Init(GetWorld());
-	PoolManager->SetUpPool<APTMonster>(EPoolType::Monster);
-	PoolManager->SetUpPool<APTProjectile>(EPoolType::Projectile);
 	
 	TimerStart();
-}
-
-void APTGameModeBase::PawnDead(APawn* Victim)
-{
-	if (LoseCondition(Victim))
-	{
-		StageLose();
-		return;
-	}
-
-	//TODO: Wave클리어, 다음 Wave 카운터 시작
-	
 }
 
 
@@ -59,6 +36,18 @@ void APTGameModeBase::TimerStart()
 void APTGameModeBase::TimerEnd()
 {
 	SpawnMonster();
+}
+
+void APTGameModeBase::PawnDead(APawn* Victim)
+{
+	if (LoseCondition(Victim))
+	{
+		StageLose();
+		return;
+	}
+
+	//TODO: Wave클리어, 다음 Wave 카운터 시작
+	
 }
 
 bool APTGameModeBase::WinCondition()

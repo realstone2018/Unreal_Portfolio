@@ -10,9 +10,6 @@ class PROJECT2_API UPTHUDWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	UPTHUDWidget(const FObjectInitializer& ObjectInitializer);
-
 protected:
 	virtual void NativeConstruct() override;
 
@@ -37,4 +34,6 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UPTEquipWeaponWidget> EquipWeapon;
+
+	// 	StageTimer in EventGraph
 };

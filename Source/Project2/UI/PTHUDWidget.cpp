@@ -5,11 +5,6 @@
 #include "PTGunInfoWidget.h"
 #include "Interface/PTCharactHUDInterface.h"
 
-UPTHUDWidget::UPTHUDWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
-{
-	
-}
-
 void UPTHUDWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
