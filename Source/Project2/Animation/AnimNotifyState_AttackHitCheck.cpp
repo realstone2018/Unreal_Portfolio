@@ -1,5 +1,5 @@
 #include "Animation/AnimNotifyState_AttackHitCheck.h"
-#include "Interface/PTAnimationAttackInterface.h"
+#include "PTInterface/PTAnimationAttackInterface.h"
 
 void UAnimNotifyState_AttackHitCheck::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	float FrameDeltaTime)

@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Interface/PTPullingObjectInterface.h"
+#include "PTInterface/PTPullingObjectInterface.h"
 #include "Containers/Map.h"
 #include "Containers/Array.h"
 #include "PTObjectPoolManager.generated.h"

@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Character/PTCharacterBase.h"
-#include "Interface/PTPullingObjectInterface.h"
+#include "PTInterface/PTPullingObjectInterface.h"
 #include "PTProjectile.generated.h"
 
 DECLARE_DELEGATE_TwoParams(FOnExplosionDelegate, AActor* /*Owner*/, const TArray<FOverlapResult>& /*targets*/)

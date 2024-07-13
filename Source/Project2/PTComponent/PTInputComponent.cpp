@@ -4,7 +4,7 @@
 #include "Character/PTCharacterControlData.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Interface/PTPlayerInputInterface.h"
+#include "PTInterface/PTPlayerInputInterface.h"
 #include "GameFramework/CharacterMovementComponent.h"	// for GetCharacterMovement()
 
 UPTInputComponent::UPTInputComponent()

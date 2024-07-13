@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/PTCharacterBase.h"
-#include "Interface/PTPullingObjectInterface.h"
+#include "PTInterface/PTPullingObjectInterface.h"
 #include "PTMonster.generated.h"
 
 UENUM()
