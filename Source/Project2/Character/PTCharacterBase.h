@@ -20,7 +20,7 @@ public:
 	APTCharacterBase();
 
 	virtual void PostInitializeComponents() override;
-	
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAceess = "true"))
 	TObjectPtr<class UPTCharacterMoveComponent> MoveComponent;

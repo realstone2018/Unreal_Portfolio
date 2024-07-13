@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PTProjectile.h"
+#include "PTActor/PTProjectile.h"
 #include "GameFramework/GameModeBase.h"
 #include "Manager/MonsterSpawnManager.h"
 #include "Manager/PTObjectPoolManager.h"

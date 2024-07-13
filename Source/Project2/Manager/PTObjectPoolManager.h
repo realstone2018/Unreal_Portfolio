@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Interface/PTPullingObjectInterface.h"
-#include "Character/PTMonster.h"
 #include "Containers/Map.h"
 #include "Containers/Array.h"
 #include "PTObjectPoolManager.generated.h"

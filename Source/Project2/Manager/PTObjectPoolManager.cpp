@@ -4,6 +4,8 @@
 #include "Containers/Array.h"
 #include "Engine/AssetManager.h"
 #include "GameData/ObjectPoolData.h"
+#include "Character/PTMonster.h"
+#include "PTActor/PTProjectile.h"
 
 UPTObjectPoolManager::UPTObjectPoolManager()
 {
@@ -18,6 +20,9 @@ UPTObjectPoolManager::UPTObjectPoolManager()
 void UPTObjectPoolManager::Init(UWorld* World)
 {
 	WorldContext = World;
+
+	SetUpPool<APTMonster>(EPoolType::Monster);
+	SetUpPool<APTProjectile>(EPoolType::Projectile);
 }
 
 template <typename T, typename>

@@ -1,5 +1,5 @@
 #include "PTGameModeBase.h"
-#include "PTProjectile.h"
+#include "PTActor/PTProjectile.h"
 #include "Engine/World.h"
 #include "Manager/MonsterSpawnManager.h"
 #include "UObject/UObjectGlobals.h"

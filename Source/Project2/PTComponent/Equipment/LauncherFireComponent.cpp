@@ -1,6 +1,6 @@
 #include "PTComponent/Equipment//LauncherFireComponent.h"
 #include "PTGameModeBase.h"
-#include "PTProjectile.h"
+#include "PTActor/PTProjectile.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 #include "PTComponent/PTFactionComponent.h"

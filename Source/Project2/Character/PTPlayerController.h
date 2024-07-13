@@ -13,7 +13,7 @@ public:
 	APTPlayerController();
 
 	virtual void BeginPlay() override;
-
+	
 protected: 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 	TSubclassOf<class UPTHUDWidget> HUDClass;
