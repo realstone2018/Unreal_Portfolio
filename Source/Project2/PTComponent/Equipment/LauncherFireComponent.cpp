@@ -12,14 +12,17 @@ void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int Da
 	FRotator OutRotation;
 	GunOwner->GetController()->GetPlayerViewPoint(OutLocation, OutRotation);
 	
-	APTGameModeBase* GameMode = Cast<APTGameModeBase>(GetWorld()->GetAuthGameMode());
-	APTProjectile* Projectile2 =  GameMode->SpawnProjectile(0, SpawnPoint, OutRotation);
-	ensure(Projectile2);
+	IPTGameInterface* GameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
+	if (GameMode)
+	{
+		APTProjectile* Projectile2 = GameMode->SpawnProjectile(0, SpawnPoint, OutRotation);
+		ensure(Projectile2);
 
-	Projectile2->Init(GunOwner);
-	Projectile2->OnExplosion.BindLambda([this, Damage](AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults){
-		ApplyDamageToEnemies(ProjectileOwner, OverlapResults, Damage);
-	});	
+		Projectile2->Init(GunOwner);
+		Projectile2->OnExplosion.BindLambda([this, Damage](AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults){
+			ApplyDamageToEnemies(ProjectileOwner, OverlapResults, Damage);
+		});
+	}
 }
 
 void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults, int Damage)

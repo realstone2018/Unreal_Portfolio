@@ -23,7 +23,6 @@ public:
 	FORCEINLINE int GetCurrentLevel() const { return CurrentLevel; }
 	FORCEINLINE int GetCurrentHp() const { return CurrentHp; }
 	FORCEINLINE int GetMaxHp() const { return MaxHp; }
-	FORCEINLINE int GetAttackRadius() const { return AttackRadius; }	
 
 protected:
 	void SetHp(int NewHp, int NewMaxHp);
@@ -43,8 +42,5 @@ protected:
 
 	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat)
 	int MaxHp;
-	
-	UPROPERTY(VisibleInstanceOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
-	float AttackRadius;
 
 };

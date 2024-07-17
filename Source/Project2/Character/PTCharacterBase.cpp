@@ -9,8 +9,6 @@
 
 APTCharacterBase::APTCharacterBase()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 	
 	MoveComponent = Cast<UPTCharacterMoveComponent>(GetMovementComponent());
@@ -77,7 +75,7 @@ void APTCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void APTCharacterBase::Evation()
+void APTCharacterBase::Dash()
 {
 }
 

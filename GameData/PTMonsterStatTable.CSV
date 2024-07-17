@@ -1,2 +1,2 @@
-Name,MaxHp,Attack,AttackRange,AttackSpeed,MovementSpeed
-Scorch,100,100,40,1,400
+Name,MaxHp,Attack,AttackRange,AttackRadius,AttackCooldown,MovementSpeed
+Scorch,100,100,400,10,3,400

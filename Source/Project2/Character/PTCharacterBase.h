@@ -22,16 +22,16 @@ public:
 	virtual void PostInitializeComponents() override;
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAceess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAceess = "true"))
 	TObjectPtr<class UPTCharacterMoveComponent> MoveComponent;
 	
 	virtual UPTCharacterStatComponent* GetStatComponent();
 
 	// Widget
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPTWidgetComponent> HpBar; 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UPTUserWidget> HpBarWidgetClass;
 	
 	virtual void SetupCharacterWidget(UPTUserWidget* InUserWidget) override;
@@ -43,7 +43,7 @@ public:
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void Evation();
+	virtual void Dash();
 
 	virtual void OnNotifyAttack() override;
 
@@ -54,6 +54,4 @@ public:
 
 	virtual void Kill(AActor* victim);
 	virtual void Dead();
-
-	
 };

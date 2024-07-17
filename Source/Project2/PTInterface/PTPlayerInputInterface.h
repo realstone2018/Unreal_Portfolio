@@ -19,7 +19,7 @@ public:
 	virtual void StartAttack() = 0;
 	virtual void StopAttack() = 0;
 
-	virtual void EvationAction() = 0;
+	virtual void DashAction() = 0;
 
 	virtual void ReloadAction() = 0;
 

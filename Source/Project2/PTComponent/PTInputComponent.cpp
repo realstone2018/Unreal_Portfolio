@@ -218,7 +218,7 @@ void UPTInputComponent::OnJumpInput()
 	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
 	{
-		PlayerInputInterface->EvationAction();
+		PlayerInputInterface->DashAction();
 	}
 }
 

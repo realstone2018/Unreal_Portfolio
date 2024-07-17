@@ -1,14 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ABAI.h"
 #include "PTActor/PTProjectile.h"
 #include "GameFramework/GameModeBase.h"
 #include "Manager/MonsterSpawnManager.h"
 #include "Manager/PTObjectPoolManager.h"
+#include "PTInterface/PTGameInterface.h"
 #include "PTGameModeBase.generated.h"
 
 UCLASS()
-class PROJECT2_API APTGameModeBase : public AGameModeBase
+class PROJECT2_API APTGameModeBase : public AGameModeBase, public IPTGameInterface
 {
 	GENERATED_BODY()
 
@@ -22,10 +24,18 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UPTObjectPoolManager> PoolManager;
 
+	UPROPERTY(VisibleAnywhere, Category= "Stage", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class APTStructure> MainStationClass; 
+	
+	UPROPERTY(VisibleAnywhere, Category= "Stage", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class APTStructure> MainStation; 
+
+	FORCEINLINE virtual APTStructure* GetMainStation() override { return MainStation; }
+	
 private:
 
 #pragma region Timer
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stage", meta=(AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stage", meta = (AllowPrivateAccess = "true"))
 	float StageClearTime = 300.f;
 	
 	void TimerStart();
@@ -56,7 +66,7 @@ public:
 	void ReturnPoolMonster(AActor* Monster);
 	
 	UFUNCTION()
-	APTProjectile* SpawnProjectile(int ProjectileCode, FVector SpawnPosition, FRotator SpawnRotator);
+	virtual APTProjectile* SpawnProjectile(int ProjectileCode, FVector SpawnPosition, FRotator SpawnRotator) override;
 #pragma endregion
 	
 };

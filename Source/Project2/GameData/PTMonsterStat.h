@@ -10,7 +10,7 @@ struct FPTMonsterStat : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	FPTMonsterStat() : MaxHp(0), Attack(0), AttackRange(0.0f), AttackSpeed(0.0f), MovementSpeed(0.0f) {}
+	FPTMonsterStat() : MaxHp(0), Attack(0), AttackRange(0.f), AttackRadius(0.f), AttackCooldown(0.f), MovementSpeed(0.f) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	int MaxHp;
@@ -22,7 +22,10 @@ public:
 	float AttackRange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
-	float AttackSpeed;
+	float AttackRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	float AttackCooldown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	float MovementSpeed;
@@ -36,7 +39,8 @@ public:
 		Result.MaxHp = this->MaxHp + Other.MaxHp;
 		Result.Attack = this->Attack + Other.Attack;
 		Result.AttackRange = this->AttackRange + Other.AttackRange;
-		Result.AttackSpeed = this->AttackSpeed + Other.AttackSpeed;
+		Result.AttackRadius = this->AttackRadius + Other.AttackRadius;
+		Result.AttackCooldown = this->AttackCooldown + Other.AttackCooldown;
 		Result.MovementSpeed = this->MovementSpeed + Other.MovementSpeed;
 		
 		return Result;

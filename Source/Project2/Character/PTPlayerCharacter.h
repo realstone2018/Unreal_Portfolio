@@ -36,14 +36,14 @@ protected:
 public:
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual void Evation() override;
+	virtual void Dash() override;
 	
 // Battle
 	void StartAttack() override;
 	void StopAttack() override;
 
 	//TODO: AI의 Evation을 위해 이렇게 해둔거 같긴한데.. 필요한가?
-	void EvationAction() override { Evation(); }
+	void DashAction() override { Dash(); }
 	void ReloadAction() override;
 
 	void EquipInput(EEquipType EquipType) override;

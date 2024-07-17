@@ -4,7 +4,6 @@
 UPTCharacterStatComponent::UPTCharacterStatComponent()
 {
 	CurrentLevel = 1;
-	AttackRadius = 50.0f;
 	MaxHp = 100;
 }
 

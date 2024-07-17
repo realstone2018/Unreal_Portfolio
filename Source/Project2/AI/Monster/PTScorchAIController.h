@@ -17,7 +17,7 @@ class PROJECT2_API APTScorchAIController : public AAIController
 public:
 	APTScorchAIController();
 
-	void RunAI();
+	void RunAI(AActor* DefaultTarget);
 	void StopAI();
 
 protected:

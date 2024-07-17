@@ -1,9 +1,13 @@
 #include "Character/PTMonster.h"
+
+#include "PTGameModeBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/PTCollision.h"
 #include "Engine/DamageEvents.h"
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
 #include "AI/Monster/PTScorchAIController.h"
+#include "Kismet/GameplayStatics.h"
+#include "PTActor/PTStructure.h"
 #include "PTComponent/PTFactionComponent.h"
 #include "PTComponent/Character/PTMonsterStatComponent.h"
 
@@ -55,7 +59,15 @@ void APTMonster::Initialize()
 	// 비헤이비어 트리 활성화
 	if (APTScorchAIController* AIController = Cast<APTScorchAIController>(GetInstigatorController()))
 	{
-		AIController->RunAI();
+		AActor* DefaultTarget = nullptr;
+		
+		IPTGameInterface* GameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
+		if (GameMode)
+		{
+			DefaultTarget = GameMode->GetMainStation();
+		}
+		
+		AIController->RunAI(DefaultTarget);
 	}
 
 	MoveComponent->SetMovementMode(EMovementMode::MOVE_Walking);
@@ -138,19 +150,17 @@ void APTMonster::Attack()
 	// FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
 	// 	MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
 	// MoveComponent->MoveInput(Direction, 10.f, 0.2f);
-
-	Jump();
 	
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 	
-	const float AttackRange = MonsterStat->GetMonsterStat().AttackRange;
+	const float AttackRange = MonsterStat->GetAttackRange();
 	const float AttackRadius = MonsterStat->GetAttackRadius();
 
 	//const float AttackDamage = StatComponent->GetTotalStat().Attack;
 	const float AttackDamage = 1.f;
 	
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
-	const FVector End = Start + GetActorForwardVector() * AttackRange;
+	const FVector End = Start + GetActorForwardVector() * AttackRadius;
 
 	FHitResult OutHitResult;
 	bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End, FQuat::Identity, CCHANNEL_PTMONSTER_MELEE, FCollisionShape::MakeSphere(AttackRadius), Params);
@@ -162,13 +172,29 @@ void APTMonster::Attack()
 #if ENABLE_DRAW_DEBUG
 	//센터
 	FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
-	//둥근부분을 뺀 길이의 절반
-	float CapsuleHalfHeight = AttackRange * 0.5f;
 	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
 
-	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, AttackRadius, FRotationMatrix::MakeFromZ(GetActorForwardVector()).ToQuat(), DrawColor, false, 0.5f);
+	DrawDebugSphere(GetWorld(), CapsuleOrigin, AttackRadius, 2, DrawColor, false, 0.5f);
 #endif
 
+}
+
+void APTMonster::Dash()
+{
+	UE_LOG(LogTemp, Display, TEXT("APTMonster::Dash"));
+	Super::Dash();
+
+	Jump();
+	
+	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
+	MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
+	
+	MoveComponent->MoveToDirection(Direction, 500.f, 0.5f);
+}
+
+void APTMonster::EndAttackMontage(UAnimMontage* TargetMontage, bool IsProperlyEnded)
+{
+	OnAttackFinished.ExecuteIfBound();
 }
 
 void APTMonster::Dead()
@@ -189,7 +215,7 @@ void APTMonster::Dead()
 	OnDead.ExecuteIfBound(this);
 }
 
-void APTMonster::EndAttackMontage(UAnimMontage* TargetMontage, bool IsProperlyEnded)
+void APTMonster::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)
 {
-	
+	OnAttackFinished = InOnAttackFinished;
 }

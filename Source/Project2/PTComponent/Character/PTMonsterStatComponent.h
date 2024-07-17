@@ -18,6 +18,9 @@ public:
 	void SetMonsterStat(FName MonsterName);
 
 	FORCEINLINE const FPTMonsterStat& GetMonsterStat() const { return MonsterStat; }
+	FORCEINLINE float GetAttackRange() const { return MonsterStat.AttackRange; }	
+	FORCEINLINE float GetAttackRadius() const { return MonsterStat.AttackRadius; }
+	FORCEINLINE float GetAttackCooldown() const { return MonsterStat.AttackCooldown; }
 	
 protected:
 	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))

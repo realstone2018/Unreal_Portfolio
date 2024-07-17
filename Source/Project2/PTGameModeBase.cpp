@@ -7,17 +7,27 @@
 #include "Character/PTMonster.h"
 #include "GameData/ObjectPoolData.h"
 #include "Character/PTPlayerController.h"
+#include "PTActor/PTStructure.h"
 
 APTGameModeBase::APTGameModeBase()
 {
 	MonsterSpawnManager = NewObject<UMonsterSpawnManager>();
 	PoolManager = CreateDefaultSubobject<UPTObjectPoolManager>(TEXT("ObjectPoolManager"));
+
+	static ConstructorHelpers::FClassFinder<APTStructure> MainStationClassRef(TEXT("/Game/Project2/Blueprint/Structure/BP_MainStation.BP_MainStation_C"));
+	if (MainStationClassRef.Class)
+	{
+		MainStationClass = MainStationClassRef.Class;
+	}	
 }
 
 void APTGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	MainStation = GetWorld()->SpawnActor<APTStructure>(MainStationClass, FVector(0.f, 0.f, -350.f), FRotator::ZeroRotator);
+	check(MainStation);
+	
 	PoolManager->Init(GetWorld());
 	
 	TimerStart();
@@ -30,7 +40,7 @@ void APTGameModeBase::TimerStart()
 	FTimerDelegate StageEndDelegate = FTimerDelegate::CreateUObject(this, &APTGameModeBase::TimerEnd);
 
 	//TODO: Stage 데이터 받아서 돌리기 
-	GetWorldTimerManager().SetTimer(StageTimerHandle, StageEndDelegate, 3.f, true);
+	GetWorldTimerManager().SetTimer(StageTimerHandle, StageEndDelegate, 3.f, false);
 }
 
 void APTGameModeBase::TimerEnd()

@@ -4,13 +4,13 @@
 
 UPTEquipmentComponent::UPTEquipmentComponent()
 {
-	static ConstructorHelpers::FClassFinder<AGun> MainGunRef(TEXT("/Game/Project2/Blueprint/BP_Rifle.BP_Rifle_C"));
+	static ConstructorHelpers::FClassFinder<AGun> MainGunRef(TEXT("/Game/Project2/Blueprint/Gun/BP_Rifle.BP_Rifle_C"));
 	if (MainGunRef.Class)
 	{
 		MainGunClass = MainGunRef.Class;
 	}
 
-	static ConstructorHelpers::FClassFinder<AGun> SubGunRef(TEXT("/Game/Project2/Blueprint/BP_Launcher.BP_Launcher_C"));
+	static ConstructorHelpers::FClassFinder<AGun> SubGunRef(TEXT("/Game/Project2/Blueprint/Gun/BP_Launcher.BP_Launcher_C"));
 	if (SubGunRef.Class)
 	{
 		SubGunClass = SubGunRef.Class;

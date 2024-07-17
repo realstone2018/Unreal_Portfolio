@@ -68,16 +68,16 @@ void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 	PlayerInputComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 }
 
-void APTPlayerCharacter::Evation()
+void APTPlayerCharacter::Dash()
 {
-	//TODO: 회피중엔 재장전 캔슬
-	
-	Super::Evation();
-	
+	Super::Dash();
+
 	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
 		MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
 	
-	MoveComponent->MoveToDirection(Direction, 400.f, 0.3f);	
+	MoveComponent->MoveToDirection(Direction, 400.f, 0.3f);
+	
+	//TODO: 회피중엔 재장전 캔슬
 }
 
 void APTPlayerCharacter::StartAttack()
