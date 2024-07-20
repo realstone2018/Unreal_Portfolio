@@ -5,6 +5,7 @@
 UBTService_SetDashDestination::UBTService_SetDashDestination()
 {
 	NodeName = "Set Dash Destination";
+	Interval = 1.0f;
 }
 
 void UBTService_SetDashDestination::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)

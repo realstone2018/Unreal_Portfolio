@@ -22,6 +22,8 @@ public:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void Destructed();
+
+	uint8 GetbIsMainStation() { return bIsMainStation; }
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Component")

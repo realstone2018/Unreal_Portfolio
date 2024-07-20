@@ -1,46 +1,72 @@
 #include "AI/BTDecorator_AttackInRange.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "PTInterface/PTMonsterAIInterface.h"
 #include "AIController.h"
-#include "VectorUtil.h"
-#include "Components/ShapeComponent.h"
-#include "ABAI.h"
+#include "PTInterface/PTMonsterAIInterface.h"
+#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Util/PTVectorUtil.h"
 
 bool UBTDecorator_AttackInRange::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
 	bool bResult = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
 
-	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (nullptr == ControllingPawn)
-	{
-		return false;
-	}
-	
-	IPTAIInterface* AIPawn = Cast<IPTAIInterface>(ControllingPawn);
-	if (nullptr == AIPawn)
+	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
+	if (OwnerPawn == nullptr)
 	{
 		return false;
 	}
 
-	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(	GetSelectedBlackboardKey()));
-	if (nullptr == Target)
+	IPTAIInterface* OwnerInterface = Cast<IPTAIInterface>(OwnerPawn);
+	if (nullptr == OwnerInterface)
+	{
+		return false;
+	}
+
+	UCapsuleComponent* OwnerPawnCollision = OwnerPawn->GetComponentByClass<UCapsuleComponent>();
+	if (OwnerPawnCollision == nullptr)
 	{
 		return false;
 	}
 	
-	// auto* Collision = Target->GetComponentByClass<UShapeComponent>();
-	// FVector Direction = (Target->GetActorLocation() - ControllingPawn->GetActorLocation()).GetSafeNormal();
-	//
-	// FVector Center = Collision->GetComponentLocation(); 
-	// float Radius = Center + 
-
-	//FVector TargetPos = Target->GetActorLocation() + (Direction * Collision->)
-
-	//UE::Geometry::VectorUtil
+	AActor* Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(GetSelectedBlackboardKey()));
+	if (Target == nullptr)
+	{
+		return false;
+	}
 	
-	//FVector::Dist2D(ControllingPawn->GetActorLocation(), Target->GetActorLocation());
-	float DistanceToTarget = ControllingPawn->GetDistanceTo(Target);
-	float AttackRange = AIPawn->GetAIAttackRange();
-	bResult = (DistanceToTarget <= AttackRange);
+	UShapeComponent* TargetCollision = Target->GetComponentByClass<UShapeComponent>();
+	if (TargetCollision == nullptr)
+	{
+		return false;
+	}
+
+	float AttackRange = OwnerInterface->GetAIAttackRange();
+	FVector3d OwnerLocation = OwnerPawn->GetActorLocation();
+	FVector3d TargetLocation = Target->GetActorLocation();
+
+	if (UCapsuleComponent* TargetCapsule = Cast<UCapsuleComponent>(TargetCollision))
+	{
+		float Range = AttackRange + TargetCapsule->GetScaledCapsuleRadius();
+		bResult = PTVectorUtil::CollisionToCircle<double>(OwnerLocation, TargetLocation, Range);
+	}
+	else if (UBoxComponent* TargetBox = Cast<UBoxComponent>(TargetCollision))
+	{
+		//<!!!!!> Extent는 전체 넓이, 높이가 아닌 Radius 개념 
+		float HalfWidth = TargetBox->GetScaledBoxExtent().X;
+		float HalfHeight = TargetBox->GetScaledBoxExtent().Y;
+		float boxRaidus = FMath::Sqrt((HalfWidth * HalfWidth) + (HalfHeight * HalfHeight));
+		
+		float Range = AttackRange + boxRaidus;
+		bool CheckCircumcircle = PTVectorUtil::CheckInRange<double>(OwnerLocation, TargetLocation, Range);
+
+		if (CheckCircumcircle == false)
+		{
+			return false;
+		}
+		
+		float BoxRotationYaw = TargetBox->GetComponentRotation().Yaw;
+		bResult = PTVectorUtil::CollisionToBox(OwnerLocation, AttackRange, TargetLocation, HalfWidth, HalfHeight, BoxRotationYaw);
+	}
+	
 	return bResult;
 }

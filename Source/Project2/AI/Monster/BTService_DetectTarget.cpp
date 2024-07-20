@@ -1,102 +1,134 @@
 #include "AI/Monster/BTService_DetectTarget.h"
-
 #include "ABAI.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Engine/OverlapResult.h"
 #include "PTInterface/PTMonsterAIInterface.h"
 #include "Physics/PTCollision.h"
+#include "Character/PTPlayerCharacter.h"
+#include "PTActor/PTStructure.h"
 #include "DrawDebugHelpers.h"
 
 UBTService_DetectTarget::UBTService_DetectTarget()
 {
-	NodeName = TEXT("DetectTarget");	//노드 이름 지정
-	Interval = 1.0f;	//1초 단위 반복 수행
+	NodeName = TEXT("DetectTarget");
+	Interval = 1.0f;
 }
 
 void UBTService_DetectTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 	
-	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
-	if (ControllingPawn == nullptr || ControllingPawn->GetController() == nullptr)
+	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
+	if (OwnerPawn == nullptr || OwnerPawn->GetController() == nullptr)
 	{
 		return;
 	}
-
-	FVector Center = ControllingPawn->GetActorLocation();
-	UWorld* World = ControllingPawn->GetWorld();
-	if (nullptr == World)
-	{
-		return;
-	}
-
-	IPTAIInterface* AIPawn = Cast<IPTAIInterface>(ControllingPawn);
-	if (nullptr == AIPawn)
-	{
-		return;
-	}
-
-	float DetectWallRadius = AIPawn->GetAIDetectWallRange();
-	float DetectPlayerRadius = AIPawn->GetAIDetectPlayerRange();
 	
+	IPTAIInterface* AIPawn = Cast<IPTAIInterface>(OwnerPawn);
+	if (AIPawn == nullptr)
+	{
+		return;
+	}
+
+	UWorld* World = OwnerPawn->GetWorld();
+	FVector OwnerLocation = OwnerPawn->GetActorLocation();
+
 	TArray<FOverlapResult> OverlapResults;
-	FCollisionQueryParams CollisionQueryParam(SCENE_QUERY_STAT(Detect), false, ControllingPawn);
+	FCollisionQueryParams CollisionQueryParam(SCENE_QUERY_STAT(Detect), false, OwnerPawn);
 	bool bResult = World->OverlapMultiByChannel(
 		OverlapResults,
-		Center,
+		OwnerLocation,
 		FQuat::Identity,
 		CCHANNEL_PTMONSTER_MELEE,
-		FCollisionShape::MakeSphere(DetectWallRadius),
+		FCollisionShape::MakeSphere(AIPawn->GetAIDetectWallRange()),
 		CollisionQueryParam
-		);
+	);
 
-	bool DetectPlayer = false;
-	bool DetectWall = false;
+	UObject* TargetPlayer = nullptr;
+	UObject* TargetStructure = nullptr;
 	
 	if (bResult)
 	{
-		for (auto const& OverlapResult : OverlapResults)
+		TargetPlayer = DetectPlayer(World, OverlapResults, OwnerLocation, AIPawn->GetAIDetectPlayerRange());
+		TargetStructure = DetectStructure(World, OverlapResults, OwnerLocation, AIPawn->GetAIDetectWallRange());
+	}
+	
+	UpdateBlackboardValue(OwnerComp.GetBlackboardComponent(), BBKEY_TARGET, TargetPlayer);
+	UpdateBlackboardValue(OwnerComp.GetBlackboardComponent(), BBKEY_TARGET_WALL, TargetStructure);
+}
+
+UObject* UBTService_DetectTarget::DetectPlayer(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
+{
+	for (auto const& OverlapResult : OverlapResults)
+	{
+		if (APawn* TargetPlayer = Cast<APawn>(OverlapResult.GetActor()))
 		{
-			APawn* Pawn = Cast<APawn>(OverlapResult.GetActor());
-			if (Pawn && Pawn->GetController()->IsPlayerController())
+			FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
+			float Distance = FVector::Dist2D(DetectLocation, TargetPlayerLocation);
+			if (Distance <= DetectRadius)
 			{
-				float Distance = FVector::Dist2D(Center, Pawn->GetActorLocation());
-
-				if (Distance <= DetectPlayerRadius)
-				{
-					DetectPlayer = true;
-					OwnerComp.GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, Pawn);
+				DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Green, false, 0.2f);
+				DrawDebugPoint(World, TargetPlayer->GetActorLocation(), 10.0f, FColor::Green, false, 0.2f);
+				DrawDebugLine(World, DetectLocation, TargetPlayer->GetActorLocation(), FColor::Green, false, 0.27f);
 				
-					DrawDebugSphere(World, Center, DetectPlayerRadius, 16, FColor::Green, false, 0.2f);
+				return TargetPlayer;
+			}
+		}
+	}
+	
+	DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Red, false, 0.2f);
+	return nullptr;
+}
 
-					DrawDebugPoint(World, Pawn->GetActorLocation(), 10.0f, FColor::Green, false, 0.2f);
-					DrawDebugLine(World, ControllingPawn->GetActorLocation(), Pawn->GetActorLocation(), FColor::Green, false, 0.27f);
-				}
+UObject* UBTService_DetectTarget::DetectStructure(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
+{
+	AActor* TargetStructure = nullptr;
+	int32 MinDistance = MAX_int32;
+
+	for (auto const& OverlapResult : OverlapResults)
+	{
+		if (APTStructure* Structure = Cast<APTStructure>(OverlapResult.GetActor()))
+		{
+			if (Structure->GetbIsMainStation())
+			{
+				continue;	
 			}
 			
-			// Detect Most Min Distance Wall
-
-
-
-
-			
+			float Distance = FVector::Dist2D(DetectLocation, Structure->GetActorLocation());
+			if (Distance < MinDistance)
+			{
+				MinDistance = Distance;
+				TargetStructure = Structure;
+			}	
 		}
 	}
 
-
+	// if (TargetStructure)
+	// {
+	// 	DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Green, false, 0.2f);
+	// 	DrawDebugPoint(World, TargetStructure->GetActorLocation(), 10.0f, FColor::Green, false, 0.2f);
+	// 	DrawDebugLine(World, DetectLocation, TargetStructure->GetActorLocation(), FColor::Green, false, 0.27f);
+	// }
+	// else
+	// {
+	// 	DrawDebugSphere(World, DetectLocation, DetectRadius + 100.f, 16, FColor::Red, false, 0.2f);
+	// }
 	
-	if (!DetectPlayer)
+	return TargetStructure;
+}
+
+void UBTService_DetectTarget::UpdateBlackboardValue(UBlackboardComponent* BlackboardComp, FName KeyName, UObject* NewValue)
+{
+	if (NewValue == nullptr)
 	{
-		//폰은 감지했지만 플레이어와 충돌하지 않은 경우
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET, nullptr);
-		DrawDebugSphere(World, Center, DetectPlayerRadius, 16, FColor::Red, false, 0.2f);
+		BlackboardComp->SetValueAsObject(KeyName, nullptr);
+		return;
 	}
 
-	if (!DetectWall)
+	UObject* currentValue = BlackboardComp->GetValueAsObject(KeyName);
+	if (currentValue != NewValue)
 	{
-		//폰은 감지했지만 플레이어와 충돌하지 않은 경우
-		OwnerComp.GetBlackboardComponent()->SetValueAsObject(BBKEY_TARGET_WALL, nullptr);
-		DrawDebugSphere(World, Center, DetectPlayerRadius + 100.f, 16, FColor::Orange, false, 0.2f);
+		BlackboardComp->SetValueAsObject(KeyName, NewValue);
 	}
 }
