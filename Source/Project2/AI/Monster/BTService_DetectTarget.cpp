@@ -9,6 +9,8 @@
 #include "PTActor/PTStructure.h"
 #include "DrawDebugHelpers.h"
 
+#define ENABLE_DRAW_DEBUG 0
+
 UBTService_DetectTarget::UBTService_DetectTarget()
 {
 	NodeName = TEXT("DetectTarget");
@@ -60,6 +62,8 @@ void UBTService_DetectTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 
 UObject* UBTService_DetectTarget::DetectPlayer(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
 {
+	AActor* result = nullptr;
+	
 	for (auto const& OverlapResult : OverlapResults)
 	{
 		if (APawn* TargetPlayer = Cast<APawn>(OverlapResult.GetActor()))
@@ -68,22 +72,31 @@ UObject* UBTService_DetectTarget::DetectPlayer(const UWorld* World, const TArray
 			float Distance = FVector::Dist2D(DetectLocation, TargetPlayerLocation);
 			if (Distance <= DetectRadius)
 			{
-				DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Green, false, 0.2f);
-				DrawDebugPoint(World, TargetPlayer->GetActorLocation(), 10.0f, FColor::Green, false, 0.2f);
-				DrawDebugLine(World, DetectLocation, TargetPlayer->GetActorLocation(), FColor::Green, false, 0.27f);
-				
-				return TargetPlayer;
+				result = TargetPlayer;
+				break;
 			}
 		}
 	}
+
+#if ENABLE_DRAW_DEBUG
+	if (result)
+	{
+		DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Green, false, 0.2f);
+		DrawDebugPoint(World, result->GetActorLocation(), 10.0f, FColor::Green, false, 0.2f);
+		DrawDebugLine(World, DetectLocation, result->GetActorLocation(), FColor::Green, false, 0.27f);
+	}
+	else
+	{
+		DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Red, false, 0.2f);
+	}
+#endif
 	
-	DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Red, false, 0.2f);
-	return nullptr;
+	return result;
 }
 
 UObject* UBTService_DetectTarget::DetectStructure(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
 {
-	AActor* TargetStructure = nullptr;
+	AActor* result = nullptr;
 	int32 MinDistance = MAX_int32;
 
 	for (auto const& OverlapResult : OverlapResults)
@@ -99,23 +112,25 @@ UObject* UBTService_DetectTarget::DetectStructure(const UWorld* World, const TAr
 			if (Distance < MinDistance)
 			{
 				MinDistance = Distance;
-				TargetStructure = Structure;
+				result = Structure;
 			}	
 		}
 	}
 
-	// if (TargetStructure)
-	// {
-	// 	DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Green, false, 0.2f);
-	// 	DrawDebugPoint(World, TargetStructure->GetActorLocation(), 10.0f, FColor::Green, false, 0.2f);
-	// 	DrawDebugLine(World, DetectLocation, TargetStructure->GetActorLocation(), FColor::Green, false, 0.27f);
-	// }
-	// else
-	// {
-	// 	DrawDebugSphere(World, DetectLocation, DetectRadius + 100.f, 16, FColor::Red, false, 0.2f);
-	// }
+#if ENABLE_DRAW_DEBUG
+	if (TargetStructure)
+	{
+		DrawDebugSphere(World, DetectLocation, DetectRadius, 16, FColor::Green, false, 0.2f);
+		DrawDebugPoint(World, TargetStructure->GetActorLocation(), 10.0f, FColor::Green, false, 0.2f);
+		DrawDebugLine(World, DetectLocation, TargetStructure->GetActorLocation(), FColor::Green, false, 0.27f);
+	}
+	else
+	{
+		DrawDebugSphere(World, DetectLocation, DetectRadius + 100.f, 16, FColor::Red, false, 0.2f);
+	}
+#endif
 	
-	return TargetStructure;
+	return result;
 }
 
 void UBTService_DetectTarget::UpdateBlackboardValue(UBlackboardComponent* BlackboardComp, FName KeyName, UObject* NewValue)

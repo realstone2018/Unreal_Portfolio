@@ -1,5 +1,4 @@
 #include "Character/PTMonster.h"
-
 #include "PTGameModeBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/PTCollision.h"
@@ -10,6 +9,8 @@
 #include "PTActor/PTStructure.h"
 #include "PTComponent/PTFactionComponent.h"
 #include "PTComponent/Character/PTMonsterStatComponent.h"
+
+#define ENABLE_DRAW_DEBUG 1
 
 APTMonster::APTMonster()
 {
@@ -130,40 +131,19 @@ void APTMonster::OnNotifyAttack()
 	Attack();
 }
 
-// Call by Montage Notify
 void APTMonster::Attack()
 {
-	// FString string = MoveComponent->GetIsMoving() ? "Yes" : "No";
-	// UE_LOG(LogTemp, Display, TEXT("PTMonster::Attack() - IsMoving: %s"), *string);
-	//
-	// if (!MoveComponent->GetIsMoving())
-	// {
-	// 	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
-	// 	MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
-	// 	//Direction.Z = 0.3f;
-	// 	MoveComponent->MoveToDirection(Direction, 150.f, 0.2f);
-	//
-	// 	UE_LOG(LogTemp, Display, TEXT("MoveComponent->MoveToDirection"));
-	// }
-
-
-	// FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
-	// 	MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
-	// MoveComponent->MoveInput(Direction, 10.f, 0.2f);
-	
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
 	
-	const float AttackRange = MonsterStat->GetAttackRange();
 	const float AttackRadius = MonsterStat->GetAttackRadius();
-
-	//const float AttackDamage = StatComponent->GetTotalStat().Attack;
-	const float AttackDamage = 1.f;
-	
+	const float AttackDamage = MonsterStat->GetAttackDamage();
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
 	const FVector End = Start + GetActorForwardVector() * AttackRadius;
 
 	FHitResult OutHitResult;
-	bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End, FQuat::Identity, CCHANNEL_PTMONSTER_MELEE, FCollisionShape::MakeSphere(AttackRadius), Params);
+	bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End,
+		FQuat::Identity, CCHANNEL_PTMONSTER_MELEE, FCollisionShape::MakeSphere(AttackRadius), Params);
+	
 	if (HitDetected) {
 		FDamageEvent DamageEvent;
 		OutHitResult.GetActor()->TakeDamage(AttackDamage, DamageEvent, GetController(), this);
@@ -174,9 +154,8 @@ void APTMonster::Attack()
 	FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
 	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
 
-	DrawDebugSphere(GetWorld(), CapsuleOrigin, AttackRadius, 2, DrawColor, false, 0.5f);
+	DrawDebugSphere(GetWorld(), CapsuleOrigin, AttackRadius, 10, DrawColor, false, 0.5f);
 #endif
-
 }
 
 void APTMonster::Dash()
