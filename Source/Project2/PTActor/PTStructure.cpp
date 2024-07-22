@@ -31,7 +31,7 @@ APTStructure::APTStructure()
 		FrameMainStationClass = FrameMainStationClassRef.Class;
 	}
 	
-	MaxHp = 100.f;
+	MaxHp = 3000.f;
 }
 
 void APTStructure::BeginPlay()
@@ -45,14 +45,8 @@ void APTStructure::BeginPlay()
 	AStaticMeshActor* StaticMeshActor = GetWorld()->SpawnActor<AStaticMeshActor>(
 		bIsMainStation ? FrameMainStationClass : FrameWallClass, SceneComponent->GetComponentLocation(), FRotator::ZeroRotator);
 	check(StaticMeshActor);
-
-	UE_LOG(LogTemp, Display, TEXT("SceneComponent->GetComponentLocation(): %s    StaticMeshActor->GetActorLocation(): %s"), *SceneComponent->GetComponentLocation().ToString(), *StaticMeshActor->GetActorLocation().ToString());
 	
 	StaticMeshActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-
-	UE_LOG(LogTemp, Display, TEXT("SceneComponent->GetRelativeLocation(): %s    StaticMeshActor->GetActorLocation(): %s"), *SceneComponent->GetRelativeLocation().ToString(), *StaticMeshActor->GetActorLocation().ToString());
-	UE_LOG(LogTemp, Display, TEXT("SceneComponent->GetComponentLocation(): %s    StaticMeshActor->GetActorLocation(): %s"), *SceneComponent->GetComponentLocation().ToString(), *StaticMeshActor->GetActorLocation().ToString());
-
 }
 
 float APTStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -60,6 +54,9 @@ float APTStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	float result = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
 	CurrentHp -= DamageAmount;
+
+	UE_LOG(LogTemp, Display, TEXT("APTStructure::TakeDamage() - CurrentHp: %d   DamagaeAmount: %f"), CurrentHp, DamageAmount);
+
 	if (CurrentHp <= 0)
 	{
 		Destructed();
