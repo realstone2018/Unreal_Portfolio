@@ -3,6 +3,9 @@
 #include "CoreMinimal.h"
 #include "PTActor/PTStructure.h"
 #include "UObject/Interface.h"
+#include "GameData/ObjectPoolData.h"
+#include "Manager/PTSpawnManager.h"
+#include "Manager/PTObjectPoolManager.h"
 #include "PTGameInterface.generated.h"
 
 UINTERFACE(MinimalAPI)
@@ -17,6 +20,8 @@ class PROJECT2_API IPTGameInterface
 
 public:
 	virtual APTStructure* GetMainStation() = 0;
-	virtual APTProjectile* SpawnProjectile(int ProjectileCode, FVector SpawnPosition, FRotator SpawnRotator) = 0;
+
+	virtual UPTObjectPoolManager* GetObjectPoolManager() = 0;
+	virtual UPTSpawnManager* GetSpawnManager() = 0;
 
 };

@@ -4,8 +4,7 @@
 #include "Containers/Array.h"
 #include "Engine/AssetManager.h"
 #include "GameData/ObjectPoolData.h"
-#include "Character/PTMonster.h"
-#include "PTActor/PTProjectile.h"
+#include "Enum/ObjectPoolType.h"
 
 UPTObjectPoolManager::UPTObjectPoolManager()
 {
@@ -20,9 +19,6 @@ UPTObjectPoolManager::UPTObjectPoolManager()
 void UPTObjectPoolManager::Init(UWorld* World)
 {
 	WorldContext = World;
-
-	SetUpPool<APTMonster>(EPoolType::Monster);
-	SetUpPool<APTProjectile>(EPoolType::Projectile);
 }
 
 template <typename T, typename>
@@ -55,8 +51,16 @@ void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> Object
 }
 
 template <typename T, typename>
-T* UPTObjectPoolManager::GetPooledObject(EPoolType PoolType, FTransform const& Trans)
+T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans)
 {
+	EPoolType PoolType = EPoolTypeUtil::ClassToPoolType(T::StaticClass());
+	if (PoolType == EPoolType::None)
+	{
+		return nullptr;
+	}
+	
+	UE_LOG(LogTemp, Display, TEXT("UPTObjectPoolManager::GetPooledObject() - Success Get PoolType: %s "), *UEnum::GetValueAsString(PoolType));
+
 	if (!PoolMap.Contains(PoolType))
 	{
 		return nullptr;
@@ -83,8 +87,15 @@ T* UPTObjectPoolManager::GetPooledObject(EPoolType PoolType, FTransform const& T
 	return PoolableObject;
 }
 
-void UPTObjectPoolManager::ReturnPooledObject(EPoolType PoolType, AActor* Object)
+template <typename T, typename>
+void UPTObjectPoolManager::ReturnPooledObject(AActor* Object)
 {
+	EPoolType PoolType = EPoolTypeUtil::ClassToPoolType(T::StaticClass());
+	if (PoolType == EPoolType::None)
+	{
+		return;
+	}
+		
 	if (IPTPullingObjectInterface* PoolableObject = Cast<IPTPullingObjectInterface>(Object))
 	{
 		PoolableObject->Terminate();

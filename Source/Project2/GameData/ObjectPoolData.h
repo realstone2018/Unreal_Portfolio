@@ -1,17 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Character/PTMonster.h"
+#include "Enum/ObjectPoolType.h"
 #include "Engine/DataAsset.h"
 #include "ObjectPoolData.generated.h"
-
-UENUM(BlueprintType)
-enum class EPoolType : uint8
-{
-	None = 0,
-	Monster UMETA(DisplayName = "Monster"),
-	Projectile UMETA(DisplayName = "Projectile"),
-};
 
 USTRUCT()
 struct FPoolData
