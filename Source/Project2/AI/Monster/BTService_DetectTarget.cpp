@@ -9,7 +9,7 @@
 #include "PTActor/PTStructure.h"
 #include "DrawDebugHelpers.h"
 
-#define ENABLE_DRAW_DEBUG 0
+#define ENABLE_DRAW_DEBUG 1
 
 UBTService_DetectTarget::UBTService_DetectTarget()
 {
@@ -96,7 +96,7 @@ UObject* UBTService_DetectTarget::DetectPlayer(const UWorld* World, const TArray
 
 UObject* UBTService_DetectTarget::DetectStructure(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
 {
-	AActor* result = nullptr;
+	AActor* TargetStructure = nullptr;
 	int32 MinDistance = MAX_int32;
 
 	for (auto const& OverlapResult : OverlapResults)
@@ -112,7 +112,7 @@ UObject* UBTService_DetectTarget::DetectStructure(const UWorld* World, const TAr
 			if (Distance < MinDistance)
 			{
 				MinDistance = Distance;
-				result = Structure;
+				TargetStructure = Structure;
 			}	
 		}
 	}
@@ -130,7 +130,7 @@ UObject* UBTService_DetectTarget::DetectStructure(const UWorld* World, const TAr
 	}
 #endif
 	
-	return result;
+	return TargetStructure;
 }
 
 void UBTService_DetectTarget::UpdateBlackboardValue(UBlackboardComponent* BlackboardComp, FName KeyName, UObject* NewValue)

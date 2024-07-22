@@ -1,6 +1,8 @@
 #include "PTActor/PTStructure.h"
 #include "Components/BoxComponent.h"
+#include "Engine/DamageEvents.h"
 #include "Engine/StaticMeshActor.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PTComponent/PTFactionComponent.h"
 
@@ -13,9 +15,9 @@ APTStructure::APTStructure()
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	BoxComponent->SetupAttachment(RootComponent);
 
-	DamagedParticles = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Smoke Particle"));
-	DamagedParticles->SetupAttachment(RootComponent);
-	
+	FireEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Smoke Particle"));
+	FireEffect->SetupAttachment(RootComponent);
+
 	FactionComponent = CreateDefaultSubobject<UPTFactionComponent>(TEXT("Faction"));
 	FactionComponent->SetFaction(EFaction::Ally);
 	
@@ -31,7 +33,7 @@ APTStructure::APTStructure()
 		FrameMainStationClass = FrameMainStationClassRef.Class;
 	}
 	
-	MaxHp = 3000.f;
+	MaxHp = 300.f;
 }
 
 void APTStructure::BeginPlay()
@@ -40,13 +42,14 @@ void APTStructure::BeginPlay()
 	
 	CurrentHp = MaxHp;
 
-	DamagedParticles->DeactivateImmediate();
-
-	AStaticMeshActor* StaticMeshActor = GetWorld()->SpawnActor<AStaticMeshActor>(
-		bIsMainStation ? FrameMainStationClass : FrameWallClass, SceneComponent->GetComponentLocation(), FRotator::ZeroRotator);
-	check(StaticMeshActor);
+	FireEffect->DeactivateImmediate();
 	
-	StaticMeshActor->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+	StaticMesh = GetWorld()->SpawnActor<AStaticMeshActor>(
+		bIsMainStation ? FrameMainStationClass : FrameWallClass, SceneComponent->GetComponentLocation(), FRotator::ZeroRotator);
+	check(StaticMesh);
+
+	StaticMesh->SetActorScale3D(SceneComponent->GetComponentScale());
+	StaticMesh->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 }
 
 float APTStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -59,18 +62,47 @@ float APTStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 
 	if (CurrentHp <= 0)
 	{
-		Destructed();
+		Destruct();
 	}
-	else if (CurrentHp < MaxHp / 3.f)
+	
+	if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
 	{
-		DamagedParticles->Activate();
+		const FPointDamageEvent* PointDamageEvent = static_cast<const FPointDamageEvent*>(&DamageEvent);
+		FVector DamagedLocation = PointDamageEvent->HitInfo.ImpactPoint;
+		FRotator DamagedRotator = PointDamageEvent->HitInfo.ImpactNormal.Rotation();
+
+		if (DamagedEffect)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DamagedEffect, DamagedLocation, DamagedRotator);
+		}
+
+		if (DamagedSound)
+		{
+			UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DamagedSound, GetActorLocation());
+		}	
+	}
+	
+	if (CurrentHp < MaxHp * 0.7f)
+	{
+		FireEffect->Activate();
 	}
 	
 	return result;
 }
 
-void APTStructure::Destructed()
+void APTStructure::Destruct()
 {
+	if (DestructEffect)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestructEffect, SceneComponent->GetComponentLocation());
+	}
+
+	if (DestructSound)
+	{
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DestructSound, GetActorLocation());
+	}
+
 	BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
+	StaticMesh->SetActorHiddenInGame(true);
+	FireEffect->Deactivate();
 }

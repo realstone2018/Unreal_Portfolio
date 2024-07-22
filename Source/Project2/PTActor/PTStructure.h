@@ -21,7 +21,7 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	virtual void Destructed();
+	virtual void Destruct();
 
 	uint8 GetbIsMainStation() { return bIsMainStation; }
 	
@@ -32,9 +32,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Component")
 	TObjectPtr<class UStaticMeshComponent> MeshComponent;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Component")
-	TObjectPtr<UParticleSystemComponent> DamagedParticles;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta=(AllowPrivateAccess))
 	TObjectPtr<class USceneComponent> SceneComponent;
 	
@@ -43,13 +40,35 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AStaticMeshActor> FrameMainStationClass;
-	
-	UPROPERTY()
-	int MaxHp;
-	
-	UPROPERTY()
-	int CurrentHp;	// 방어력없음, Hp로만 내구성 구현하기
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Structure", meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<AStaticMeshActor> StaticMesh; 
+	
+	UPROPERTY()
+	int32 MaxHp;
+	
+	UPROPERTY()
+	int32 CurrentHp;	// 방어력없음, Hp로만 내구성 구현하기
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	uint8 bIsMainStation : 1;
+
+#pragma region Effect
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> DamagedEffect;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> DamagedSound;
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystemComponent> FireEffect;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> DestructEffect;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> DestructSound;
+
+#pragma endregion
+	
 };
