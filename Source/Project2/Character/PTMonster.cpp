@@ -115,6 +115,8 @@ UPTCharacterStatComponent* APTMonster::GetStatComponent()
 
 void APTMonster::PlayAttackMontage()
 {
+	HitTargets.Empty();
+	
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Play(AttackMontage, 1.0f);
 
@@ -134,6 +136,10 @@ void APTMonster::OnNotifyAttack()
 void APTMonster::Attack()
 {
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), false, this);
+	for (AActor* HitTarget : HitTargets)
+	{
+		Params.AddIgnoredActor(HitTarget);	
+	}
 	
 	const float AttackRadius = MonsterStat->GetAttackRadius();
 	const float AttackDamage = MonsterStat->GetAttackDamage();
@@ -145,8 +151,13 @@ void APTMonster::Attack()
 		FQuat::Identity, CCHANNEL_PTMONSTER_MELEE, FCollisionShape::MakeSphere(AttackRadius), Params);
 	
 	if (HitDetected) {
-		FDamageEvent DamageEvent;
-		OutHitResult.GetActor()->TakeDamage(AttackDamage, DamageEvent, GetController(), this);
+		HitTargets.Add(OutHitResult.GetActor());
+		
+		FPointDamageEvent PointDamageEvent;
+		PointDamageEvent.HitInfo.ImpactPoint = OutHitResult.ImpactPoint;
+		OutHitResult.GetActor()->TakeDamage(AttackDamage, PointDamageEvent, GetController(), this);
+
+		UE_LOG(LogTemp, Display, TEXT("APTMonster::Attack() - Target: %s   Damage: %f"), *OutHitResult.GetActor()->GetName(), AttackDamage);
 	}
 
 #if ENABLE_DRAW_DEBUG
@@ -174,6 +185,8 @@ void APTMonster::Dash()
 void APTMonster::EndAttackMontage(UAnimMontage* TargetMontage, bool IsProperlyEnded)
 {
 	OnAttackFinished.ExecuteIfBound();
+
+	HitTargets.Empty();
 }
 
 void APTMonster::Dead()
@@ -192,6 +205,12 @@ void APTMonster::Dead()
 	}
 
 	OnDead.ExecuteIfBound(this);
+}
+
+void APTMonster::AttackByAI(float& AttackCooldown)
+{
+	PlayAttackMontage();
+	AttackCooldown = MonsterStat->GetAttackCooldown();
 }
 
 void APTMonster::SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished)

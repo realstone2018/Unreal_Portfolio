@@ -58,6 +58,8 @@ private:
 	//몽타주가 종료될 때 호출, 몽타주에 설정된 delegate로 바로 호출되도록 파라미터 세팅 (UAnimMontage.OnMontageEnd 딜리게이트의 파라미터와 동일하게)
 	void EndAttackMontage(class UAnimMontage* TargetMontage, bool IsProperlyEnded);
 
+	UPROPERTY()
+	TArray<AActor*> HitTargets;
 	
 public:
 	FOnDeadDelegate OnDead;
@@ -71,14 +73,14 @@ protected:
 
 #pragma region AI
 	FORCEINLINE float GetAIDetectPlayerRange() override { return 600.f;  }
-	FORCEINLINE float GetAIDetectWallRange() override {return 1000; }
+	FORCEINLINE float GetAIDetectWallRange() override {return 1500; }
 	FORCEINLINE virtual float GetAIAttackRange() override { return MonsterStat->GetAttackRange(); }
 	FORCEINLINE virtual float GetAITurnSpeed() override { return 10.f; }
 	FORCEINLINE virtual float GetAIAttackCooldown() override { return MonsterStat->GetAttackCooldown(); }
 	
 	FORCEINLINE virtual void JumpByAI() override { Dash(); }
 	
-	FORCEINLINE virtual void AttackByAI(float& AttackCooldown) override { PlayAttackMontage(); AttackCooldown = MonsterStat->GetAttackCooldown(); }
+	FORCEINLINE virtual void AttackByAI(float& AttackCooldown) override;
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
 #pragma endregion 
 };

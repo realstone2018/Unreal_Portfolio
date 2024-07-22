@@ -1,2 +1,2 @@
 Name,MaxHp,Attack,Armor,DamageReduceRatio,MovementSpeed,RangeIncreaseRatio,ReloadReduceRatio,Penetration
-1,100,100,0,0,400,0,0,0
+1,1000,100,0,0,400,0,0,0
