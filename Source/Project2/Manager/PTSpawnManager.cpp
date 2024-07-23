@@ -33,7 +33,6 @@ void UPTSpawnManager::ReturnObject(AActor* PooledObject)
 	), 5.0f, false);
 }
 
-
 void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
 {
 	BaseSpawnLocation = PTVectorUtil::GetCirclePoint<double>(BaseSpawnLocation, SPAWN_RADIUS);

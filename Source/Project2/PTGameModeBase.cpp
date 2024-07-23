@@ -45,8 +45,8 @@ void APTGameModeBase::StartPlay()
 
 void APTGameModeBase::GameStart()
 {
-	TimerStart();
-	
+	StageTimerStart();
+	MonsterWaveTimerStart();
 }
 
 void APTGameModeBase::GameClear()
@@ -81,14 +81,11 @@ void APTGameModeBase::OnPlayerDead()
 	
 }
 
-void APTGameModeBase::TimerStart()
+void APTGameModeBase::StageTimerStart()
 {
-	FTimerDelegate StageEndDelegate = FTimerDelegate::CreateUObject(this, &APTGameModeBase::TimerEnd);
-
+	FTimerDelegate StageEndDelegate = FTimerDelegate::CreateUObject(this, &APTGameModeBase::GameClear);
 	GetWorldTimerManager().SetTimer(StageTimerHandle, StageEndDelegate, StageClearTime, false);
-
-	UE_LOG(LogTemp, Display, TEXT("APTGameModeBase::TimerStart() - %f"), GetWorldTimerManager().GetTimerRemaining(StageTimerHandle));
-
+	
 	APTPlayerController* PlayerController = Cast<APTPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
@@ -96,17 +93,7 @@ void APTGameModeBase::TimerStart()
 	}
 }
 
-void APTGameModeBase::TimerEnd()
-{
-	//SpawnManagerV3->SpawnObject<APTMonster>(FRotator::ZeroRotator, FVector(4500.f, 0.f, -200.f));
-	//SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 10);
-
-	UE_LOG(LogTemp, Display, TEXT("APTGameModeBase::TimerEnd()"));
-	
-	GameClear();		
-}
-
-float APTGameModeBase::GetRemainTime()
+float APTGameModeBase::GetStageRemainTime()
 {
 	if (!StageTimerHandle.IsValid())
 	{
@@ -114,4 +101,20 @@ float APTGameModeBase::GetRemainTime()
 	}
 	
 	return FMath::Max(0.f, GetWorldTimerManager().GetTimerRemaining(StageTimerHandle));
+}
+
+void APTGameModeBase::MonsterWaveTimerStart()
+{
+	FTimerHandle MonsterWaveTimer;
+
+	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+
+	
+	GetWorldTimerManager().SetTimer(MonsterWaveTimer, FTimerDelegate::CreateLambda([this]()
+	{
+		SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+		SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 2);
+		SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 4);
+	}), 18.f, true);
 }

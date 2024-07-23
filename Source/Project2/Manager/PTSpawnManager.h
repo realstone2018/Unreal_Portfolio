@@ -16,7 +16,7 @@ public:
 #pragma region Polling
 public:
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
-T* SpawnObject(FRotator SpawnRotator, FVector SpawnLocation);
+	T* SpawnObject(FRotator SpawnRotator, FVector SpawnLocation);
 
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
 	void ReturnObject(AActor* PooledObject);
@@ -34,6 +34,7 @@ private:
 
 
 #pragma region Monster
+public:
 	void SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num);
 
 

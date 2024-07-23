@@ -29,15 +29,15 @@ public:
 
 #pragma region Timer
 public:
-	void TimerStart();
-	void TimerEnd();
+	void StageTimerStart();
+	void MonsterWaveTimerStart();
 
 	UFUNCTION(BlueprintCallable, Category = "Timer")
-	float GetRemainTime();
-	
+	float GetStageRemainTime();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stage", meta = (AllowPrivateAccess = "true"))
-	float StageClearTime = 10.f;
+	float StageClearTime = 100.f;
 
 	UPROPERTY()
 	FTimerHandle StageTimerHandle;

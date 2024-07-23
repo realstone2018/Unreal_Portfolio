@@ -34,7 +34,7 @@ APTStructure::APTStructure()
 		FrameMainStationClass = FrameMainStationClassRef.Class;
 	}
 	
-	MaxHp = 30000.f;
+	MaxHp = 3000.f;
 }
 
 void APTStructure::BeginPlay()
