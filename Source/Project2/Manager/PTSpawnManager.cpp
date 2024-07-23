@@ -1,20 +1,11 @@
 #include "Manager/PTSpawnManager.h"
+#include "NavigationSystem.h"
 #include "PTInterface/PTGameInterface.h"
+#include "Util/PTVectorUtil.h"
 
-UPTSpawnManager::UPTSpawnManager()
+void UPTSpawnManager::Init(UWorld* InWorld, UPTObjectPoolManager* InPoolManager)
 {
-	int Row = GroupSize / GroupColumnSize + 1;
-	for (int i = 0; i < Row; i++)
-	{
-		for (int j = 0; j <= GroupColumnSize; j++)
-		{
-			SpawnLocationOffsets.Add(FVector2D(j, i));	
-		}
-	}
-}
-
-void UPTSpawnManager::Init(UPTObjectPoolManager* InPoolManager)
-{
+	World = InWorld;
 	PoolManager = InPoolManager;
 }
 
@@ -43,19 +34,24 @@ void UPTSpawnManager::ReturnObject(AActor* PooledObject)
 }
 
 
-void UPTSpawnManager::SpawnMonsterWave(FVector SpawnLocation, int32 Num)
+void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
 {
-	//APTGameModeBase* GameMode = Cast<APTGameModeBase>(GetWorld()->GetAuthGameMode());
-
+	BaseSpawnLocation = PTVectorUtil::GetCirclePoint<double>(BaseSpawnLocation, SPAWN_RADIUS);
+	
+	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(World);
+	if (NavSystem == nullptr)
+	{ 
+		return;
+	}
+	
 	for (int i = 0; i < Num; i++)
 	{
-		FVector2D SpawnLocationOffset2D = SpawnLocationOffsets[i];
-		float MonsterSize = 300.f;
-
-		SpawnLocationOffset2D = SpawnLocationOffset2D * MonsterSize;
-
-		FVector SpawnLocationOffset(SpawnLocationOffset2D.X, SpawnLocationOffset2D.Y, 0);
-		SpawnLocation += SpawnLocationOffset;
+		FVector SpawnLocation = BaseSpawnLocation;
+		FNavLocation NavLocation;
+		if (NavSystem->GetRandomPointInNavigableRadius(BaseSpawnLocation, NAVIGATION_RANDOM_RADIUS, NavLocation))
+		{
+			SpawnLocation = NavLocation;
+		}
 		
 		SpawnObject<APTMonster>(FRotator::ZeroRotator, SpawnLocation);
 	}	

@@ -49,4 +49,14 @@ namespace PTVectorUtil
 		// 충돌 여부 판단
 		return distanceSquared <= (CircleRadius * CircleRadius);
 	}
+
+	template <typename RealType>
+	inline TVector<RealType> GetCirclePoint(const TVector<RealType> Center, float Radius)
+	{
+		float Theta = FMath::FRandRange(0.0f, 2.0f * PI); // 0에서 2π 사이의 랜덤 각도 생성
+		float X = Center.X + Radius * FMath::Cos(Theta);
+		float Y = Center.Y + Radius * FMath::Sin(Theta);
+
+		return TVector<RealType>(X, Y, 0);
+	} 
 }

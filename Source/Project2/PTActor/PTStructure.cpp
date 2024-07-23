@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PTComponent/PTFactionComponent.h"
+#include "PTInterface/PTGameInterface.h"
 
 APTStructure::APTStructure()
 {
@@ -15,8 +16,8 @@ APTStructure::APTStructure()
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	BoxComponent->SetupAttachment(RootComponent);
 
-	FireEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Smoke Particle"));
-	FireEffect->SetupAttachment(RootComponent);
+	FireParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("FireParticleComponent"));
+	FireParticleComponent->SetupAttachment(RootComponent);
 
 	FactionComponent = CreateDefaultSubobject<UPTFactionComponent>(TEXT("Faction"));
 	FactionComponent->SetFaction(EFaction::Ally);
@@ -33,7 +34,7 @@ APTStructure::APTStructure()
 		FrameMainStationClass = FrameMainStationClassRef.Class;
 	}
 	
-	MaxHp = 300.f;
+	MaxHp = 30000.f;
 }
 
 void APTStructure::BeginPlay()
@@ -42,7 +43,7 @@ void APTStructure::BeginPlay()
 	
 	CurrentHp = MaxHp;
 
-	FireEffect->DeactivateImmediate();
+	FireParticleComponent->DeactivateImmediate();
 	
 	StaticMesh = GetWorld()->SpawnActor<AStaticMeshActor>(
 		bIsMainStation ? FrameMainStationClass : FrameWallClass, SceneComponent->GetComponentLocation(), FRotator::ZeroRotator);
@@ -84,7 +85,7 @@ float APTStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	
 	if (CurrentHp < MaxHp * 0.7f)
 	{
-		FireEffect->Activate();
+		FireParticleComponent->Activate();
 	}
 	
 	return result;
@@ -94,7 +95,7 @@ void APTStructure::Destruct()
 {
 	if (DestructEffect)
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestructEffect, SceneComponent->GetComponentLocation());
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestructEffect, SceneComponent->GetComponentLocation(), FRotator::ZeroRotator, FVector(3.f, 3.f, 3.f));
 	}
 
 	if (DestructSound)
@@ -102,7 +103,15 @@ void APTStructure::Destruct()
 		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DestructSound, GetActorLocation());
 	}
 
-	BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	StaticMesh->SetActorHiddenInGame(true);
-	FireEffect->Deactivate();
+	// BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// StaticMesh->SetActorHiddenInGame(true);
+	// FireEffect->Deactivate();
+	StaticMesh->Destroy();
+	Destroy();
+
+	if (bIsMainStation)
+	{
+		IPTGameInterface* PTGameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
+		
+	}
 }

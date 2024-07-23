@@ -14,30 +14,34 @@ public:
 	APTGameModeBase();
 	
 	virtual void BeginPlay() override;
-	
 
-#pragma region Timer
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stage", meta = (AllowPrivateAccess = "true"))
-	float StageClearTime = 300.f;
-	
-	void TimerStart();
+	virtual void StartPlay() override;
 
-	UFUNCTION()
-	void TimerEnd();
+#pragma region Flow
+public:
+	void GameStart();
+	void GameClear();
+	void GameOver();
 
-	
+	virtual void OnPlayerDead() override;
 #pragma endregion
 
 
-#pragma region Result
-	void PawnDead(APawn* Victim);
+#pragma region Timer
+public:
+	void TimerStart();
+	void TimerEnd();
 
-	bool WinCondition();
-	bool LoseCondition(APawn* PawnKilled);
-	void StageWin();
-	void StageLose();
-	void EndGame();
+	UFUNCTION(BlueprintCallable, Category = "Timer")
+	float GetRemainTime();
+	
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stage", meta = (AllowPrivateAccess = "true"))
+	float StageClearTime = 10.f;
 
+	UPROPERTY()
+	FTimerHandle StageTimerHandle;
+	
 #pragma endregion
 
 
@@ -67,6 +71,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category= "Stage", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class APTStructure> MainStation; 
 
+	FORCEINLINE virtual void OnMainStationDestruct() override { GameOver(); }
 #pragma endregion 
 	
 };

@@ -114,6 +114,7 @@ void APTCharacterBase::Kill(AActor* victim)
 
 void APTCharacterBase::Dead()
 {
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	HpBar->SetHiddenInGame(true);
 }

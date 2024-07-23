@@ -24,4 +24,6 @@ public:
 	virtual UPTObjectPoolManager* GetObjectPoolManager() = 0;
 	virtual UPTSpawnManager* GetSpawnManager() = 0;
 
+	virtual void OnMainStationDestruct() = 0;
+	virtual void OnPlayerDead() = 0;
 };

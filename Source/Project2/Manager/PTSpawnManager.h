@@ -11,25 +11,31 @@ class PROJECT2_API UPTSpawnManager : public UObject
 	GENERATED_BODY()
 
 public:
-	UPTSpawnManager();
+	void Init(UWorld* Inworld, UPTObjectPoolManager* InPoolManager);
 
-	void Init(UPTObjectPoolManager* InPoolManager);
-	
+#pragma region Polling
+public:
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
-	T* SpawnObject(FRotator SpawnRotator, FVector SpawnLocation);
+T* SpawnObject(FRotator SpawnRotator, FVector SpawnLocation);
 
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
 	void ReturnObject(AActor* PooledObject);
 
-	void SpawnMonsterWave(FVector SpawnLocation, int32 Num);
-
 private:
 	UPROPERTY()
-	UPTObjectPoolManager* PoolManager;
-
+	TObjectPtr<class UWorld> World;
+	
 	UPROPERTY()
-	TArray<FVector2D> SpawnLocationOffsets;
+	TObjectPtr<UPTObjectPoolManager> PoolManager;
 
-	const int GroupSize = 30;
-	const int GroupColumnSize = 6;
+	const float SPAWN_RADIUS = 8000.f;
+	const float NAVIGATION_RANDOM_RADIUS = 500.f;
+#pragma endregion
+
+
+#pragma region Monster
+	void SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num);
+
+
+#pragma endregion
 };

@@ -2,6 +2,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
+#include "PTGameModeBase.h"
 #include "PTComponent/PTInputComponent.h"
 #include "PTComponent/Character/PTPlayerStatComponent.h"
 #include "GameData/PTGameDataSingleton.h"
@@ -143,10 +144,9 @@ void APTPlayerCharacter::Dead()
 
 	StopAttack();
 	
-	ASimpleShooterGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ASimpleShooterGameModeBase>();
-	if (GameMode != nullptr)
+	if (IPTGameInterface* PTGameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode()))
 	{
-		//GameMode->PawnKilled(this);
+		PTGameMode->OnPlayerDead();
 	}
 	
 	// 더이상 어떤 행동도 하지 않도록 컨트롤러를 폰에서 분리 

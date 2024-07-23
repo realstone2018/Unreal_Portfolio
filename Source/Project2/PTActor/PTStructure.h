@@ -61,7 +61,7 @@ private:
 	TObjectPtr<USoundBase> DamagedSound;
 	
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UParticleSystemComponent> FireEffect;
+	TObjectPtr<UParticleSystemComponent> FireParticleComponent;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UParticleSystem> DestructEffect;

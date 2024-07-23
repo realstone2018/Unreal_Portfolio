@@ -10,7 +10,7 @@
 #include "PTComponent/PTFactionComponent.h"
 #include "PTComponent/Character/PTMonsterStatComponent.h"
 
-#define ENABLE_DRAW_DEBUG 1
+#define ENABLE_DRAW_DEBUG 0
 
 APTMonster::APTMonster()
 {
@@ -156,8 +156,6 @@ void APTMonster::Attack()
 		FPointDamageEvent PointDamageEvent;
 		PointDamageEvent.HitInfo.ImpactPoint = OutHitResult.ImpactPoint;
 		OutHitResult.GetActor()->TakeDamage(AttackDamage, PointDamageEvent, GetController(), this);
-
-		UE_LOG(LogTemp, Display, TEXT("APTMonster::Attack() - Target: %s   Damage: %f"), *OutHitResult.GetActor()->GetName(), AttackDamage);
 	}
 
 #if ENABLE_DRAW_DEBUG

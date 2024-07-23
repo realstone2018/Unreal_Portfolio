@@ -9,7 +9,7 @@
 #include "PTActor/PTStructure.h"
 #include "DrawDebugHelpers.h"
 
-#define ENABLE_DRAW_DEBUG 1
+#define ENABLE_DRAW_DEBUG 0
 
 UBTService_DetectTarget::UBTService_DetectTarget()
 {
