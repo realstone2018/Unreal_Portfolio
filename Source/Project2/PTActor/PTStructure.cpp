@@ -20,7 +20,7 @@ APTStructure::APTStructure()
 	FireParticleComponent->SetupAttachment(RootComponent);
 
 	FactionComponent = CreateDefaultSubobject<UPTFactionComponent>(TEXT("Faction"));
-	FactionComponent->SetFaction(EFaction::Ally);
+	FactionComponent->SetFaction(EFaction::Player);
 	
 	static ConstructorHelpers::FClassFinder<AStaticMeshActor> FrameWallClassRef(TEXT("/Game/Project2/Blueprint/Structure/StructureFrame/BP_FrameWall.BP_FrameWall_C"));
 	if (FrameWallClassRef.Class)

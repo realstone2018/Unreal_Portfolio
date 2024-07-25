@@ -16,7 +16,7 @@ protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 private:
-	UObject* DetectPlayer(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius);
-	UObject* DetectStructure(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius);
+	UObject* DetectPlayer(const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius);
+	UObject* DetectStructure(const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius);
 	void UpdateBlackboardValue(UBlackboardComponent* OwnerComp, FName KeyName, UObject* NewValue);
 };

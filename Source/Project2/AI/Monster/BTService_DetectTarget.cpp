@@ -8,6 +8,7 @@
 #include "Character/PTPlayerCharacter.h"
 #include "PTActor/PTStructure.h"
 #include "DrawDebugHelpers.h"
+#include "PTComponent/PTFactionComponent.h"
 
 #define ENABLE_DRAW_DEBUG 0
 
@@ -15,6 +16,8 @@ UBTService_DetectTarget::UBTService_DetectTarget()
 {
 	NodeName = TEXT("DetectTarget");
 	Interval = 1.0f;
+
+	UE_LOG(LogTemp, Display, TEXT("UBTService_DetectTarget::UBTService_DetectTarget()"));
 }
 
 void UBTService_DetectTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -52,22 +55,27 @@ void UBTService_DetectTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 	
 	if (bResult)
 	{
-		TargetPlayer = DetectPlayer(World, OverlapResults, OwnerLocation, AIPawn->GetAIDetectPlayerRange());
-		TargetStructure = DetectStructure(World, OverlapResults, OwnerLocation, AIPawn->GetAIDetectWallRange());
+		TargetPlayer = DetectPlayer(OverlapResults, OwnerLocation, AIPawn->GetAIDetectPlayerRange());
+		TargetStructure = DetectStructure(OverlapResults, OwnerLocation, AIPawn->GetAIDetectWallRange());
 	}
 	
 	UpdateBlackboardValue(OwnerComp.GetBlackboardComponent(), BBKEY_TARGET, TargetPlayer);
 	UpdateBlackboardValue(OwnerComp.GetBlackboardComponent(), BBKEY_TARGET_WALL, TargetStructure);
 }
 
-UObject* UBTService_DetectTarget::DetectPlayer(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
+UObject* UBTService_DetectTarget::DetectPlayer(const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
 {
 	AActor* result = nullptr;
 	
 	for (auto const& OverlapResult : OverlapResults)
 	{
-		if (APawn* TargetPlayer = Cast<APawn>(OverlapResult.GetActor()))
+		if (APTPlayerCharacter* TargetPlayer = Cast<APTPlayerCharacter>(OverlapResult.GetActor()))
 		{
+			if (TargetPlayer->IsDead())
+			{
+				continue;
+			}
+			
 			FVector TargetPlayerLocation = TargetPlayer->GetActorLocation();
 			float Distance = FVector::Dist2D(DetectLocation, TargetPlayerLocation);
 			if (Distance <= DetectRadius)
@@ -94,7 +102,7 @@ UObject* UBTService_DetectTarget::DetectPlayer(const UWorld* World, const TArray
 	return result;
 }
 
-UObject* UBTService_DetectTarget::DetectStructure(const UWorld* World, const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
+UObject* UBTService_DetectTarget::DetectStructure(const TArray<FOverlapResult>& OverlapResults, FVector DetectLocation, float DetectRadius)
 {
 	AActor* TargetStructure = nullptr;
 	int32 MinDistance = MAX_int32;

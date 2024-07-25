@@ -34,7 +34,7 @@ void APTMonster::PostInitializeComponents()
 // 	//TODO: Dirty 패턴 적용하기
 // 	SetHp(BaseStat.MaxHp);
 
-	FactionComponent->SetFaction(EFaction::Enemy);
+	FactionComponent->SetFaction(EFaction::Monster);
 }
 
 void APTMonster::Initialize()
@@ -146,16 +146,27 @@ void APTMonster::Attack()
 	const FVector Start = GetActorLocation() + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
 	const FVector End = Start + GetActorForwardVector() * AttackRadius;
 
-	FHitResult OutHitResult;
-	bool HitDetected = GetWorld()->SweepSingleByChannel(OutHitResult, Start, End,
+	TArray<FHitResult> OutHitResult;
+	bool HitDetected = GetWorld()->SweepMultiByChannel(OutHitResult, Start, End,
 		FQuat::Identity, CCHANNEL_PTMONSTER_MELEE, FCollisionShape::MakeSphere(AttackRadius), Params);
-	
-	if (HitDetected) {
-		HitTargets.Add(OutHitResult.GetActor());
+
+	for(FHitResult HitResult : OutHitResult)
+	{
+		APTCharacterBase* HitCharacter = Cast<APTCharacterBase>(HitResult.GetActor());
+
+		if (HitCharacter)
+		{
+			UE_LOG(LogTemp, Display, TEXT("AMonster::Attack() - HitCharacter: %s   IsDead: %s"), *HitCharacter->GetName(), HitCharacter->IsDead() ? TEXT("True") : TEXT("False"));
+		}
 		
-		FPointDamageEvent PointDamageEvent;
-		PointDamageEvent.HitInfo.ImpactPoint = OutHitResult.ImpactPoint;
-		OutHitResult.GetActor()->TakeDamage(AttackDamage, PointDamageEvent, GetController(), this);
+		if (HitCharacter && !HitCharacter->IsDead())
+		{
+			HitTargets.Add(HitResult.GetActor());
+		
+			FPointDamageEvent PointDamageEvent;
+			PointDamageEvent.HitInfo.ImpactPoint = HitResult.ImpactPoint;
+			HitResult.GetActor()->TakeDamage(AttackDamage, PointDamageEvent, GetController(), this);
+		}
 	}
 
 #if ENABLE_DRAW_DEBUG

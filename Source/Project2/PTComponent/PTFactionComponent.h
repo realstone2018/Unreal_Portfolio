@@ -8,8 +8,8 @@ UENUM(BlueprintType)
 enum class EFaction : uint8
 {
 	None UMETA(DisplayName="None"),
-	Ally UMETA(DisplayName="Ally"),
-	Enemy UMETA(DisplayName="Enemy"),
+	Player UMETA(DisplayName="Player"),
+	Monster UMETA(DisplayName=Monster),
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,7 +23,8 @@ public:
 
 	FORCEINLINE bool IsNoneFaction() const { return Faction == EFaction::None; }
 	FORCEINLINE bool CompareFaction(const UPTFactionComponent* Other) const { return GetFaction() ==  Other->GetFaction(); }
-
+	FORCEINLINE bool CompareFaction(EFaction OtherFaction) const { return GetFaction() ==  OtherFaction; }
+	
 private:
 	EFaction Faction = EFaction::None;
 
