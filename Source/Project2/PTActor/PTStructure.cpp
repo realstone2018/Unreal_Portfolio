@@ -101,15 +101,15 @@ void APTStructure::Destruct()
 		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), DestructSound, GetActorLocation());
 	}
 
+	if (bIsMainStation)
+	{
+		IPTGameInterface* PTGameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
+		PTGameMode->OnMainStationDestruct();
+	}
+	
 	// BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// StaticMesh->SetActorHiddenInGame(true);
 	// FireEffect->Deactivate();
 	StaticMesh->Destroy();
 	Destroy();
-
-	if (bIsMainStation)
-	{
-		IPTGameInterface* PTGameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
-		
-	}
 }
