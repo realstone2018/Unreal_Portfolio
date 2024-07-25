@@ -2,11 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "Character/PTCharacterBase.h"
-#include "PTComponent/PTInputComponent.h"
 #include "PTInterface/PTPlayerInputInterface.h"
-#include "PTINterface/PTCharactHUDInterface.h"
-#include "PTComponent/Character/PTCharacterStatComponent.h"
-#include "Weapon/Gun.h"
+#include "PTInterface/PTCharactHUDInterface.h"
 #include "PTPlayerCharacter.generated.h"
 
 UCLASS()
@@ -19,8 +16,8 @@ public:
 
 private:
 	virtual void PostInitializeComponents() override;
-
-	virtual void BeginPlay() override;
+	
+	virtual void PossessedBy(AController* NewController) override;
 	
 // Camera
 protected:

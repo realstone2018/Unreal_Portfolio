@@ -36,8 +36,8 @@ bool UBTDecorator_AttackCooldown::CalculateRawConditionValue(UBehaviorTreeCompon
 	
 	bResult = CurrentTime >= LastAttackTime + AIPawn->GetAIAttackCooldown();
 
-	UE_LOG(LogTemp, Display, TEXT("bResult[%s] - LastAttackTime[%f] + AIPawn->GetAIAttackCooldown()[%f] <= CurrentTime[%f]"),
-		bResult ? TEXT("true") : TEXT("false"), LastAttackTime, AIPawn->GetAIAttackCooldown(), CurrentTime);
+	// UE_LOG(LogTemp, Display, TEXT("bResult[%s] - LastAttackTime[%f] + AIPawn->GetAIAttackCooldown()[%f] <= CurrentTime[%f]"),
+	// 	bResult ? TEXT("true") : TEXT("false"), LastAttackTime, AIPawn->GetAIAttackCooldown(), CurrentTime);
 
 	
 	return bResult;

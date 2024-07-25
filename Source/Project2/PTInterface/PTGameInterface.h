@@ -25,5 +25,5 @@ public:
 	virtual UPTSpawnManager* GetSpawnManager() = 0;
 
 	virtual void OnMainStationDestruct() = 0;
-	virtual void OnPlayerDead() = 0;
+	virtual void OnPlayerDead(ACharacter* ControllCharacter) = 0;
 };

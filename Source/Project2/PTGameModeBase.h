@@ -23,24 +23,37 @@ public:
 	void GameClear();
 	void GameOver();
 
-	virtual void OnPlayerDead() override;
+	virtual void OnPlayerDead(ACharacter* ControllCharacter) override;
+
+	virtual void RestartPlayer(AController* NewPlayer) override;
+
 #pragma endregion
 
 
 #pragma region Timer
 public:
-	void StageTimerStart();
-	void MonsterWaveTimerStart();
-
+	void StageTimer();
+	void MonsterWaveTimer();
+	void PlayerRespawnTimer();
+	
 	UFUNCTION(BlueprintCallable, Category = "Timer")
 	float GetStageRemainTime();
 
+	UFUNCTION(BlueprintCallable, Category = "Timer")
+	float GetPlayerRespawnRemainTime();
+	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Stage", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timer", meta = (AllowPrivateAccess = "true"))
 	float StageClearTime = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timer", meta = (AllowPrivateAccess = "true"))
+	float PlayerRespawnDelay = 5.f;
 
 	UPROPERTY()
 	FTimerHandle StageTimerHandle;
+
+	UPROPERTY()
+	FTimerHandle PlayerRespawnTimerHandle;
 	
 #pragma endregion
 

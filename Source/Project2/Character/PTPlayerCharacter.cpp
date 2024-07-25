@@ -1,21 +1,15 @@
 #include "Character/PTPlayerCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
-#include "PTGameModeBase.h"
 #include "PTComponent/PTInputComponent.h"
 #include "PTComponent/Character/PTPlayerStatComponent.h"
-#include "GameData/PTGameDataSingleton.h"
-#include "GameFramework/CharacterMovementComponent.h"	// for GetCharacterMovement()
-#include "Weapon/Gun.h"
-#include "Physics/PTCollision.h"
-#include "Components/CapsuleComponent.h"
 #include "PTComponent/Character//PTCharacterMoveComponent.h"
-#include "SimpleShooterGameModeBase.h"
-#include "UI/PTHUDWidget.h"
-#include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "PTComponent/PTFactionComponent.h"
-#include "PTComponent/Equipment/PTEquipmentComponent.h"
+#include "Physics/PTCollision.h"
+#include "PTInterface/PTGameInterface.h"
+#include "UI/PTHUDWidget.h"
 
 APTPlayerCharacter::APTPlayerCharacter()
 {
@@ -42,12 +36,12 @@ void APTPlayerCharacter::PostInitializeComponents()
 	// 리소스에 붙어 있는 총 숨김
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 
-	FactionComponent->SetFaction(EFaction::Ally);
+	FactionComponent->SetFaction(EFaction::Player);
 }
 
-void APTPlayerCharacter::BeginPlay()
+void APTPlayerCharacter::PossessedBy(AController* NewController)
 {
-	Super::BeginPlay();
+	Super::PossessedBy(NewController);
 
 	PlayerInputComponent->Init(CameraBoom);
 	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
@@ -141,16 +135,16 @@ void APTPlayerCharacter::Reloading()
 void APTPlayerCharacter::Dead()
 {	
 	Super::Dead();
-
+	
 	StopAttack();
+
+	//TODO: Dead 애니메이션 안나온다, 코드ㅏ
+	
 	
 	if (IPTGameInterface* PTGameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode()))
 	{
-		PTGameMode->OnPlayerDead();
+		PTGameMode->OnPlayerDead(this);
 	}
-	
-	// 더이상 어떤 행동도 하지 않도록 컨트롤러를 폰에서 분리 
-	DetachFromControllerPendingDestroy();
 }
 
 void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)

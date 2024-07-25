@@ -17,7 +17,7 @@ public:
 	FORCEINLINE void GameClear() { K2_OnGameClear(); }
 	FORCEINLINE void GameOver() { K2_OnGameOver(); }
 	FORCEINLINE void TimerStart() { K2_OnTimerStart(); }
-
+	FORCEINLINE void PlayerRespawn() { K2_OnPlayerRespawn(); }
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnGameClearCpp"))
 	void K2_OnGameClear();
@@ -27,6 +27,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnTimerStartCpp"))
 	void K2_OnTimerStart();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnPlayerRespawnCpp"))
+	void K2_OnPlayerRespawn();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 	TSubclassOf<class UPTHUDWidget> HUDClass;
