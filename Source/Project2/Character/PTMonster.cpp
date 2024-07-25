@@ -152,21 +152,18 @@ void APTMonster::Attack()
 
 	for(FHitResult HitResult : OutHitResult)
 	{
-		APTCharacterBase* HitCharacter = Cast<APTCharacterBase>(HitResult.GetActor());
-
-		if (HitCharacter)
+		if (APTCharacterBase* HitCharacter = Cast<APTCharacterBase>(HitResult.GetActor()))
 		{
-			UE_LOG(LogTemp, Display, TEXT("AMonster::Attack() - HitCharacter: %s   IsDead: %s"), *HitCharacter->GetName(), HitCharacter->IsDead() ? TEXT("True") : TEXT("False"));
+			if (HitCharacter->IsDead())
+			{
+				continue;
+			}
 		}
+		HitTargets.Add(HitResult.GetActor());
 		
-		if (HitCharacter && !HitCharacter->IsDead())
-		{
-			HitTargets.Add(HitResult.GetActor());
-		
-			FPointDamageEvent PointDamageEvent;
-			PointDamageEvent.HitInfo.ImpactPoint = HitResult.ImpactPoint;
-			HitResult.GetActor()->TakeDamage(AttackDamage, PointDamageEvent, GetController(), this);
-		}
+		FPointDamageEvent PointDamageEvent;
+		PointDamageEvent.HitInfo.ImpactPoint = HitResult.ImpactPoint;
+		HitResult.GetActor()->TakeDamage(AttackDamage, PointDamageEvent, GetController(), this);		
 	}
 
 #if ENABLE_DRAW_DEBUG

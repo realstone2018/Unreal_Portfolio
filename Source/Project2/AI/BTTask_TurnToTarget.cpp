@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "AI/BTTask_TurnToTarget.h"
 #include "ABAI.h"
 #include "AIController.h"
@@ -17,28 +14,30 @@ EBTNodeResult::Type UBTTask_TurnToTarget::ExecuteTask(UBehaviorTreeComponent& Ow
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	APawn* ControllingPawn = Cast<APawn>(OwnerComp.GetAIOwner()->GetPawn());
-	if (nullptr == ControllingPawn)
+	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
+	if (OwnerPawn == nullptr)
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	APawn* TargetPawn = Cast<APawn>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(BBKEY_TARGET));
-	if (nullptr == TargetPawn)
+	UObject* Target = OwnerComp.GetBlackboardComponent()->GetValueAsObject(GetSelectedBlackboardKey());
+	AActor* TargetActor = Cast<AActor>(Target);
+	if (TargetActor == nullptr)
 	{
 		return EBTNodeResult::Failed;
 	}
 
-	IPTAIInterface* AIPawn = Cast<IPTAIInterface>(ControllingPawn);
-	if (nullptr == AIPawn)
+	IPTAIInterface* AIPawn = Cast<IPTAIInterface>(OwnerPawn);
+	if (AIPawn == nullptr)
 	{
 		return EBTNodeResult::Failed;
 	}
 
 	float TurnSpeed = AIPawn->GetAITurnSpeed();
-	FVector LookVector = TargetPawn->GetActorLocation() - ControllingPawn->GetActorLocation();
+	FVector LookVector = TargetActor->GetActorLocation() - OwnerPawn->GetActorLocation();
 	LookVector.Z = 0.0f;
 	FRotator TargetRot = FRotationMatrix::MakeFromX(LookVector).Rotator();
-	ControllingPawn->SetActorRotation(FMath::RInterpTo(ControllingPawn->GetActorRotation(), TargetRot, GetWorld()->GetDeltaSeconds(), TurnSpeed));
+	OwnerPawn->SetActorRotation(FMath::RInterpTo(OwnerPawn->GetActorRotation(), TargetRot, GetWorld()->GetDeltaSeconds(), TurnSpeed));
 
-	return EBTNodeResult::Succeeded;}
+	return EBTNodeResult::Succeeded;
+}

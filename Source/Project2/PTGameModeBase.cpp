@@ -150,14 +150,14 @@ void APTGameModeBase::MonsterWaveTimer()
 
 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 1);
 	
-	//SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
-	//SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
 
 	
-	// GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this]()
-	// {
-	// 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
-	// 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 2);
-	// 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 4);
-	// }), 18.f, true);
+	 GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this]()
+	 {
+	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 2);
+	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 4);
+	 }), 18.f, true);
 }
