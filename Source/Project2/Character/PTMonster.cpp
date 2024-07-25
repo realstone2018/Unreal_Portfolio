@@ -180,7 +180,6 @@ void APTMonster::Attack()
 
 void APTMonster::Dash()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTMonster::Dash"));
 	Super::Dash();
 
 	Jump();

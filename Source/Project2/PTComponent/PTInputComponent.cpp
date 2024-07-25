@@ -266,8 +266,6 @@ void UPTInputComponent::OnZoomOutInput()
 
 void UPTInputComponent::OnEquipMainInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnEquipMainInput"));
-	
 	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
 	{
@@ -277,8 +275,6 @@ void UPTInputComponent::OnEquipMainInput()
 
 void UPTInputComponent::OnEquipSubInput()
 {
-	UE_LOG(LogTemp, Display, TEXT("UPTInputComponent::OnEquipSubInput"));
-	
 	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
 	{

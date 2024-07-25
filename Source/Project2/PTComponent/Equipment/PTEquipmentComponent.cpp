@@ -41,7 +41,7 @@ void UPTEquipmentComponent::Init()
 void UPTEquipmentComponent::ChangeEquipment(EEquipType NewEquipType)
 {
 	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EEquipType"), true);
-	UE_LOG(LogTemp, Display, TEXT("UPTEquipmentComponent::ChangeEquipment - CurrentEquipType: %s / NewEquipType: %s"), *EnumPtr->GetNameStringByValue((uint8)CurrentEquipType),*EnumPtr->GetNameStringByValue((uint8)NewEquipType));
+	//UE_LOG(LogTemp, Display, TEXT("UPTEquipmentComponent::ChangeEquipment - CurrentEquipType: %s / NewEquipType: %s"), *EnumPtr->GetNameStringByValue((uint8)CurrentEquipType),*EnumPtr->GetNameStringByValue((uint8)NewEquipType));
 	
 	if (!EquipGuns.Contains(NewEquipType))
 	{

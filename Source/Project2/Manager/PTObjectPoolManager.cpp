@@ -59,8 +59,6 @@ T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans)
 		return nullptr;
 	}
 	
-	UE_LOG(LogTemp, Display, TEXT("UPTObjectPoolManager::GetPooledObject() - Success Get PoolType: %s "), *UEnum::GetValueAsString(PoolType));
-
 	if (!PoolMap.Contains(PoolType))
 	{
 		return nullptr;

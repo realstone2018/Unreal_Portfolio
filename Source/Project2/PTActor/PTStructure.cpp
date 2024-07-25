@@ -58,9 +58,7 @@ float APTStructure::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	float result = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
 	CurrentHp -= DamageAmount;
-
-	UE_LOG(LogTemp, Display, TEXT("APTStructure::TakeDamage() - CurrentHp: %d   DamagaeAmount: %f"), CurrentHp, DamageAmount);
-
+	
 	if (CurrentHp <= 0)
 	{
 		Destruct();
