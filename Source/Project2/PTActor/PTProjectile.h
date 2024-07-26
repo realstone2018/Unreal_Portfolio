@@ -6,7 +6,7 @@
 #include "PTInterface/PTPullingObjectInterface.h"
 #include "PTProjectile.generated.h"
 
-DECLARE_DELEGATE_TwoParams(FOnExplosionDelegate, AActor* /*Owner*/, const TArray<FOverlapResult>& /*targets*/)
+DECLARE_DELEGATE_ThreeParams(FOnExplosionDelegate, AActor* /*Owner*/, const TArray<FOverlapResult>& /*targets*/, FVector /* Location */)
 DECLARE_DELEGATE_OneParam(FOnDeadDelegate, AActor* /*this*/);
 
 UCLASS()

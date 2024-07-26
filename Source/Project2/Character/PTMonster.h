@@ -42,31 +42,29 @@ protected:
 
 #pragma region Battle
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation") 
-	TObjectPtr<class UAnimMontage> AttackMontage;
+	FOnDeadDelegate OnDead;
+	FAICharacterAttackFinished OnAttackFinished;
+	
+	virtual void Dash() override;
 
+	void Attack();
+	
 	void PlayAttackMontage();
 
 	virtual void OnNotifyAttack() override;
 	
-	void Attack();
-	FAICharacterAttackFinished OnAttackFinished;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation") 
+	TObjectPtr<class UAnimMontage> AttackMontage;
 
-	virtual void Dash() override;
-	
+
 private:
 	//몽타주가 종료될 때 호출, 몽타주에 설정된 delegate로 바로 호출되도록 파라미터 세팅 (UAnimMontage.OnMontageEnd 딜리게이트의 파라미터와 동일하게)
 	void EndAttackMontage(class UAnimMontage* TargetMontage, bool IsProperlyEnded);
 
-	UPROPERTY()
-	TArray<AActor*> HitTargets;
-	
-public:
-	FOnDeadDelegate OnDead;
-	
-protected:
 	virtual void Dead() override;
 
+	UPROPERTY()
+	TArray<AActor*> HitTargets;
 
 #pragma endregion
 

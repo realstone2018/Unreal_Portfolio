@@ -19,13 +19,13 @@ void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int Da
 		ensure(Projectile);
 
 		Projectile->Init(GunOwner);
-		Projectile->OnExplosion.BindLambda([this, Damage](AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults){
-			ApplyDamageToEnemies(ProjectileOwner, OverlapResults, Damage);
+		Projectile->OnExplosion.BindLambda([this, Damage](AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults, FVector Location){
+			ApplyDamageToEnemies(ProjectileOwner, OverlapResults, Location, Damage);
 		});
 	}
 }
 
-void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults, int Damage)
+void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults, FVector Location, int Damage)
 {
 	APTCharacterBase* OwnerCharacter = Cast<APTCharacterBase>(ProjectileOwner);	
 
@@ -43,8 +43,12 @@ void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const
 		{
 			continue;
 		}
+
 		
-		UClass* DamageTypeClass = UDamageType::StaticClass();
-		UGameplayStatics::ApplyDamage(TargetCharacter, Damage, OwnerCharacter->GetController(), Gun, DamageTypeClass);
+		FRadialDamageEvent RadialDamageEvent;
+		RadialDamageEvent.Params.BaseDamage = Damage;
+		RadialDamageEvent.Params.MinimumDamage = Damage;
+		RadialDamageEvent.Origin = Location;
+		TargetCharacter->TakeDamage(Damage, RadialDamageEvent, OwnerCharacter->GetController(), Gun);
 	}
 }

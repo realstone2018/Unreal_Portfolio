@@ -122,7 +122,7 @@ void APTProjectile::Explosion()
 	TArray<FOverlapResult> OutOverlapResults;
 	GetWorld()->OverlapMultiByChannel(OutOverlapResults, Location, FQuat::Identity, CCHANNEL_PTBULLET, FCollisionShape::MakeSphere(ExplosionRadius), Params);	
 
-	OnExplosion.Execute(GetOwner(), OutOverlapResults);
+	OnExplosion.Execute(GetOwner(), OutOverlapResults, Location);
 
 	if (ExplosionParticles)
 	{
