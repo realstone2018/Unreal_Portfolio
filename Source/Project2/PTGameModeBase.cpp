@@ -25,7 +25,7 @@ void APTGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MainStation = GetWorld()->SpawnActor<APTStructure>(MainStationClass, FVector(0.f, 0.f, -350.f), FRotator::ZeroRotator);
+	MainStation = GetWorld()->SpawnActor<APTStructure>(MainStationClass, FVector::ZeroVector, FRotator::ZeroRotator);
 	check(MainStation);
 	
 	PoolManager->Init(GetWorld());
@@ -152,7 +152,7 @@ void APTGameModeBase::MonsterWaveTimer()
 	
 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
-
+	
 	
 	 GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this]()
 	 {

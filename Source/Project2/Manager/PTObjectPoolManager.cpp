@@ -35,11 +35,19 @@ void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> Object
 	ensure(PoolData);
 	const FPoolData Data = PoolData->GetPoolData(PoolType);
 	int Size = SetUpSize != 0 ? SetUpSize : Data.SetupSize;
+	FVector SpawnLocation(0.f, 0.f, 5000.f);
 	
 	for (int32 i = 0; i < Size; i++)
 	{
-		AActor* NewObject = WorldContext->SpawnActor<T>(Data.PoolClass);
-		check(NewObject);
+		UE_LOG(LogTemp, Error, TEXT("Set Up Pool is Fail, PoolType: %s   ClassName: %s"), *UEnum::GetValueAsString(PoolType), *Data.PoolClass->GetName());
+
+		AActor* NewObject = WorldContext->SpawnActor<T>(Data.PoolClass, SpawnLocation, FRotator::ZeroRotator);
+		if (NewObject == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Set Up Pool is Fail, PoolType: %s"), *UEnum::GetValueAsString(PoolType));
+			ensure(NewObject);
+			continue;
+		}
 		
 		NewObject->SetFolderPath(*ParentPath);
 		if (IPTPullingObjectInterface* PoolableObject = Cast<IPTPullingObjectInterface>(NewObject))
