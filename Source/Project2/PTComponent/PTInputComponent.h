@@ -55,7 +55,7 @@ protected:
 	TObjectPtr<class UInputAction> QuaterMoveAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
-	TObjectPtr<class UInputAction> JumpAction;
+	TObjectPtr<class UInputAction> DashAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UInputAction> ShootAction;
@@ -75,8 +75,7 @@ protected:
 	void OnShoulderLookInput(const FInputActionValue& Value);
 	void OnQuaterMoveInput(const FInputActionValue& Value);
 
-	void OnJumpInput();
-	void OnJumpStopInput();
+	void OnDashInput();
 
 	void OnStartAttackInput();
 	void OnCompleteAttackInout();

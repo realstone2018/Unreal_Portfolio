@@ -1,5 +1,5 @@
 #include "UI/PTHpBarWidget.h"
-#include "PTInterface/PTCharacterWidgetInterface.h"
+#include "PTInterface/PTCharactHUDInterface.h"
 #include "Components/ProgressBar.h"	//UMG모듈에서 지원, Build.cs로 가서 UMG를 추가해줘야한다.
 
 
@@ -15,10 +15,10 @@ void UPTHpBarWidget::NativeConstruct()
 	HpProgressBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HpBar")));
 	ensure(HpProgressBar);
 	
-	IPTCharacterWidgetInterface* CharacterWidget = Cast<IPTCharacterWidgetInterface>(OwningActor);
+	IPTCharactHUDInterface* CharacterWidget = Cast<IPTCharactHUDInterface>(OwningActor);
 	if(CharacterWidget)
 	{
-		CharacterWidget->SetupCharacterWidget(this);		
+		CharacterWidget->SetupHpBarWidget(this);		
 	}
 }
 

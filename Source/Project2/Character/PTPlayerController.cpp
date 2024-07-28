@@ -14,7 +14,6 @@ void APTPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 마우스를 뷰포트 안으로 
 	FInputModeGameOnly GameOnlyInputMode;
 	SetInputMode(GameOnlyInputMode);
 }

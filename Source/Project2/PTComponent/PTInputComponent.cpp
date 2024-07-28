@@ -43,10 +43,10 @@ UPTInputComponent::UPTInputComponent()
 		QuaterMoveAction = InputActionQuaterMoveRef.Object;
 	}
 		
-	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionJumpRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_Jump.IA_Jump'"));
-	if (nullptr != InputActionJumpRef.Object)
+	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionDashRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_Dash.IA_Dash'"));
+	if (nullptr != InputActionDashRef.Object)
 	{
-		JumpAction = InputActionJumpRef.Object;
+		DashAction = InputActionDashRef.Object;
 	}
      
 	static ConstructorHelpers::FObjectFinder<UInputAction> InputActionShootRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Project2/Input/Action/IA_Shoot.IA_Shoot'"));
@@ -89,8 +89,7 @@ void UPTInputComponent::Init(USpringArmComponent* SpringArm)
 
 void UPTInputComponent::SetupPlayerInputComponent(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnJumpInput);
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &UPTInputComponent::OnJumpStopInput);
+	EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &UPTInputComponent::OnDashInput);
 	EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &UPTInputComponent::OnStartAttackInput);
 	EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &UPTInputComponent::OnCompleteAttackInout);
 	
@@ -212,19 +211,13 @@ void UPTInputComponent::OnQuaterMoveInput(const FInputActionValue& Value)
 	Character->AddMovementInput(MoveDirection, MovementVectorSize);
 }
 
-void UPTInputComponent::OnJumpInput()
+void UPTInputComponent::OnDashInput()
 {
-	//PlayerCharacter->Jump();
 	IPTPlayerInputInterface* PlayerInputInterface = Cast<IPTPlayerInputInterface>(Character);	
 	if (PlayerInputInterface)
 	{
 		PlayerInputInterface->DashAction();
 	}
-}
-
-void UPTInputComponent::OnJumpStopInput()
-{
-	//PlayerCharacter->StopJumping();
 }
 
 void UPTInputComponent::OnStartAttackInput()

@@ -4,13 +4,13 @@
 
 UPTEquipmentComponent::UPTEquipmentComponent()
 {
-	static ConstructorHelpers::FClassFinder<AGun> MainGunRef(TEXT("/Game/Project2/Blueprint/Gun/BP_Rifle.BP_Rifle_C"));
+	static ConstructorHelpers::FClassFinder<APTGun> MainGunRef(TEXT("/Game/Project2/Blueprint/Gun/BP_Rifle.BP_Rifle_C"));
 	if (MainGunRef.Class)
 	{
 		MainGunClass = MainGunRef.Class;
 	}
 
-	static ConstructorHelpers::FClassFinder<AGun> SubGunRef(TEXT("/Game/Project2/Blueprint/Gun/BP_Launcher.BP_Launcher_C"));
+	static ConstructorHelpers::FClassFinder<APTGun> SubGunRef(TEXT("/Game/Project2/Blueprint/Gun/BP_Launcher.BP_Launcher_C"));
 	if (SubGunRef.Class)
 	{
 		SubGunClass = SubGunRef.Class;
@@ -21,13 +21,13 @@ void UPTEquipmentComponent::Init()
 {
 	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
 	
-	AGun* MainGun = GetWorld()->SpawnActor<AGun>(MainGunClass);
+	APTGun* MainGun = GetWorld()->SpawnActor<APTGun>(MainGunClass);
 	EquipGuns.Add(EEquipType::Main, MainGun);
 	MainGun->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	MainGun->SetOwner(OwnerCharacter);
 	MainGun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseRifle"));
 	
-	AGun* SubGun = GetWorld()->SpawnActor<AGun>(SubGunClass);
+	APTGun* SubGun = GetWorld()->SpawnActor<APTGun>(SubGunClass);
 	EquipGuns.Add(EEquipType::Sub, SubGun);
 	SubGun->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	SubGun->SetOwner(OwnerCharacter);
@@ -61,7 +61,7 @@ void UPTEquipmentComponent::ChangeEquipment(EEquipType NewEquipType)
 		OnChangeEquip.Execute(CurrentEquipType, CurrentGun);
 	}
 	
-	for (const TPair<EEquipType, AGun*>& Pair : EquipGuns)
+	for (const TPair<EEquipType, APTGun*>& Pair : EquipGuns)
 	{
 		Pair.Value->SetActorHiddenInGame(Pair.Key != CurrentEquipType);
 	}

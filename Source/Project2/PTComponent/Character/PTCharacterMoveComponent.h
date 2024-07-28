@@ -19,18 +19,17 @@ public:
 	void MoveToLocation(FVector InTargetLocation, float Duration);
 	void MoveToDirection(FVector Direction, float Distance, float Duration);
 
-	bool GetIsMoving() { return bIsMoving; }
+	uint8 GetIsMoving() const { return bIsMoving; }
 
 	UPROPERTY(EditAnywhere, Category="PTMove")
 	float MoveScale;
 	
 private:
-	bool bIsMoving;
-	bool bIsMovingUseInput;
+	uint8 bIsMoving : 1;
+	uint8 bIsMovingUseInput : 1;
 	
 	FVector StartLocation;
 	FVector TargetLocation;
-
 	FVector MoveDirection;
 	
 	float MoveDuration;

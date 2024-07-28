@@ -2,23 +2,22 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/SkeletalMeshComponent.h"
 #include "GameData/PTGunData.h"
 #include "PTComponent/Equipment/GunFireComponent.h"
-#include "Gun.generated.h"
+#include "PTGun.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnStartReloadDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnCompleteReloadDelegate);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnChangeAmmo, int /*CurrentAmmo*/, int /*MaxAmmo*/)
 
 UCLASS()
-class PROJECT2_API AGun : public AActor
+class PROJECT2_API APTGun : public AActor
 {
 	GENERATED_BODY()
 
 // Stat
 public:	
-	AGun();
+	APTGun();
 	
 	FORCEINLINE void SetGunData(const FPTGunData& InGunData);
 

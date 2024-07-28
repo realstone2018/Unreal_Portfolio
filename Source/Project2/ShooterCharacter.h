@@ -68,11 +68,11 @@ private:
 private:
 	//인스턴스를 저장하는게 아닌, 클래스 자체를 저장하기 때문에 포인터가 붙지 않는다.
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class AGun> GunClass;
+	TSubclassOf<class APTGun> GunClass;
 
 	//스폰한 인스턴스를 저장하기에 포인터
 	UPROPERTY()
-	AGun* Gun;
+	APTGun* Gun;
 	
 
 };

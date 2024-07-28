@@ -1,4 +1,4 @@
-#include "Gun.h"
+#include "PTGun.h"
 #include "AsyncTreeDifferences.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/Character.h"
@@ -7,7 +7,7 @@
 #include "PTComponent/Equipment//RifleFireComponent.h"
 #include "PTComponent/Equipment//LauncherFireComponent.h"
 
-AGun::AGun()
+APTGun::APTGun()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -27,7 +27,7 @@ AGun::AGun()
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
 }
 
-void AGun::SetGunData(const FPTGunData& InGunData)
+void APTGun::SetGunData(const FPTGunData& InGunData)
 {
 	GunData = InGunData;
 	MaxAmmo = GunData.MaxAmmo;
@@ -50,10 +50,10 @@ void AGun::SetGunData(const FPTGunData& InGunData)
 	// 엔진에 생성한 컴포넌트를 인식
 	GunFireComponent->RegisterComponent();
 	GunFireComponent->Init(this, ProjectileClass);
-	GunFireComponent->OnHitTracing.BindUObject(this, &AGun::PlayImpactEffectAndSound);
+	GunFireComponent->OnHitTracing.BindUObject(this, &APTGun::PlayImpactEffectAndSound);
 }
 
-bool AGun::PullTrigger()
+bool APTGun::PullTrigger()
 {
 	//UE_LOG(LogTemp, Display, TEXT("Gun::PullTrigger() - %f"), UGameplayStatics::GetRealTimeSeconds(GetWorld()));
 
@@ -71,13 +71,13 @@ bool AGun::PullTrigger()
 		Fire(); // 즉시 발사하고, 타이머 시작
 		
 		GetWorld()->GetTimerManager().ClearTimer(FireRateTimerHandle);
-		GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, &AGun::Fire, GunData.FireRate, true);
+		GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, &APTGun::Fire, GunData.FireRate, true);
 	}
 
 	return true;
 }
 
-void AGun::StopTrigger()
+void APTGun::StopTrigger()
 {
 	if (bIsFiring)
 	{
@@ -87,7 +87,7 @@ void AGun::StopTrigger()
 }
 
 //TODO: 멀티플레이 대비, 사용하는 플레이어가 변경되어도 정상동작할지 체크 필요
-AController* AGun::GetOwnerController() const
+AController* APTGun::GetOwnerController() const
 {
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr)
@@ -100,7 +100,7 @@ AController* AGun::GetOwnerController() const
 
 
 //TODO: 함수 분리 필요해보임
-void AGun::Fire()
+void APTGun::Fire()
 {
 	if (CurrentAmmo <= 0)
 	{
@@ -125,7 +125,7 @@ void AGun::Fire()
 	 GunFireComponent->FireProcess(ProjectileSpawnPoint->GetComponentLocation(), GunData.Range, GunData.Damage);
 }
 
-void AGun::ConsumeBullet()
+void APTGun::ConsumeBullet()
 {
 	CurrentAmmo--;
 	SetAmmo(CurrentAmmo, MaxAmmo);
@@ -135,7 +135,7 @@ void AGun::ConsumeBullet()
 
 }
 
-void AGun::ApplyRecoil()
+void APTGun::ApplyRecoil()
 {
 	AController* OwnerController = GetOwnerController();
 	
@@ -161,7 +161,7 @@ void AGun::ApplyRecoil()
 	}
 }
 
-void AGun::PlayImpactEffectAndSound(FHitResult Hit, FVector ShotDirection)
+void APTGun::PlayImpactEffectAndSound(FHitResult Hit, FVector ShotDirection)
 {
 	//TODO: Emitter 컨트롤러 만들어서 null체크 랩핑해주기 + SpawnEmitterAtLocation내부코드에 널체크 없는지 그냥 널 스폰해보기  
 	if (ImpactEffect)
@@ -177,7 +177,7 @@ void AGun::PlayImpactEffectAndSound(FHitResult Hit, FVector ShotDirection)
 
 
 #pragma region Reload
-float AGun::Reloading(float AccelerationRate)
+float APTGun::Reloading(float AccelerationRate)
 {
 	FireCount = 0;
 	
@@ -189,25 +189,25 @@ float AGun::Reloading(float AccelerationRate)
 	//TODO: 총기 재장전 관련 애니메이션 있다면 재생, 타이머 작동
 
 	GetWorld()->GetTimerManager().ClearTimer(ReloadingTimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(ReloadingTimerHandle, this, &AGun::CompleteReload, result);
+	GetWorld()->GetTimerManager().SetTimer(ReloadingTimerHandle, this, &APTGun::CompleteReload, result);
 
 	OnStartReload.Broadcast();
 	
 	return result;
 }
 
-void AGun::CancelReload()
+void APTGun::CancelReload()
 {
 }
 
-void AGun::CompleteReload()
+void APTGun::CompleteReload()
 {
 	SetAmmo(MaxAmmo, MaxAmmo);
 	
 	OnCompleteReload.Broadcast();
 }
 
-void AGun::SetAmmo(int InCurrentAmmo, int InMaxAmmo)
+void APTGun::SetAmmo(int InCurrentAmmo, int InMaxAmmo)
 {
 	CurrentAmmo = InCurrentAmmo;
 	MaxAmmo = InMaxAmmo;

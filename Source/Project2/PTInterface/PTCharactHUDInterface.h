@@ -16,4 +16,5 @@ class PROJECT2_API IPTCharactHUDInterface
 
 public:
 	virtual void SetupHUDWidget(class UPTHUDWidget* InHUDWidget) = 0;
+	virtual void SetupHpBarWidget(class UPTUserWidget* InUserWidget) = 0;
 };

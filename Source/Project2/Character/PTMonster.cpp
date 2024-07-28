@@ -1,14 +1,12 @@
 #include "Character/PTMonster.h"
-#include "PTGameModeBase.h"
-#include "Components/CapsuleComponent.h"
-#include "Physics/PTCollision.h"
 #include "Engine/DamageEvents.h"
+#include "Components/CapsuleComponent.h"
+#include "PTGameModeBase.h"
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
-#include "AI/Monster/PTScorchAIController.h"
-#include "Kismet/GameplayStatics.h"
-#include "PTActor/PTStructure.h"
 #include "PTComponent/PTFactionComponent.h"
-#include "PTComponent/Character/PTMonsterStatComponent.h"
+#include "Physics/PTCollision.h"
+#include "AI/Monster/PTMonsterAIController.h"
+#include "UI/PTWidgetComponent.h"
 
 #define ENABLE_DRAW_DEBUG 0
 
@@ -17,22 +15,10 @@ APTMonster::APTMonster()
 	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTMONSTER);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
-	AIControllerClass = APTScorchAIController::StaticClass();
-	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;	//배치npc, 런타임중 스폰npc 둘다 AABAIController 적용
+	AIControllerClass = APTMonsterAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	MonsterStat = CreateDefaultSubobject<UPTMonsterStatComponent>(TEXT("MonsterStat"));
-}
-
-//TODO: 이거 타이밍이 어떻게 되더라
-void APTMonster::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-	
-// 	FPTCharacterStat CharacterStat = UPTGameDataSingleton::Get().GetCharacterStat(CurrentLevel);
-// 	SetBaseStat(CharacterStat);
-// 	
-// 	//TODO: Dirty 패턴 적용하기
-// 	SetHp(BaseStat.MaxHp);
 
 	FactionComponent->SetFaction(EFaction::Monster);
 }
@@ -48,7 +34,6 @@ void APTMonster::Initialize()
 	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTMONSTER);
 	SetActorEnableCollision(true);
 	
-	// 애니메이션 활성화
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	GetComponents(SkeletalMeshComponents);
 	
@@ -57,8 +42,7 @@ void APTMonster::Initialize()
 		SkeletalMeshComponent->SetComponentTickEnabled(true);
 	}
 
-	// 비헤이비어 트리 활성화
-	if (APTScorchAIController* AIController = Cast<APTScorchAIController>(GetInstigatorController()))
+	if (APTMonsterAIController* AIController = Cast<APTMonsterAIController>(GetInstigatorController()))
 	{
 		AActor* DefaultTarget = nullptr;
 		
@@ -85,7 +69,6 @@ void APTMonster::Terminate()
 	SetActorEnableCollision(false);
 	SetActorTickEnabled(false);
 	
-	// 애니메이션 비활성화
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	GetComponents(SkeletalMeshComponents);
 	
@@ -98,10 +81,7 @@ void APTMonster::Terminate()
 		}
 	}
 
-	// 비헤이비어 트리 비활성화
-	// TODO: APTScorchAIController를 APMonsterAIController로 변경
-	//       APMonsterAIController 하나로 모든 몬스터를 관리 + BT와 BB만 교체해줘서 행동패턴을 다르게 
-	if (APTScorchAIController* AIController = Cast<APTScorchAIController>(GetInstigatorController()))
+	if (APTMonsterAIController* AIController = Cast<APTMonsterAIController>(GetInstigatorController()))
 	{
 		AIController->StopAI();
 	}
@@ -126,11 +106,33 @@ void APTMonster::PlayAttackMontage()
 	AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
 }
 
-void APTMonster::OnNotifyAttack()
+//TODO: Terminate()와 비교해서 풀기 
+void APTMonster::Dead()
 {
-	Super::OnNotifyAttack();
+	Super::Dead();
+	
+	//SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
+	
+	// 비헤이비어 트리 비활성화
+	// TODO: APTScorchAIController를 APMonsterAIController로 변경
+	//       APMonsterAIController 하나로 모든 몬스터를 관리 + BT와 BB만 교체해줘서 행동패턴을 다르게 
+	if (APTMonsterAIController* AIController = Cast<APTMonsterAIController>(GetInstigatorController()))
+	{
+		AIController->StopAI();
+	}
 
-	Attack();
+	OnDead.ExecuteIfBound(this);
+}
+
+void APTMonster::Dash()
+{
+	Jump();
+	
+	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
+	MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
+	
+	MoveComponent->MoveToDirection(Direction, 500.f, 0.5f);
 }
 
 void APTMonster::Attack()
@@ -147,7 +149,7 @@ void APTMonster::Attack()
 	const FVector End = Start + GetActorForwardVector() * AttackRadius;
 
 	TArray<FHitResult> OutHitResult;
-	bool HitDetected = GetWorld()->SweepMultiByChannel(OutHitResult, Start, End,
+	uint8 HitDetected = GetWorld()->SweepMultiByChannel(OutHitResult, Start, End,
 		FQuat::Identity, CCHANNEL_PTMONSTER_MELEE, FCollisionShape::MakeSphere(AttackRadius), Params);
 
 	for(FHitResult HitResult : OutHitResult)
@@ -167,7 +169,6 @@ void APTMonster::Attack()
 	}
 
 #if ENABLE_DRAW_DEBUG
-	//센터
 	FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
 	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
 
@@ -175,41 +176,21 @@ void APTMonster::Attack()
 #endif
 }
 
-void APTMonster::Dash()
+void APTMonster::OnNotifyAttack()
 {
-	Super::Dash();
+	Super::OnNotifyAttack();
 
-	Jump();
-	
-	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
-	MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
-	
-	MoveComponent->MoveToDirection(Direction, 500.f, 0.5f);
+	Attack();
 }
 
 void APTMonster::EndAttackMontage(UAnimMontage* TargetMontage, bool IsProperlyEnded)
 {
-	OnAttackFinished.ExecuteIfBound();
-
-	HitTargets.Empty();
-}
-
-void APTMonster::Dead()
-{
-	Super::Dead();
-	
-	//SetActorEnableCollision(false);
-	SetActorTickEnabled(false);
-	
-	// 비헤이비어 트리 비활성화
-	// TODO: APTScorchAIController를 APMonsterAIController로 변경
-	//       APMonsterAIController 하나로 모든 몬스터를 관리 + BT와 BB만 교체해줘서 행동패턴을 다르게 
-	if (APTScorchAIController* AIController = Cast<APTScorchAIController>(GetInstigatorController()))
+	if (OnAttackFinished.IsBound())
 	{
-		AIController->StopAI();
+		OnAttackFinished.Execute();
 	}
 
-	OnDead.ExecuteIfBound(this);
+	HitTargets.Empty();
 }
 
 void APTMonster::AttackByAI(float& AttackCooldown)

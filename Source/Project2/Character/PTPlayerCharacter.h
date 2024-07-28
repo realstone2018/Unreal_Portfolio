@@ -7,71 +7,69 @@
 #include "PTPlayerCharacter.generated.h"
 
 UCLASS()
-class PROJECT2_API APTPlayerCharacter : public APTCharacterBase, public IPTPlayerInputInterface, public IPTCharactHUDInterface
+class PROJECT2_API APTPlayerCharacter : public APTCharacterBase, public IPTPlayerInputInterface
 {
 	GENERATED_BODY()
 
 public:
 	APTPlayerCharacter();
 
-private:
-	virtual void PostInitializeComponents() override;
-	
 	virtual void PossessedBy(AController* NewController) override;
-	
-// Camera
+
+	virtual void BeginPlay() override;
+
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
+#pragma region Component
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class USpringArmComponent> CameraBoom;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", Meta = (AllowPrivateAccess = "true"));
 	TObjectPtr<class UCameraComponent> FollowCamera;
 	
-// Input
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	TObjectPtr<class UPTInputComponent> PlayerInputComponent;
 
-public:
-	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
 
-	virtual void Dash() override;
+	virtual UPTCharacterStatComponent* GetStatComponent() override;
+
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	TObjectPtr<class UPTEquipmentComponent> EquipmentComponent;
+
+#pragma endregion 
+
+
+#pragma region Battle
+public:
+	virtual void Dead() override;
+	virtual void Dash();
 	
-// Battle
 	void StartAttack() override;
 	void StopAttack() override;
 
-	//TODO: AI의 Evation을 위해 이렇게 해둔거 같긴한데.. 필요한가?
 	void DashAction() override { Dash(); }
 	void ReloadAction() override;
 
 	void EquipInput(EEquipType EquipType) override;
 	
-	virtual void Dead() override;
-
-// Stat
-private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
-
-	virtual UPTCharacterStatComponent* GetStatComponent() override;
-	
-// Weapon
-private:
-	UPROPERTY(VisibleAnywhere, Category = "Component")
-	TObjectPtr<class UPTEquipmentComponent> EquipmentComponent;
-
 	void Reloading();
-	
-	UPROPERTY()
-	bool IsReloading;
 
-// UI Section
 private:
-	// Widget
-	virtual bool GetShouldDisplayHpBar() override { return false; }
-	
-	// IPTCharacterHUDInterface
-	virtual void SetupHUDWidget(UPTHUDWidget* InHUDWidget) override;
+	UPROPERTY()
+	uint8 IsReloading : 1;
 
+#pragma endregion
+
+
+#pragma region Widget
+public:
+	virtual uint8 GetShouldDisplayHpBar() override { return false; }
 	
+private:
+	virtual void SetupHUDWidget(UPTHUDWidget* InHUDWidget) override; // IPTCharacterHUDInterface
 	
 };

@@ -37,13 +37,12 @@ void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const
 		{
 			continue;
 		}
-				
-		if (TargetCharacter->FactionComponent->IsNoneFaction() ||
-			OwnerCharacter->FactionComponent->CompareFaction(TargetCharacter->FactionComponent))
+
+		UPTFactionComponent* TargetFaction = TargetCharacter->GetFactionComponent();
+		if (TargetFaction->IsNoneFaction() || OwnerCharacter->GetFactionComponent()->CompareFaction(TargetFaction))
 		{
 			continue;
 		}
-
 		
 		FRadialDamageEvent RadialDamageEvent;
 		RadialDamageEvent.Params.BaseDamage = Damage;

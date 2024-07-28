@@ -1,18 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "GameFramework/Character.h"
 #include "PTInterface/PTAnimationAttackInterface.h"
-#include "PTInterface/PTCharacterWidgetInterface.h"
-#include "UI/PTWidgetComponent.h"
-#include "UI/PTUserWidget.h"
+#include "PTInterface/PTCharactHUDInterface.h"
+#include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "PTCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationAttackInterface, public IPTCharacterWidgetInterface
+class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationAttackInterface, public IPTCharactHUDInterface
 {
 	GENERATED_BODY()
 
@@ -21,37 +17,50 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
+
+#pragma region Component
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAceess = "true"))
 	TObjectPtr<class UPTCharacterMoveComponent> MoveComponent;
-	
-	virtual UPTCharacterStatComponent* GetStatComponent();
 
-	// Widget
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
+	TObjectPtr<class UPTFactionComponent> FactionComponent;
+	
+	virtual UPTCharacterStatComponent* GetStatComponent() { return nullptr; }
+
+public:
+	FORCEINLINE UPTFactionComponent* GetFactionComponent() { return FactionComponent; }
+
+#pragma endregion
+
+
+#pragma region Battle
+public:
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void Kill(AActor* victim) { }
+	virtual void Dead();
+	
+	UFUNCTION(BlueprintPure)
+	virtual bool IsDead() { return GetStatComponent()->GetCurrentHp() <= 0; }
+
+	virtual void OnNotifyAttack() override { }
+
+#pragma endregion
+
+
+#pragma region Widget
+public:
+	virtual void SetupHUDWidget(UPTHUDWidget* InHUDWidget) override { }
+	virtual void SetupHpBarWidget(UPTUserWidget* InUserWidget) override;
+	virtual uint8 GetShouldDisplayHpBar() { return true; }
+
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPTWidgetComponent> HpBar; 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UPTUserWidget> HpBarWidgetClass;
+
+#pragma endregion
 	
-	virtual void SetupCharacterWidget(UPTUserWidget* InUserWidget) override;
-	virtual bool GetShouldDisplayHpBar() { return true; }
-	
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	TObjectPtr<class UPTFactionComponent> FactionComponent;
-	
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	virtual void Dash();
-
-	virtual void OnNotifyAttack() override;
-
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
-	UFUNCTION(BlueprintPure)
-	virtual bool IsDead();
-
-	virtual void Kill(AActor* victim);
-	virtual void Dead();
 };

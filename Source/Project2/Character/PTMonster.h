@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Character/PTCharacterBase.h"
-#include "PTComponent/Character/PTMonsterStatComponent.h"
 #include "PTInterface/PTPullingObjectInterface.h"
 #include "PTInterface/PTMonsterAIInterface.h"
+#include "PTComponent/Character/PTMonsterStatComponent.h"
 #include "PTMonster.generated.h"
 
 UENUM()
@@ -24,45 +24,38 @@ class PROJECT2_API APTMonster : public APTCharacterBase, public IPTPullingObject
 public:
 	APTMonster();
 	
-	virtual void PostInitializeComponents() override;
-	
 	virtual void Initialize() override;
 	virtual void Terminate() override;
 
-// Stat
+
+#pragma region Component
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UPTMonsterStatComponent> MonsterStat;
 
 	virtual UPTCharacterStatComponent* GetStatComponent() override;
 
-// Widget
-	virtual bool GetShouldDisplayHpBar() override { return true; }
+#pragma endregion
 
 
 #pragma region Battle
 public:
 	FOnDeadDelegate OnDead;
 	FAICharacterAttackFinished OnAttackFinished;
-	
-	virtual void Dash() override;
 
+	virtual void Dead() override;
+	virtual void Dash();
 	void Attack();
 	
 	void PlayAttackMontage();
-
 	virtual void OnNotifyAttack() override;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation") 
-	TObjectPtr<class UAnimMontage> AttackMontage;
-
-
-private:
-	//몽타주가 종료될 때 호출, 몽타주에 설정된 delegate로 바로 호출되도록 파라미터 세팅 (UAnimMontage.OnMontageEnd 딜리게이트의 파라미터와 동일하게)
 	void EndAttackMontage(class UAnimMontage* TargetMontage, bool IsProperlyEnded);
 
-	virtual void Dead() override;
-
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation") 
+	TObjectPtr<class UAnimMontage> AttackMontage;
+	
+private:
 	UPROPERTY()
 	TArray<AActor*> HitTargets;
 
@@ -70,15 +63,25 @@ private:
 
 
 #pragma region AI
+private:
 	FORCEINLINE float GetAIDetectPlayerRange() override { return 600.f;  }
 	FORCEINLINE float GetAIDetectWallRange() override {return 1500; }
-	FORCEINLINE virtual float GetAIAttackRange() override { return MonsterStat->GetAttackRange(); }
-	FORCEINLINE virtual float GetAITurnSpeed() override { return 10.f; }
-	FORCEINLINE virtual float GetAIAttackCooldown() override { return MonsterStat->GetAttackCooldown(); }
+
+	virtual float GetAIAttackRange() override { return MonsterStat->GetAttackRange(); }
+	virtual float GetAITurnSpeed() override { return 10.f; }
+	virtual float GetAIAttackCooldown() override { return MonsterStat->GetAttackCooldown(); }
 	
-	FORCEINLINE virtual void JumpByAI() override { Dash(); }
+	virtual void JumpByAI() override { Dash(); }
 	
-	FORCEINLINE virtual void AttackByAI(float& AttackCooldown) override;
+	virtual void AttackByAI(float& AttackCooldown) override;
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) override;
-#pragma endregion 
+
+#pragma endregion
+
+#pragma region Widget
+public:
+	virtual uint8 GetShouldDisplayHpBar() override { return true; }
+
+#pragma endregion
+	
 };

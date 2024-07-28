@@ -27,15 +27,8 @@ APTPlayerCharacter::APTPlayerCharacter()
 	PlayerInputComponent = CreateDefaultSubobject<UPTInputComponent>(TEXT("InputComponet"));	
 	StatComponent = CreateDefaultSubobject<UPTPlayerStatComponent>(TEXT("PlayerStatComponent"));
 	EquipmentComponent = CreateDefaultSubobject<UPTEquipmentComponent>(TEXT("EquipmentComponent"));
-}
 
-void APTPlayerCharacter::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-	// 리소스에 붙어 있는 총 숨김
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
-
 	FactionComponent->SetFaction(EFaction::Player);
 }
 
@@ -45,16 +38,15 @@ void APTPlayerCharacter::PossessedBy(AController* NewController)
 
 	PlayerInputComponent->Init(CameraBoom);
 	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
+}
+
+void APTPlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
 
 	EquipmentComponent->Init();
 }
 
-UPTCharacterStatComponent* APTPlayerCharacter::GetStatComponent()
-{
-	return StatComponent;
-}
-
-// BeginPlay보다 먼저 호출됨
 void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 {
 	Super::SetupPlayerInputComponent(Component);
@@ -63,16 +55,29 @@ void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 	PlayerInputComponent->SetupPlayerInputComponent(EnhancedInputComponent);
 }
 
+UPTCharacterStatComponent* APTPlayerCharacter::GetStatComponent()
+{
+	return StatComponent;
+}
+
+void APTPlayerCharacter::Dead()
+{	
+	Super::Dead();
+	
+	StopAttack();
+	
+	if (IPTGameInterface* PTGameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode()))
+	{
+		PTGameMode->OnPlayerDead(this);
+	}
+}
+
 void APTPlayerCharacter::Dash()
 {
-	Super::Dash();
-
 	FVector Direction = (MoveComponent->Velocity.Size() != 0) ?
 		MoveComponent->Velocity.GetSafeNormal2D() : GetActorRotation().Vector().GetSafeNormal2D();
 	
 	MoveComponent->MoveToDirection(Direction, 400.f, 0.3f);
-	
-	//TODO: 회피중엔 재장전 캔슬
 }
 
 void APTPlayerCharacter::StartAttack()
@@ -85,7 +90,6 @@ void APTPlayerCharacter::StartAttack()
 	if (EquipmentComponent->GetCurrentGun()->PullTrigger() == false)
 	{
 		Reloading();
-		return;
 	}
 }
 
@@ -112,7 +116,7 @@ void APTPlayerCharacter::EquipInput(EEquipType EquipType)
 
 void APTPlayerCharacter::Reloading()
 {
-	AGun* CurrentGun = EquipmentComponent->GetCurrentGun();
+	APTGun* CurrentGun = EquipmentComponent->GetCurrentGun();
 
 	if (!IsReloading && !CurrentGun->GetIsFiring())
 	{
@@ -123,27 +127,10 @@ void APTPlayerCharacter::Reloading()
 			IsReloading = false;			
 		});
 		
-		//TODO: 재장전가속 스텟 전달, 최종 시간 반환받기
 		float ReloadAccelerationRateStat = 0.f;
-		float ReloadTime = CurrentGun->Reloading(ReloadAccelerationRateStat);
-	
+
 		//TODO: 재장전 애니메이션 재생, GunData.ReloadTime에 접근해서 재장전 애니메이션 속도 조절 필요
-
-	}
-}
-
-void APTPlayerCharacter::Dead()
-{	
-	Super::Dead();
-	
-	StopAttack();
-
-	//TODO: Dead 애니메이션 안나온다, 코드ㅏ
-	
-	
-	if (IPTGameInterface* PTGameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode()))
-	{
-		PTGameMode->OnPlayerDead(this);
+		float ReloadTime = CurrentGun->Reloading(ReloadAccelerationRateStat);
 	}
 }
 
@@ -161,7 +148,7 @@ void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 	StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
 	StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
 	
-	EquipmentComponent->OnChangeEquip.BindLambda([this, InHUDWidget](EEquipType NewEquipType, AGun* NewEquipment){
+	EquipmentComponent->OnChangeEquip.BindLambda([this, InHUDWidget](EEquipType NewEquipType, APTGun* NewEquipment){
 		InHUDWidget->UpdateGunAmmo(NewEquipment->GetCurrentAmmo(), NewEquipment->GetMaxAmmo());
 		InHUDWidget->UpdateEquipWeapon(NewEquipType == EEquipType::Main);
 		
@@ -177,4 +164,4 @@ void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 			InHUDWidget->UpdateGunReloadImg(false);
 		});
 	});
-}
+ }

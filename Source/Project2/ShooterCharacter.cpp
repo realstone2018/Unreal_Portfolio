@@ -2,7 +2,7 @@
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Weapon/Gun.h"
+#include "Weapon/PTGun.h"
 #include "Components/CapsuleComponent.h"
 #include "SimpleShooterGameModeBase.h"
 
@@ -54,7 +54,7 @@ void AShooterCharacter::BeginPlay()
 	SetCharacterControl();
 
 	//AGun을 상속받는 블루프린트(GunClass) 스폰 
-	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
+	Gun = GetWorld()->SpawnActor<APTGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 	Gun->SetOwner(this);

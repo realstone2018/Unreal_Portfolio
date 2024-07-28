@@ -5,7 +5,6 @@
 
 UPTCharacterMoveComponent::UPTCharacterMoveComponent()
 {
-	bIsMoving = false;
 	MoveDuration = 1.0f;
 	ElapsedTime = 0.0f;
 
@@ -29,7 +28,7 @@ void UPTCharacterMoveComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 		{
 			bIsMoving = false;
 			StopMovementImmediately();
-					}
+		}
 	}
 	else if (bIsMovingUseInput)
 	{

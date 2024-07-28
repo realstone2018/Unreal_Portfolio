@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Weapon/Gun.h"
+#include "Weapon/PTGun.h"
 #include "PTEquipmentComponent.generated.h"
 
 UENUM(BlueprintType)
@@ -14,7 +14,7 @@ enum class EEquipType : uint8
 	
 };
 
-DECLARE_DELEGATE_TwoParams(FOnChangeEquip, EEquipType /* NewEquipType */, AGun* /* NewEquipment */)
+DECLARE_DELEGATE_TwoParams(FOnChangeEquip, EEquipType /* NewEquipType */, APTGun* /* NewEquipment */)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT2_API UPTEquipmentComponent : public UActorComponent
@@ -28,23 +28,23 @@ public:
 	void Init();
 	void ChangeEquipment(EEquipType NewEquipType);
 
-	FORCEINLINE AGun* GetCurrentGun() const { return CurrentGun; } 
+	FORCEINLINE APTGun* GetCurrentGun() const { return CurrentGun; } 
 
 	FOnChangeEquip OnChangeEquip;
 	
 private:	
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AGun> MainGunClass;
+	TSubclassOf<APTGun> MainGunClass;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AGun> SubGunClass;
+	TSubclassOf<APTGun> SubGunClass;
 
 	UPROPERTY(VisibleAnywhere)
-	TMap<EEquipType, AGun*> EquipGuns;
+	TMap<EEquipType, APTGun*> EquipGuns;
 
 	UPROPERTY(VisibleAnywhere)
 	EEquipType CurrentEquipType = EEquipType::None;
 	
 	UPROPERTY()
-	AGun* CurrentGun;
+	APTGun* CurrentGun;
 };

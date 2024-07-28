@@ -18,6 +18,7 @@ public:
 	FORCEINLINE void GameOver() { K2_OnGameOver(); }
 	FORCEINLINE void TimerStart() { K2_OnTimerStart(); }
 	FORCEINLINE void PlayerRespawn() { K2_OnPlayerRespawn(); }
+	
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnGameClearCpp"))
 	void K2_OnGameClear();
