@@ -30,3 +30,21 @@ void UPTPlayerStatComponent::SetCharacterLevelStat(int32 InNewLevel)
 	
 	check(BaseStat.MaxHp > 0.0f);
 }
+
+void UPTPlayerStatComponent::SetBaseStat(const FPTCharacterStat& InBaseStat)
+{
+	BaseStat = InBaseStat;
+	OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat());
+}
+
+void UPTPlayerStatComponent::SetModifierStat(const FPTCharacterStat& InModifierStat)
+{
+	ModifierStat = InModifierStat;
+	OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat());
+}
+
+void UPTPlayerStatComponent::AddBaseStat(const FPTCharacterStat& InAddBaseStat)
+{
+	BaseStat = BaseStat + InAddBaseStat;
+	OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat());
+}

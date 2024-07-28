@@ -31,21 +31,28 @@ void UPTCharacterStatWidget::UpdateStat(const FPTCharacterStat& BaseStat, const 
 	{
 		const FName PropKey(PropIt->GetName());
 
-		float BaseData = 0.0f;
-		PropIt->GetValue_InContainer((const void*)&BaseStat, &BaseData);
-		float ModifierData = 0.0f;
-		PropIt->GetValue_InContainer((const void*)&ModifierStat, &ModifierData);
-
 		UTextBlock** BaseTextBlockPtr = BaseLookup.Find(PropKey);
-		if (BaseTextBlockPtr)
-		{
-			(*BaseTextBlockPtr)->SetText(FText::FromString(FString::SanitizeFloat(BaseData)));
-		}
-
 		UTextBlock** ModifierTextBlockPtr = ModifierLookup.Find(PropKey);
-		if (ModifierTextBlockPtr)
+
+		if (PropIt->IsFloatingPoint())
 		{
+			float BaseData = 0.0f;
+			PropIt->GetValue_InContainer((const void*)&BaseStat, &BaseData);
+			float ModifierData = 0.0f;
+			PropIt->GetValue_InContainer((const void*)&ModifierStat, &ModifierData);
+
+			(*BaseTextBlockPtr)->SetText(FText::FromString(FString::SanitizeFloat(BaseData)));
 			(*ModifierTextBlockPtr)->SetText(FText::FromString(FString::SanitizeFloat(ModifierData)));
+		}
+		else if (PropIt->IsInteger())
+		{
+			int32 BaseData = 0;
+			PropIt->GetValue_InContainer((const void*)&BaseStat, &BaseData);
+			float ModifierData = 0.0f;
+			PropIt->GetValue_InContainer((const void*)&ModifierStat, &ModifierData);
+
+			(*BaseTextBlockPtr)->SetText(FText::FromString(FString::FromInt(BaseData)));
+			(*ModifierTextBlockPtr)->SetText(FText::FromString(FString::FromInt(ModifierData)));
 		}
 	}	
 }

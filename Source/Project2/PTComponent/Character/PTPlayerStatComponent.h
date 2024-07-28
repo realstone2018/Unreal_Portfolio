@@ -20,9 +20,9 @@ public:
 
 	void SetCharacterLevelStat(int32 InNewLevel);
 	
-	FORCEINLINE void SetBaseStat(const FPTCharacterStat& InBaseStat) { BaseStat = InBaseStat; OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat()); }
-	FORCEINLINE void SetModifierStat(const FPTCharacterStat& InModifierStat) { ModifierStat = InModifierStat; OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat()); }
-	FORCEINLINE void AddBaseStat(const FPTCharacterStat& InAddBaseStat) { BaseStat = BaseStat + InAddBaseStat; OnStatChanged.Broadcast(GetBaseStat(), GetModifierStat());}
+	void SetBaseStat(const FPTCharacterStat& InBaseStat);
+	void SetModifierStat(const FPTCharacterStat& InModifierStat);
+	void AddBaseStat(const FPTCharacterStat& InAddBaseStat);
 
 	FORCEINLINE FPTCharacterStat GetTotalStat() const { return BaseStat + ModifierStat; }
 	FORCEINLINE const FPTCharacterStat& GetBaseStat() const { return BaseStat; }

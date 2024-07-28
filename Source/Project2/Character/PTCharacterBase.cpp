@@ -82,13 +82,6 @@ void APTCharacterBase::SetupHpBarWidget(UPTUserWidget* InUserWidget)
 		HpBarWidget->UpdateHpBar(Stat->GetCurrentHp());
 		
 		Stat->OnHpChanged.AddUObject(HpBarWidget, &UPTHpBarWidget::UpdateHpBar);
-
-		// HpBarWidget->UpdateStat(Stat->GetBaseStat(), Stat->GetModifierStat());
-		//
-		// Stat->OnHpChanged.AddUObject(HpBarWidget, &UABHpBarWidget::UpdateHpBar);
-		// //14-5
-		// Stat->OnStatChanged.AddUObject(HpBarWidget, &UABHpBarWidget::UpdateStat);
-
 		HpBar->SetHiddenInGame(false);
 	}	
 }
