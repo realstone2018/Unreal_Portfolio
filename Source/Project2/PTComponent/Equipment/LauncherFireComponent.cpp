@@ -15,7 +15,7 @@ void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int Da
 	IPTGameInterface* GameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
 	if (GameMode)
 	{
-		APTProjectile* Projectile = GameMode->GetSpawnManager()->SpawnObject<APTProjectile>(OutRotation, SpawnPoint);
+		APTProjectile* Projectile = GameMode->GetSpawnManager()->SpawnObject<APTProjectile>(OutRotation, SpawnPoint, true);
 		ensure(Projectile);
 
 		Projectile->Init(GunOwner);

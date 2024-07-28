@@ -11,16 +11,19 @@ class PROJECT2_API UPTSpawnManager : public UObject
 	GENERATED_BODY()
 
 public:
-	void Init(UWorld* Inworld, UPTObjectPoolManager* InPoolManager);
+	void Init(UWorld* InWorld, UPTObjectPoolManager* InPoolManager);
 
 #pragma region Polling
 public:
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
-	T* SpawnObject(FRotator SpawnRotator, FVector SpawnLocation);
+	T* SpawnObject(FRotator SpawnRotator, FVector SpawnLocation, bool ReturnImmediately);
 
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
 	void ReturnObject(AActor* PooledObject);
 
+	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
+	void ReturnImmediatelyObject(AActor* PooledObject);
+	
 private:
 	UPROPERTY()
 	TObjectPtr<class UWorld> World;

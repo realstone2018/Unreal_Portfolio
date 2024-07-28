@@ -10,15 +10,22 @@ void UPTSpawnManager::Init(UWorld* InWorld, UPTObjectPoolManager* InPoolManager)
 }
 
 template <typename T, typename>
-T* UPTSpawnManager::SpawnObject(FRotator SpawnRotator, FVector SpawnLocation)
+T* UPTSpawnManager::SpawnObject(FRotator SpawnRotator, FVector SpawnLocation, bool ReturnImmediately)
 {
 	FTransform SpawnTransform(SpawnRotator, SpawnLocation);
 
 	T* PooledObject = PoolManager->GetPooledObject<T>(SpawnTransform);
 	ensure(PooledObject);
 
-	PooledObject->OnDead.BindUObject(this, &UPTSpawnManager::ReturnObject<T>);
-
+	if (ReturnImmediately)
+	{
+		PooledObject->OnDead.BindUObject(this, &UPTSpawnManager::ReturnImmediatelyObject<T>);
+	}
+	else
+	{
+		PooledObject->OnDead.BindUObject(this, &UPTSpawnManager::ReturnObject<T>);
+	}
+	
 	return PooledObject;
 }
 
@@ -31,6 +38,12 @@ void UPTSpawnManager::ReturnObject(AActor* PooledObject)
 			PoolManager->ReturnPooledObject<T>(PooledObject);
 		}
 	), 5.0f, false);
+}
+
+template <typename T, typename>
+void UPTSpawnManager::ReturnImmediatelyObject(AActor* PooledObject)
+{
+	PoolManager->ReturnPooledObject<T>(PooledObject);
 }
 
 void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
@@ -52,6 +65,6 @@ void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
 			SpawnLocation = NavLocation;
 		}
 		
-		SpawnObject<APTMonster>(FRotator::ZeroRotator, SpawnLocation);
+		SpawnObject<APTMonster>(FRotator::ZeroRotator, SpawnLocation, false);
 	}	
 }
