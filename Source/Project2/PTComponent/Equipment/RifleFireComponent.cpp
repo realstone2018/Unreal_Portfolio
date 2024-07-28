@@ -1,6 +1,8 @@
 #include "PTComponent/Equipment//RifleFireComponent.h"
 #include "Engine/DamageEvents.h"
 
+#define ENABLE_DRAW_DEBUG 0
+
 //TODO: OwnerController 매개변수에서 제거 가능한지 알아보기
 // Gun을 넘길까?
 // Interface?
@@ -23,7 +25,9 @@ void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int Damag
 		HitActor->TakeDamage(Damage, DamageEvent, GunOwner->GetController(), Gun);;
 	}
 
+#if ENABLE_DRAW_DEBUG
 	DrawDebugPoint(GetWorld(), HitResult.Location, 10, FColor::Red, true);
+#endif
 }
 
 bool URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirection, FVector SpawnPoint, float Range)
@@ -42,8 +46,10 @@ bool URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirection
 	Params.AddIgnoredActor(GetOwner());
 	Params.AddIgnoredActor(GunOwner);
 
+#if ENABLE_DRAW_DEBUG
 	DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
-
+#endif
+	
 	//어딘가에 부딪쳐야만 True반환
 	return GetWorld()->LineTraceSingleByChannel(HitResult, OutLocation, End, ECC_GameTraceChannel1, Params);
 }

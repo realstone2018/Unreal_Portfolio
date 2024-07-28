@@ -7,6 +7,8 @@
 #include "Physics/PTCollision.h"
 #include "Components/CapsuleComponent.h"
 
+#define ENABLE_DRAW_DEBUG 0
+
 APTProjectile::APTProjectile()
 {
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Component"));
@@ -45,7 +47,6 @@ void APTProjectile::Initialize()
 
 	TrailParticles->Activate();
 	
-	// 애니메이션 활성화
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	GetComponents(SkeletalMeshComponents);
 	
@@ -69,7 +70,6 @@ void APTProjectile::Terminate()
 	ProjectileMovementComponent->Deactivate();
 	TrailParticles->DeactivateImmediate();
 	
-	// 애니메이션 비활성화
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	GetComponents(SkeletalMeshComponents);
 	
@@ -138,7 +138,8 @@ void APTProjectile::Explosion()
 	{
 		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 	}
-	
+
+#if ENABLE_DRAW_DEBUG
 	DrawDebugSphere(
 		GetWorld(),
 		Location,
@@ -148,6 +149,7 @@ void APTProjectile::Explosion()
 		false,
 		3.f
 	);
+#endif
 }
 
 void APTProjectile::Dead()

@@ -65,7 +65,6 @@ void APTMonster::Terminate()
 	OnDead.Unbind();
 	SetActorHiddenInGame(true);
 
-	//TODO: Dead()에 중복 코드들 관리 
 	SetActorEnableCollision(false);
 	SetActorTickEnabled(false);
 	
@@ -85,7 +84,6 @@ void APTMonster::Terminate()
 	{
 		AIController->StopAI();
 	}
-
 }
 
 UPTCharacterStatComponent* APTMonster::GetStatComponent()
@@ -93,30 +91,12 @@ UPTCharacterStatComponent* APTMonster::GetStatComponent()
 	return MonsterStat;
 }
 
-void APTMonster::PlayAttackMontage()
-{
-	HitTargets.Empty();
-	
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	AnimInstance->Montage_Play(AttackMontage, 1.0f);
-
-	//몽타주 종료 델리게이트 등록
-	FOnMontageEnded EndDelegate;
-	EndDelegate.BindUObject(this, &APTMonster::EndAttackMontage);
-	AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
-}
-
-//TODO: Terminate()와 비교해서 풀기 
 void APTMonster::Dead()
 {
 	Super::Dead();
 	
-	//SetActorEnableCollision(false);
 	SetActorTickEnabled(false);
-	
-	// 비헤이비어 트리 비활성화
-	// TODO: APTScorchAIController를 APMonsterAIController로 변경
-	//       APMonsterAIController 하나로 모든 몬스터를 관리 + BT와 BB만 교체해줘서 행동패턴을 다르게 
+ 
 	if (APTMonsterAIController* AIController = Cast<APTMonsterAIController>(GetInstigatorController()))
 	{
 		AIController->StopAI();
@@ -174,6 +154,18 @@ void APTMonster::Attack()
 
 	DrawDebugSphere(GetWorld(), CapsuleOrigin, AttackRadius, 10, DrawColor, false, 0.5f);
 #endif
+}
+
+void APTMonster::PlayAttackMontage()
+{
+	HitTargets.Empty();
+	
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(AttackMontage, 1.0f);
+
+	FOnMontageEnded EndDelegate;
+	EndDelegate.BindUObject(this, &APTMonster::EndAttackMontage);
+	AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
 }
 
 void APTMonster::OnNotifyAttack()
