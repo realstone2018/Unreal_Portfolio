@@ -25,8 +25,6 @@ public:
 
 	virtual void OnPlayerDead(ACharacter* ControllCharacter) override;
 
-	virtual void RestartPlayer(AController* NewPlayer) override;
-
 #pragma endregion
 
 

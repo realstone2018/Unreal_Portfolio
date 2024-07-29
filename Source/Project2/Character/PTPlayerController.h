@@ -14,10 +14,12 @@ public:
 
 	virtual void BeginPlay() override;
 
+	void ReSetupHUDWidget();
+	
 	FORCEINLINE void GameClear() { K2_OnGameClear(); }
 	FORCEINLINE void GameOver() { K2_OnGameOver(); }
 	FORCEINLINE void TimerStart() { K2_OnTimerStart(); }
-	FORCEINLINE void PlayerRespawn() { K2_OnPlayerRespawn(); }
+	FORCEINLINE void PlayerRespawnTimerStart() { K2_OnPlayerRespawnTimerStart(); }
 	
 protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnGameClearCpp"))
@@ -29,8 +31,8 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnTimerStartCpp"))
 	void K2_OnTimerStart();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnPlayerRespawnCpp"))
-	void K2_OnPlayerRespawn();
+	UFUNCTION(BlueprintImplementableEvent, Category = UE_GAME, Meta = (DisplayName = "OnPlayerRespawnTimerStartCpp"))
+	void K2_OnPlayerRespawnTimerStart();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = HUD)
 	TSubclassOf<class UPTHUDWidget> HUDClass;

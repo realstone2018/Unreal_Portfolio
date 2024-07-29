@@ -80,30 +80,17 @@ void APTGameModeBase::OnPlayerDead(ACharacter* ControllCharacter)
 
 void APTGameModeBase::PlayerRespawnTimer()
 {
-	//TODO: N초 후 플레이어 부활 
-	//TODO: UIWidget 화면 전체 회색 필터 적용?  + 부활 카운트 다운  
-	
-	GetWorldTimerManager().SetTimer(PlayerRespawnTimerHandle, FTimerDelegate::CreateLambda([&]()
-	{
-		RestartPlayer(GetWorld()->GetFirstPlayerController());
-	}), PlayerRespawnDelay, false);
-
 	APTPlayerController* PlayerController = Cast<APTPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
-		PlayerController->PlayerRespawn();
-	}	
-}
+		GetWorldTimerManager().SetTimer(PlayerRespawnTimerHandle, FTimerDelegate::CreateLambda([this, PlayerController]()
+		{
+			RestartPlayer(GetWorld()->GetFirstPlayerController());
+			PlayerController->ReSetupHUDWidget();
+		}), PlayerRespawnDelay, false);
 
-
-void APTGameModeBase::RestartPlayer(AController* NewPlayer)
-{
-	Super::RestartPlayer(NewPlayer);
-
-
-	//TODO: UI 갱신
-
-	
+		PlayerController->PlayerRespawnTimerStart();
+	}
 }
 
 void APTGameModeBase::StageTimer()
@@ -143,15 +130,12 @@ void APTGameModeBase::MonsterWaveTimer()
 	FTimerHandle MonsterWaveTimerHandle;
 
 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 1);
-	
 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
-	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
-	
 	
 	 GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this]()
 	 {
 	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
 	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 2);
-	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 4);
-	 }), 18.f, true);
+	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 2);
+	 }), 25.f, true);
 }

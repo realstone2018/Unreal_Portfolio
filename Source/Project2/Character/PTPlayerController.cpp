@@ -1,4 +1,6 @@
 #include "Character/PTPlayerController.h"
+
+#include "PTInterface/PTCharactHUDInterface.h"
 #include "UI/PTHUDWidget.h"
 
 APTPlayerController::APTPlayerController()
@@ -16,4 +18,13 @@ void APTPlayerController::BeginPlay()
 
 	FInputModeGameOnly GameOnlyInputMode;
 	SetInputMode(GameOnlyInputMode);
+}
+
+void APTPlayerController::ReSetupHUDWidget()
+{
+	IPTCharactHUDInterface* HUDPawn = Cast<IPTCharactHUDInterface>(GetPawn());
+	if (HUDPawn)
+	{
+		HUDPawn->SetupHUDWidget(HUD);	
+	}
 }
