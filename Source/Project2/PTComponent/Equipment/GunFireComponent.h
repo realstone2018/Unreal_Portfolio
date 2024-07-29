@@ -14,7 +14,7 @@ class PROJECT2_API UGunFireComponent : public UActorComponent
 
 public:
 	virtual void Init(AActor* InRifle, TSubclassOf<class APTProjectile> InProjectileClass);
-	virtual void FireProcess(FVector SpawnPoint, float Range, int Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
+	virtual void FireProcess(FVector SpawnPoint, float Range, int32 Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
 
 	FOnHitTracing OnHitTracing;
 	

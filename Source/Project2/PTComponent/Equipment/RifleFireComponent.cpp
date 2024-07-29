@@ -6,11 +6,11 @@
 //TODO: OwnerController 매개변수에서 제거 가능한지 알아보기
 // Gun을 넘길까?
 // Interface?
-void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int Damage)
+void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int32 Damage)
 {
 	FHitResult HitResult;
 	FVector ShotDirection;
-	bool IsHit = GunTrace(HitResult, ShotDirection, SpawnPoint, Range);
+	uint8 IsHit = GunTrace(HitResult, ShotDirection, SpawnPoint, Range);
 	if (!IsHit)
 	{
 		return;
@@ -30,7 +30,7 @@ void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int Damag
 #endif
 }
 
-bool URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirection, FVector SpawnPoint, float Range)
+uint8 URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirection, FVector SpawnPoint, float Range)
 {
 	// 폰이 보고있는 시야의 시작 위치와 회전방향을 가져온다. (카메라가 붙어있는 경우 카메라 베이스로, 없는 경우는 모르겠다.)
 	FVector OutLocation;

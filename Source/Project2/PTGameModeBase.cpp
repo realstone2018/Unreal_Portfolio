@@ -50,8 +50,6 @@ void APTGameModeBase::GameStart()
 
 void APTGameModeBase::GameClear()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTGameModeBase::GameClear()"));
-
 	APTPlayerController* PlayerController = Cast<APTPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
@@ -63,8 +61,6 @@ void APTGameModeBase::GameClear()
 
 void APTGameModeBase::GameOver()
 {
-	UE_LOG(LogTemp, Display, TEXT("APTGameModeBase::GameOver()"));
-
 	APTPlayerController* PlayerController = Cast<APTPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
@@ -102,8 +98,6 @@ void APTGameModeBase::PlayerRespawnTimer()
 
 void APTGameModeBase::RestartPlayer(AController* NewPlayer)
 {
-	UE_LOG(LogGameMode, Warning, TEXT("APTGameModeBase::RestartPlayer()"));
-	
 	Super::RestartPlayer(NewPlayer);
 
 

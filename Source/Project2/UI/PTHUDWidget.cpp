@@ -36,22 +36,22 @@ void UPTHUDWidget::UpdateStat(const FPTCharacterStat& BaseStat, const FPTCharact
 	CharacterStat->UpdateStat(BaseStat, ModifierStat);
 }
 
-void UPTHUDWidget::UpdateHpBar(int NewCurrentHp)
+void UPTHUDWidget::UpdateHpBar(int32 NewCurrentHp)
 {
 	HpBar->UpdateHpBar(NewCurrentHp);
 }
 
-void UPTHUDWidget::UpdateGunAmmo(int NewCurAmmo, int NewMaxAmmo)
+void UPTHUDWidget::UpdateGunAmmo(int32 NewCurAmmo, int32 NewMaxAmmo)
 {
 	GunInfo->UpdateBullet(NewCurAmmo, NewMaxAmmo);
 }
 
-void UPTHUDWidget::UpdateGunReloadImg(bool InVisibility)
+void UPTHUDWidget::UpdateGunReloadImg(uint8 InVisibility)
 {
 	GunInfo->SetReloadingImg(InVisibility);
 }
 
-void UPTHUDWidget::UpdateEquipWeapon(bool IsEquipMain)
+void UPTHUDWidget::UpdateEquipWeapon(uint8 IsEquipMain)
 {
 	IsEquipMain ? EquipWeapon->EquipMainWeapon() : EquipWeapon->EquipSubWeapon();
 }

@@ -17,8 +17,7 @@ void UBTService_SetDashDestination::TickNode(UBehaviorTreeComponent& OwnerComp, 
 	{
 		return;
 	}
-
-
+	
 	FVector Direction = ControllingPawn->GetActorForwardVector();
 	FVector Destination = ControllingPawn->GetActorLocation() + (Direction * 500.f); 
 	

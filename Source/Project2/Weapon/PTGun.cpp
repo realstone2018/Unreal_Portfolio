@@ -53,7 +53,7 @@ void APTGun::SetGunData(const FPTGunData& InGunData)
 	GunFireComponent->OnHitTracing.BindUObject(this, &APTGun::PlayImpactEffectAndSound);
 }
 
-bool APTGun::PullTrigger()
+uint8 APTGun::PullTrigger()
 {
 	//UE_LOG(LogTemp, Display, TEXT("Gun::PullTrigger() - %f"), UGameplayStatics::GetRealTimeSeconds(GetWorld()));
 
@@ -207,7 +207,7 @@ void APTGun::CompleteReload()
 	OnCompleteReload.Broadcast();
 }
 
-void APTGun::SetAmmo(int InCurrentAmmo, int InMaxAmmo)
+void APTGun::SetAmmo(int32 InCurrentAmmo, int32 InMaxAmmo)
 {
 	CurrentAmmo = InCurrentAmmo;
 	MaxAmmo = InMaxAmmo;

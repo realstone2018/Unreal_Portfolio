@@ -2,11 +2,6 @@
 #include "GameData/PTGameDataSingleton.h"
 #include "GameData/PTMonsterStat.h"
 
-UPTMonsterStatComponent::UPTMonsterStatComponent()
-{
-	
-}
-
 void UPTMonsterStatComponent::SetMonsterStat(FName MonsterName)
 {
 	MonsterStat = UPTGameDataSingleton::Get().GetMonsterStat(MonsterName);

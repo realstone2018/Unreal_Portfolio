@@ -1,18 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
 
 UPTCharacterMoveComponent::UPTCharacterMoveComponent()
 {
 	MoveDuration = 1.0f;
 	ElapsedTime = 0.0f;
-
 	MoveScale = 1.f;
 }
 
-void UPTCharacterMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                              FActorComponentTickFunction* ThisTickFunction)
+void UPTCharacterMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -47,9 +42,7 @@ void UPTCharacterMoveComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 void UPTCharacterMoveComponent::MoveInput(FVector Direction, float MoveSpeed, float InMoveDuration)
 {
 	ElapsedTime = 0.0f;
-
 	MoveDuration = InMoveDuration;
-	
 	MoveDirection = Direction;
 	bIsMovingUseInput = true;
 }
@@ -58,10 +51,8 @@ void UPTCharacterMoveComponent::MoveToLocation(FVector InTargetLocation, float D
 {
 	ElapsedTime = 0.0f;
 	StartLocation = GetActorLocation();
-	
 	MoveDuration = Duration;
 	TargetLocation = InTargetLocation; 
-
 	bIsMoving = true;
 }
 

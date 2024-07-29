@@ -13,8 +13,8 @@ protected:
 	virtual void NativeConstruct() override;
 
 public:
-	void UpdateBullet(int NewCurAmount, int NewMaxAmount);
-	void SetReloadingImg(bool InVisibility);
+	void UpdateBullet(int32 NewCurAmount, int32 NewMaxAmount);
+	void SetReloadingImg(uint8 InVisibility);
 	
 private:
 	UPROPERTY()

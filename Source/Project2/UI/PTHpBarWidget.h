@@ -17,7 +17,7 @@ protected:
 
 public:
 	FORCEINLINE void SetMaxHp(float NewMaxHp) { MaxHp = NewMaxHp; }
-	void UpdateHpBar(int NewCurrentHp);
+	void UpdateHpBar(int32 NewCurrentHp);
 
 protected:
 	UPROPERTY()

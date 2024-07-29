@@ -10,7 +10,7 @@ void UPTSpawnManager::Init(UWorld* InWorld, UPTObjectPoolManager* InPoolManager)
 }
 
 template <typename T, typename>
-T* UPTSpawnManager::SpawnObject(FRotator SpawnRotator, FVector SpawnLocation, bool ReturnImmediately)
+T* UPTSpawnManager::SpawnObject(FRotator SpawnRotator, FVector SpawnLocation, uint8 ReturnImmediately)
 {
 	FTransform SpawnTransform(SpawnRotator, SpawnLocation);
 

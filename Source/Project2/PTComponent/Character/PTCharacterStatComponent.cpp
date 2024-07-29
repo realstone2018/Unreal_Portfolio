@@ -8,7 +8,7 @@ UPTCharacterStatComponent::UPTCharacterStatComponent()
 }
 
 
-void UPTCharacterStatComponent::SetHp(int NewHp, int NewMaxHp)
+void UPTCharacterStatComponent::SetHp(int32 NewHp, int32 NewMaxHp)
 {
 	MaxHp = NewMaxHp;
 	CurrentHp = FMath::Clamp(NewHp, 0.0f, MaxHp);
@@ -16,10 +16,10 @@ void UPTCharacterStatComponent::SetHp(int NewHp, int NewMaxHp)
 }
 
 
-float UPTCharacterStatComponent::ApplyDamage(int InDamage)
+float UPTCharacterStatComponent::ApplyDamage(int32 InDamage)
 {
-	const int PrevHp = CurrentHp;
-	const int ActualDamage = FMath::Clamp(InDamage, 0, PrevHp);
+	const int32 PrevHp = CurrentHp;
+	const int32 ActualDamage = FMath::Clamp(InDamage, 0, PrevHp);
 
 	SetHp(PrevHp - ActualDamage, MaxHp);
 	if (CurrentHp <= KINDA_SMALL_NUMBER) {

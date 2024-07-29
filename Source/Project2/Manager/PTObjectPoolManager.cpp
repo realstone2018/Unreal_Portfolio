@@ -34,7 +34,7 @@ void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> Object
 
 	ensure(PoolData);
 	const FPoolData Data = PoolData->GetPoolData(PoolType);
-	int Size = SetUpSize != 0 ? SetUpSize : Data.SetupSize;
+	int32 Size = SetUpSize != 0 ? SetUpSize : Data.SetupSize;
 	FVector SpawnLocation(0.f, 0.f, 5000.f);
 	
 	for (int32 i = 0; i < Size; i++)

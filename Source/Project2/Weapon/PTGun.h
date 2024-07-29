@@ -8,14 +8,13 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnStartReloadDelegate);
 DECLARE_MULTICAST_DELEGATE(FOnCompleteReloadDelegate);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnChangeAmmo, int /*CurrentAmmo*/, int /*MaxAmmo*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnChangeAmmo, int32 /*CurrentAmmo*/, int32 /*MaxAmmo*/)
 
 UCLASS()
 class PROJECT2_API APTGun : public AActor
 {
 	GENERATED_BODY()
 
-// Stat
 public:	
 	APTGun();
 	
@@ -47,17 +46,17 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class APTProjectile> ProjectileClass;
 	
-	bool bIsFiring;
-	int FireCount;
+	uint8 bIsFiring : 1;
+	int32 FireCount;
 
 // Fire
 public:
-	bool PullTrigger();
+	uint8 PullTrigger();
 	void StopTrigger();
 
-	FORCEINLINE bool GetIsFiring() { return bIsFiring; }
-	FORCEINLINE int GetCurrentAmmo() { return CurrentAmmo; }
-	FORCEINLINE int GetMaxAmmo() { return MaxAmmo; }
+	FORCEINLINE uint8 GetIsFiring() { return bIsFiring; }
+	FORCEINLINE int32 GetCurrentAmmo() { return CurrentAmmo; }
+	FORCEINLINE int32 GetMaxAmmo() { return MaxAmmo; }
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
 	USceneComponent* ProjectileSpawnPoint;
@@ -79,7 +78,7 @@ public:
 
 private:
 	void CompleteReload(); //TODO: 보급 획득시 즉시 장전 -> 즉시 Reloading 함수 or Reloading 인자로 1.0 넘기기
-	void SetAmmo(int InCurrentAmmo, int InMaxAmmo);
+	void SetAmmo(int32 InCurrentAmmo, int32 InMaxAmmo);
 
 	
 private:

@@ -11,6 +11,6 @@ class PROJECT2_API ULauncherFireComponent : public UGunFireComponent
 	GENERATED_BODY()
 
 public:
-	void FireProcess(FVector SpawnPoint, float Range, int Damage) override;
-	void ApplyDamageToEnemies(AActor* GunOwner, const TArray<FOverlapResult>& Targets, FVector Location, int InDamage);
+	void FireProcess(FVector SpawnPoint, float Range, int32 Damage) override;
+	void ApplyDamageToEnemies(AActor* GunOwner, const TArray<FOverlapResult>& Targets, FVector Location, int32 InDamage);
 };

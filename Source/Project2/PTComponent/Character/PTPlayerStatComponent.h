@@ -1,7 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PTComponent/Character//PTCharacterStatComponent.h"
+#include "PTComponent/Character/PTCharacterStatComponent.h"
+#include "GameData/PTCharacterStat.h"
 #include "PTPlayerStatComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnStatChangedDelegate, const FPTCharacterStat& /*BaseStat*/, const FPTCharacterStat& /*ModifierStat*/)

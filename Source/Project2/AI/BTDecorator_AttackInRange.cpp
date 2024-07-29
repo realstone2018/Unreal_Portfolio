@@ -57,7 +57,7 @@ bool UBTDecorator_AttackInRange::CalculateRawConditionValue(UBehaviorTreeCompone
 		float boxRaidus = FMath::Sqrt((HalfWidth * HalfWidth) + (HalfHeight * HalfHeight));
 		
 		float Range = AttackRange + boxRaidus;
-		bool CheckCircumcircle = PTVectorUtil::CheckInRange<double>(OwnerLocation, TargetLocation, Range);
+		uint8 CheckCircumcircle = PTVectorUtil::CheckInRange<double>(OwnerLocation, TargetLocation, Range);
 
 		if (CheckCircumcircle == false)
 		{

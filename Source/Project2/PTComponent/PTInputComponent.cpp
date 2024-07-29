@@ -1,7 +1,7 @@
 #include "PTInputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Character/PTCharacterControlData.h"
+#include "GameData/PTCharacterControlData.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "PTInterface/PTPlayerInputInterface.h"

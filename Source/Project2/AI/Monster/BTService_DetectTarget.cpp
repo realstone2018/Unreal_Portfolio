@@ -1,14 +1,12 @@
 #include "AI/Monster/BTService_DetectTarget.h"
-#include "ABAI.h"
-#include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Engine/OverlapResult.h"
 #include "PTInterface/PTMonsterAIInterface.h"
 #include "Physics/PTCollision.h"
 #include "Character/PTPlayerCharacter.h"
 #include "PTActor/PTStructure.h"
-#include "DrawDebugHelpers.h"
-#include "PTComponent/PTFactionComponent.h"
+#include "AIController.h"
+#include "ABAI.h"
 
 #define ENABLE_DRAW_DEBUG 0
 
@@ -41,7 +39,7 @@ void UBTService_DetectTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 
 	TArray<FOverlapResult> OverlapResults;
 	FCollisionQueryParams CollisionQueryParam(SCENE_QUERY_STAT(Detect), false, OwnerPawn);
-	bool bResult = World->OverlapMultiByChannel(
+	uint8 bResult = World->OverlapMultiByChannel(
 		OverlapResults,
 		OwnerLocation,
 		FQuat::Identity,

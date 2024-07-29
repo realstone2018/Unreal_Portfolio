@@ -21,9 +21,9 @@ public:
 	FORCEINLINE void SetFaction(EFaction InFaction) { Faction = InFaction; }
 	FORCEINLINE EFaction GetFaction() const { return Faction; }
 
-	FORCEINLINE bool IsNoneFaction() const { return Faction == EFaction::None; }
-	FORCEINLINE bool CompareFaction(const UPTFactionComponent* Other) const { return GetFaction() ==  Other->GetFaction(); }
-	FORCEINLINE bool CompareFaction(EFaction OtherFaction) const { return GetFaction() ==  OtherFaction; }
+	FORCEINLINE uint8 IsNoneFaction() const { return Faction == EFaction::None; }
+	FORCEINLINE uint8 CompareFaction(const UPTFactionComponent* Other) const { return GetFaction() ==  Other->GetFaction(); }
+	FORCEINLINE uint8 CompareFaction(EFaction OtherFaction) const { return GetFaction() ==  OtherFaction; }
 	
 private:
 	EFaction Faction = EFaction::None;

@@ -15,12 +15,12 @@ protected:
 
 public:
 	void UpdateStat(const FPTCharacterStat& BaseStat, const FPTCharacterStat& ModifierStat);
-	void UpdateHpBar(int NewCurrentHp);
+	void UpdateHpBar(int32 NewCurrentHp);
 	
-	void UpdateGunAmmo(int NewCurAmmo, int NewMaxAmmo);
-	void UpdateGunReloadImg(bool InVisibility);
+	void UpdateGunAmmo(int32 NewCurAmmo, int32 NewMaxAmmo);
+	void UpdateGunReloadImg(uint8 InVisibility);
 
-	void UpdateEquipWeapon(bool IsEquipMain);
+	void UpdateEquipWeapon(uint8 IsEquipMain);
 	
 protected:
 	UPROPERTY()
@@ -34,6 +34,4 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<class UPTEquipWeaponWidget> EquipWeapon;
-
-	// 	StageTimer in EventGraph
 };

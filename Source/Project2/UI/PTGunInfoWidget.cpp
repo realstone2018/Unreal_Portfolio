@@ -12,13 +12,13 @@ void UPTGunInfoWidget::NativeConstruct()
 	ReloadingImage->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UPTGunInfoWidget::UpdateBullet(int NewCurAmount, int NewMaxAmount)
+void UPTGunInfoWidget::UpdateBullet(int32 NewCurAmount, int32 NewMaxAmount)
 {
 	CurrentAmountTxt->SetText(FText::FromString(FString::FromInt(NewCurAmount)));
 	MaxAmountTxt->SetText(FText::FromString(FString::FromInt(NewMaxAmount)));
 }
 
-void UPTGunInfoWidget::SetReloadingImg(bool InVisibility)
+void UPTGunInfoWidget::SetReloadingImg(uint8 InVisibility)
 {
 	if (InVisibility)
 	{

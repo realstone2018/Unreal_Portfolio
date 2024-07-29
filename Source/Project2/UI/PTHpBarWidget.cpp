@@ -22,7 +22,7 @@ void UPTHpBarWidget::NativeConstruct()
 	}
 }
 
-void UPTHpBarWidget::UpdateHpBar(int NewCurrentHp)
+void UPTHpBarWidget::UpdateHpBar(int32 NewCurrentHp)
 {
 	ensure(MaxHp > 0.0f);
 	

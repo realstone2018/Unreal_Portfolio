@@ -20,7 +20,7 @@ void APTMonsterAIController::RunAI(AActor* DefaultTarget)
 			Blackboard->SetValueAsObject(BBKEY_TARGET_MAINSTATION, DefaultTarget);
 		}
 		
-		bool RunResult = RunBehaviorTree(BTAsset);
+		uint8 RunResult = RunBehaviorTree(BTAsset);
 		ensure(RunResult);
 	}
 }

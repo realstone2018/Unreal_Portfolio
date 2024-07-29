@@ -2,11 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "GameData/PTCharacterStat.h"
 #include "PTCharacterStatComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnHpZeroDelegate);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHpChangedDelegate, int /*CurrentHp*/);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHpChangedDelegate, int32 /*CurrentHp*/);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -20,27 +19,25 @@ public:
 	FOnHpZeroDelegate OnHpZero;
 	FOnHpChangedDelegate OnHpChanged;
 	
-	FORCEINLINE int GetCurrentLevel() const { return CurrentLevel; }
-	FORCEINLINE int GetCurrentHp() const { return CurrentHp; }
-	FORCEINLINE int GetMaxHp() const { return MaxHp; }
+	FORCEINLINE int32 GetCurrentLevel() const { return CurrentLevel; }
+	FORCEINLINE int32 GetCurrentHp() const { return CurrentHp; }
+	FORCEINLINE int32 GetMaxHp() const { return MaxHp; }
 
 protected:
-	void SetHp(int NewHp, int NewMaxHp);
+	void SetHp(int32 NewHp, int32 NewMaxHp);
 
 public:
-	FORCEINLINE void HealHp(int InHealAmount) { SetHp(CurrentHp + InHealAmount, MaxHp); }
-	virtual float ApplyDamage(int InDamage);
+	FORCEINLINE void HealHp(int32 InHealAmount) { SetHp(CurrentHp + InHealAmount, MaxHp); }
+	virtual float ApplyDamage(int32 InDamage);
 
 protected:
-	//Transient: 항상 바뀌는 값이라 디스크에 저장할 필요 없는 경우 세팅
-	//TODO: float여야 할 이유 없으면 int로 변경하기 
 	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat)
-	int CurrentLevel;
+	int32 CurrentLevel;
 	
 	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat)
-	int CurrentHp;
+	int32 CurrentHp;
 
 	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat)
-	int MaxHp;
+	int32 MaxHp;
 
 };

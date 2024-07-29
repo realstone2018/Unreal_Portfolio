@@ -1,3 +1,0 @@
-#include "PTComponent/PTFactionComponent.h"
-
-

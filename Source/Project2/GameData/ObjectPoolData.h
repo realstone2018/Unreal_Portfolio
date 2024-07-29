@@ -14,7 +14,7 @@ struct FPoolData
 	TSubclassOf<AActor> PoolClass;
 
 	UPROPERTY(EditAnywhere)
-	int SetupSize;
+	int32 SetupSize;
 	FPoolData operator*();
 };
 

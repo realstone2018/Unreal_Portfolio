@@ -35,29 +35,31 @@ public:
 	void Explosion();
 
 	void Dead();
-	
-private:
-	UPROPERTY()
-	bool CompleteInit = false;
 
-	//TODO: 데이터로 옮기기 
-	UPROPERTY(EditAnywhere)
-	float ExplosionRadius = 200.0f;
-	
 private:
 	UPROPERTY(EditDefaultsOnly, category = "Component")
 	TObjectPtr<class UCapsuleComponent> CapsuleComponent;
 
 	UPROPERTY(EditDefaultsOnly, category = "Component")
 	TObjectPtr<class UStaticMeshComponent> ProjectileMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = "Component")
-	TObjectPtr<UParticleSystemComponent> TrailParticles;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<class UProjectileMovementComponent> ProjectileMovementComponent;
 
-private:
+	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
+	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
+	
+	UPROPERTY()
+	uint8 CompleteInit : 1;
+
+	//TODO: 데이터로 옮기기 
+	UPROPERTY(EditAnywhere)
+	float ExplosionRadius = 200.0f;
+
+#pragma region Effect, Sound
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	TObjectPtr<UParticleSystemComponent> TrailParticles;
+
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
 	TObjectPtr<class USoundBase> LaunchSound;
 
@@ -66,7 +68,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
 	TObjectPtr<class USoundBase> ExplosionSound;
- 
-	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
-	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
+
+#pragma endregion
+	
 };
