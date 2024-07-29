@@ -1,5 +1,4 @@
 #include "Character/PTCharacterBase.h"
-#include "SimpleShooterGameModeBase.h"
 #include "Components/CapsuleComponent.h"
 #include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
