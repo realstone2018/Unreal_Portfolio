@@ -3,9 +3,6 @@
 
 #define ENABLE_DRAW_DEBUG 0
 
-//TODO: OwnerController 매개변수에서 제거 가능한지 알아보기
-// Gun을 넘길까?
-// Interface?
 void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int32 Damage)
 {
 	FHitResult HitResult;

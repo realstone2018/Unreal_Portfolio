@@ -87,7 +87,6 @@ void APTProjectile::Init(AActor* GunOwner)
 {
 	SetOwner(GunOwner);
 
-	//TODO: Projectile 오브젝트 풀링 준비
 	ProjectileMesh->SetHiddenInGame(false);
 	SetActorEnableCollision(true);
 	
