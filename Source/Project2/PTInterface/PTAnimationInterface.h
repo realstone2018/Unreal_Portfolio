@@ -2,15 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "PTAnimationAttackInterface.generated.h"
+#include "PTAnimationInterface.generated.h"
 
 UINTERFACE(MinimalAPI)
-class UPTAnimationAttackInterface : public UInterface
+class UPTAnimationInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
-class PROJECT2_API IPTAnimationAttackInterface
+class PROJECT2_API IPTAnimationInterface
 {
 	GENERATED_BODY()
 
