@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "Character/PTCharacterBase.h"
 #include "PTInterface/PTPlayerInputInterface.h"
-#include "PTInterface/PTCharactHUDInterface.h"
 #include "PTPlayerCharacter.generated.h"
 
 UCLASS()

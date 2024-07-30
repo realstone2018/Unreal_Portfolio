@@ -1,6 +1,6 @@
 #include "Character/PTPlayerController.h"
 
-#include "PTInterface/PTCharactHUDInterface.h"
+#include "PTInterface/PTHUDInterface.h"
 #include "UI/PTHUDWidget.h"
 
 APTPlayerController::APTPlayerController()

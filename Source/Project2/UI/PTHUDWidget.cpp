@@ -3,7 +3,7 @@
 #include "PTCharacterStatWidget.h"
 #include "PTEquipWeaponWidget.h"
 #include "PTGunInfoWidget.h"
-#include "PTInterface/PTCharactHUDInterface.h"
+#include "PTInterface/PTHUDInterface.h"
 
 void UPTHUDWidget::NativeConstruct()
 {
