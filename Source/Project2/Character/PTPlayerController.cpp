@@ -22,7 +22,7 @@ void APTPlayerController::BeginPlay()
 
 void APTPlayerController::ReSetupHUDWidget()
 {
-	IPTCharactHUDInterface* HUDPawn = Cast<IPTCharactHUDInterface>(GetPawn());
+	IPTHUDInterface* HUDPawn = Cast<IPTHUDInterface>(GetPawn());
 	if (HUDPawn)
 	{
 		HUDPawn->SetupHUDWidget(HUD);	

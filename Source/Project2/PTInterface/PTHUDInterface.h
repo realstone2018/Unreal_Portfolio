@@ -2,15 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "PTCharactHUDInterface.generated.h"
+#include "PTHUDInterface.generated.h"
 
 UINTERFACE(MinimalAPI)
-class UPTCharactHUDInterface : public UInterface
+class UPTHUDInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
-class PROJECT2_API IPTCharactHUDInterface
+class PROJECT2_API IPTHUDInterface
 {
 	GENERATED_BODY()
 

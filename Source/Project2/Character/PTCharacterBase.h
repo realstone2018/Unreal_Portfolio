@@ -3,12 +3,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "PTInterface/PTAnimationInterface.h"
-#include "PTInterface/PTCharactHUDInterface.h"
+#include "PTInterface/PTHUDInterface.h"
 #include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "PTCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationInterface, public IPTCharactHUDInterface
+class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationInterface, public IPTHUDInterface
 {
 	GENERATED_BODY()
 

@@ -21,7 +21,7 @@ void UPTHUDWidget::NativeConstruct()
 	EquipWeapon = Cast<UPTEquipWeaponWidget>(GetWidgetFromName("WidgetEquipWeapon"));
 	ensure(EquipWeapon);
 	
-	IPTCharactHUDInterface* HUDPawn = Cast<IPTCharactHUDInterface>(GetOwningPlayerPawn());
+	IPTHUDInterface* HUDPawn = Cast<IPTHUDInterface>(GetOwningPlayerPawn());
 	if (HUDPawn)
 	{
 		HUDPawn->SetupHUDWidget(this);	

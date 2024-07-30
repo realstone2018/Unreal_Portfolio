@@ -15,7 +15,7 @@ void UPTHpBarWidget::NativeConstruct()
 	HpProgressBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HpBar")));
 	ensure(HpProgressBar);
 	
-	IPTCharactHUDInterface* CharacterWidget = Cast<IPTCharactHUDInterface>(OwningActor);
+	IPTHUDInterface* CharacterWidget = Cast<IPTHUDInterface>(OwningActor);
 	if(CharacterWidget)
 	{
 		CharacterWidget->SetupHpBarWidget(this);		
