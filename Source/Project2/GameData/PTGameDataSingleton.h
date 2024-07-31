@@ -5,9 +5,9 @@
 #include "PTCharacterStat.h"
 #include "PTGunData.h"
 #include "PTMonsterStat.h"
+#include "PTProjectileData.h"
 #include "PTGameDataSingleton.generated.h"
 
-//싱글톤 Get함수가 실패한 경우
 DECLARE_LOG_CATEGORY_EXTERN(LogPTGameDataSingleton, Error, All);
 
 UCLASS()
@@ -20,35 +20,32 @@ public:
 
 	static UPTGameDataSingleton& Get();
 	
-	FORCEINLINE FPTCharacterStat GetCharacterStat(int32 InLevel) const {
-		return CharacterStatArray.IsValidIndex(InLevel - 1)? CharacterStatArray[InLevel - 1] : FPTCharacterStat();
-	}
-
-	// FORCEINLINE FPTMonsterStat GetMonsterStat(FName MonsterName) const {
-	// 	return MonsterStatMap.Contains(MonsterName) ? MonsterStatMap[MonsterName] : FPTMonsterStat();
-	// }
-
-	FPTMonsterStat GetMonsterStat(FName MonsterName);
+	FPTCharacterStat GetCharacterStat(int32 InLevel) const;
 	
-	FORCEINLINE FPTGunData GetGunData(FName GunName) const {
-		return GunDataMap.Contains(GunName)? GunDataMap[GunName] : FPTGunData();
-	}
+	FPTMonsterStat GetMonsterStat(FName MonsterName) const;
+	
+	FPTGunData GetGunData(FName GunName) const;
+
+	FPTProjectileData GetProjectileData(FName ProjectileName) const;
 	
 	UPROPERTY()
 	int32 CharacterMaxLevel;
 	
 private:
 	void LoadCharacterStatData();
-	void LoadGunData();
 	void LoadMonsterData();
+	void LoadGunData();
+	void LoadProjectileData();
 
-	UPROPERTY();
+	UPROPERTY()
 	TArray<FPTCharacterStat> CharacterStatArray;
-	UPROPERTY();
-	TMap<FName, FPTGunData> GunDataMap;
-	UPROPERTY();
+	
+	UPROPERTY()
 	TMap<FName, FPTMonsterStat> MonsterStatMap;
 
-	UPROPERTY();
-	FPTMonsterStat MonsterStat;
+	UPROPERTY()
+	TMap<FName, FPTGunData> GunDataMap;
+
+	UPROPERTY()
+	TMap<FName, FPTProjectileData> ProjectileDataMap;
 };

@@ -1,4 +1,4 @@
-Name,GunType,Damage,Range,MaxAmmo,Recoil,FireRate,ReloadTime,FireMode,BurstCount,Penetration
-BaseRifle,Rifle,30,5000,25,2,0.1,1.5,Single,1,1
-BaseLauncher,Launcher,80,3500,3,10,0.5,2,Single,1,1
-BaseEmitter,Emitter,5,500,250,0,0.02,5,Single,1,999
+Name,GunType,Damage,Range,MaxAmmo,Recoil,FireRate,ReloadTime,FireMode,BurstCount,Penetration,ProjectileName
+BaseRifle,Rifle,30,5000,25,2,0.1,1.5,Single,1,1,
+BaseLauncher,Launcher,80,3500,3,10,0.5,2,Single,1,1,BaseLauncher
+BaseEmitter,Emitter,5,500,250,0,0.02,5,Single,1,999,

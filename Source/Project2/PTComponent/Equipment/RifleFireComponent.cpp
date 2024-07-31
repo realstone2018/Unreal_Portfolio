@@ -1,9 +1,10 @@
 #include "PTComponent/Equipment//RifleFireComponent.h"
+#include "Character/PTCharacterBase.h"
 #include "Engine/DamageEvents.h"
 
 #define ENABLE_DRAW_DEBUG 0
 
-void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int32 Damage)
+void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int32 Damage, FString ProjectileName)
 {
 	FHitResult HitResult;
 	FVector ShotDirection;

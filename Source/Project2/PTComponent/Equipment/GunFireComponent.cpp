@@ -1,10 +1,9 @@
 #include "PTComponent/Equipment//GunFireComponent.h"
-#include "PTActor/PTProjectile.h"
+#include "Character/PTCharacterBase.h"
 
-void UGunFireComponent::Init(AActor* InRifle, TSubclassOf<APTProjectile> InProjectileClass)
+
+void UGunFireComponent::Init(AActor* InRifle)
 {
 	Gun = InRifle;
 	GunOwner = Cast<APTCharacterBase>(Gun->GetOwner());
-
-	ProjectileClass = InProjectileClass;
 }

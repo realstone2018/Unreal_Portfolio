@@ -1,12 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameData/PTProjectileData.h"
 #include "GameFramework/Actor.h"
-#include "Character/PTCharacterBase.h"
 #include "PTInterface/PTPullingObjectInterface.h"
 #include "PTProjectile.generated.h"
 
-DECLARE_DELEGATE_ThreeParams(FOnExplosionDelegate, AActor* /*Owner*/, const TArray<FOverlapResult>& /*targets*/, FVector /* Location */)
+DECLARE_DELEGATE_TwoParams(FOnExplosionDelegate, const TArray<FOverlapResult>& /*targets*/, FVector /* Location */);
 DECLARE_DELEGATE_OneParam(FOnDeadDelegate, AActor* /*this*/);
 
 UCLASS()
@@ -27,7 +27,7 @@ protected:
 	virtual void Terminate() override;
 	
 public:
-	void Init(AActor* Owner);
+	void Init(FName ProjectileKey);
 	
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
@@ -37,6 +37,9 @@ public:
 	void Dead();
 
 private:
+	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = "true"))
+	FPTProjectileData ProjectileData;
+	
 	UPROPERTY(EditDefaultsOnly, category = "Component")
 	TObjectPtr<class UCapsuleComponent> CapsuleComponent;
 
@@ -45,16 +48,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<class UProjectileMovementComponent> ProjectileMovementComponent;
-
-	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
-	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
 	
 	UPROPERTY()
 	uint8 CompleteInit : 1;
-
-	//TODO: 데이터로 옮기기 
-	UPROPERTY(EditAnywhere)
-	float ExplosionRadius = 200.0f;
 
 #pragma region Effect, Sound
 	UPROPERTY(VisibleAnywhere, Category = "Component")

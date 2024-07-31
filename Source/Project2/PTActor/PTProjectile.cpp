@@ -1,11 +1,11 @@
 #include "PTProjectile.h"
-
-#include "Character/PTMonster.h"
-#include "GameFramework/ProjectileMovementComponent.h" //
-#include "Kismet/GameplayStatics.h" // UGameplayStatics::ApplyDamage()
-#include "Particles/ParticleSystemComponent.h"
-#include "Physics/PTCollision.h"
 #include "Components/CapsuleComponent.h"
+#include "GameData/PTGameDataSingleton.h"
+#include "GameData/PTProjectileData.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Physics/PTCollision.h"
+#include "Particles/ParticleSystemComponent.h"
 
 #define ENABLE_DRAW_DEBUG 0
 
@@ -23,9 +23,8 @@ APTProjectile::APTProjectile()
 	TrailParticles->SetupAttachment(RootComponent);
 	
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement Component"));
-	//ProjectileMovementComponent->bUpdateOnlyIfRendered = true;
-	ProjectileMovementComponent->InitialSpeed = 2000.f;
-	ProjectileMovementComponent->MaxSpeed = 2000.f;
+	ProjectileMovementComponent->InitialSpeed = 0.f;
+	ProjectileMovementComponent->MaxSpeed = 0.f;
 }
 
 void APTProjectile::BeginPlay()
@@ -83,10 +82,16 @@ void APTProjectile::Terminate()
 	}
 }
 
-void APTProjectile::Init(AActor* GunOwner)
+void APTProjectile::Init(FName ProjectileKey)
 {
-	SetOwner(GunOwner);
+	ProjectileData = UPTGameDataSingleton::Get().GetProjectileData(ProjectileKey);
 
+	CapsuleComponent->SetCapsuleHalfHeight(ProjectileData.Radius);
+	CapsuleComponent->SetCapsuleRadius(ProjectileData.Radius);
+
+	ProjectileMovementComponent->InitialSpeed = ProjectileData.MoveSpeed;
+	ProjectileMovementComponent->MaxSpeed =  ProjectileData.MoveSpeed;
+	
 	ProjectileMesh->SetHiddenInGame(false);
 	SetActorEnableCollision(true);
 	
@@ -98,12 +103,6 @@ void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* 
 {
 	if (!CompleteInit || GetOwner() == OtherActor)
 	{
-		return;
-	}
-	
-	if (GetOwner() == nullptr)
-	{
-		Dead();
 		return;
 	}
 
@@ -119,9 +118,9 @@ void APTProjectile::Explosion()
 	Params.AddIgnoredActor(GetOwner());
 	
 	TArray<FOverlapResult> OutOverlapResults;
-	GetWorld()->OverlapMultiByChannel(OutOverlapResults, Location, FQuat::Identity, CCHANNEL_PTBULLET, FCollisionShape::MakeSphere(ExplosionRadius), Params);	
+	GetWorld()->OverlapMultiByChannel(OutOverlapResults, Location, FQuat::Identity, CCHANNEL_PTBULLET, FCollisionShape::MakeSphere(ProjectileData.ExplosionRadius), Params);	
 
-	OnExplosion.Execute(GetOwner(), OutOverlapResults, Location);
+	OnExplosion.Execute(OutOverlapResults, Location);
 
 	if (ExplosionParticles)
 	{
@@ -131,11 +130,6 @@ void APTProjectile::Explosion()
 	if (ExplosionSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, GetActorLocation());
-	}
-
-	if (HitCameraShakeClass)
-	{
-		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
 	}
 
 #if ENABLE_DRAW_DEBUG

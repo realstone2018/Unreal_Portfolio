@@ -57,6 +57,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	int32 Penetration; // 관통수 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	FString ProjectileName; // ProjectileData Key
+	
 	
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
 	// FString ModelName;

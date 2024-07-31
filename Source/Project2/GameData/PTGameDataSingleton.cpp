@@ -10,6 +10,41 @@ UPTGameDataSingleton::UPTGameDataSingleton()
 	LoadCharacterStatData();
 	LoadGunData();
 	LoadMonsterData();
+	LoadProjectileData();
+}
+
+UPTGameDataSingleton& UPTGameDataSingleton::Get()
+{
+	//CastChecked로 형변환이 되는지 (가져온게 유요한 객체인지) 강력하게 확인
+	UPTGameDataSingleton* Singleton = CastChecked<UPTGameDataSingleton>(GEngine->GameSingleton);
+	if (Singleton)
+	{
+		return *Singleton;
+	}
+
+	//싱글톤 Get함수가 실패한 경우
+	UE_LOG(LogPTGameDataSingleton, Error, TEXT("Invalid Game Singleton"));
+	return *NewObject<UPTGameDataSingleton>();
+}
+
+FPTCharacterStat UPTGameDataSingleton::GetCharacterStat(int32 InLevel) const
+{
+	return CharacterStatArray.IsValidIndex(InLevel - 1)? CharacterStatArray[InLevel - 1] : FPTCharacterStat();
+}
+
+FPTMonsterStat UPTGameDataSingleton::GetMonsterStat(FName MonsterName) const
+{
+	return MonsterStatMap.Contains(MonsterName)? MonsterStatMap[MonsterName] : FPTMonsterStat();
+}
+
+FPTGunData UPTGameDataSingleton::GetGunData(FName GunName) const
+{
+	return GunDataMap.Contains(GunName)? GunDataMap[GunName] : FPTGunData();
+}
+
+FPTProjectileData UPTGameDataSingleton::GetProjectileData(FName ProjectileName) const
+{
+	return ProjectileDataMap.Contains(ProjectileName)? ProjectileDataMap[ProjectileName] : FPTProjectileData();
 }
 
 void UPTGameDataSingleton::LoadCharacterStatData()
@@ -36,6 +71,26 @@ void UPTGameDataSingleton::LoadCharacterStatData()
 	ensure(CharacterMaxLevel > 0);
 }
 
+void UPTGameDataSingleton::LoadMonsterData()
+{
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Script/Engine.DataTable'/Game/Project2/GameData/PTMonsterStatTable.PTMonsterStatTable'"));
+	if (DataTableRef.Object != nullptr)
+	{
+		const UDataTable* DataTable = DataTableRef.Object;
+		for (const auto& Row : DataTable->GetRowMap())
+		{
+			FName RowName = Row.Key;
+			FPTMonsterStat* RowValue = reinterpret_cast<FPTMonsterStat*>(Row.Value);
+			if (RowValue)
+			{
+				MonsterStatMap.Add(RowName, *RowValue);
+			}
+		}
+
+		check(MonsterStatMap.Num() > 0);
+	}
+}
+
 void UPTGameDataSingleton::LoadGunData()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Script/Engine.DataTable'/Game/Project2/GameData/PTGunDataTable.PTGunDataTable'"));
@@ -57,56 +112,23 @@ void UPTGameDataSingleton::LoadGunData()
 	}
 }
 
-void UPTGameDataSingleton::LoadMonsterData()
+void UPTGameDataSingleton::LoadProjectileData()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Script/Engine.DataTable'/Game/Project2/GameData/PTMonsterStatTable.PTMonsterStatTable'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableRef(TEXT("/Script/Engine.DataTable'/Game/Project2/GameData/PTProjectileTable.PTProjectileTable'"));
 	if (DataTableRef.Object != nullptr)
 	{
-		const UDataTable* DataTable = DataTableRef.Object;
+		const UDataTable* DataTable= DataTableRef.Object;
 		for (const auto& Row : DataTable->GetRowMap())
 		{
 			FName RowName = Row.Key;
-			FPTMonsterStat* RowValue = reinterpret_cast<FPTMonsterStat*>(Row.Value);
-			if (RowValue)
+			FPTProjectileData* ProjectileData = reinterpret_cast<FPTProjectileData*>(Row.Value);
+			if (ProjectileData)
 			{
-				MonsterStatMap.Add(RowName, *RowValue);
+				ProjectileDataMap.Add(RowName, *ProjectileData);
 			}
 		}
 
-		check(MonsterStatMap.Num() > 0);
+		check(ProjectileDataMap.Num() > 0);
 	}
 }
-
-
-UPTGameDataSingleton& UPTGameDataSingleton::Get()
-{
-	//CastChecked로 형변환이 되는지 (가져온게 유요한 객체인지) 강력하게 확인
-	UPTGameDataSingleton* Singleton = CastChecked<UPTGameDataSingleton>(GEngine->GameSingleton);
-	if (Singleton)
-	{
-		return *Singleton;
-	}
-
-	//싱글톤 Get함수가 실패한 경우
-	UE_LOG(LogPTGameDataSingleton, Error, TEXT("Invalid Game Singleton"));
-	//함수 완성을 위한 return, 실제 사용되지는 않음 
-	return *NewObject<UPTGameDataSingleton>();
-}
-
-FPTMonsterStat UPTGameDataSingleton::GetMonsterStat(FName MonsterName)
-{
-	bool IsContain = MonsterStatMap.Contains(MonsterName);
-	if (IsContain)
-	{
-		MonsterStat = MonsterStatMap[MonsterName];
-		float test = MonsterStat.Attack;
-		return MonsterStat;
-	}
-	else
-	{
-		MonsterStat = FPTMonsterStat();
-		return MonsterStat;
-	}
-}
-
 

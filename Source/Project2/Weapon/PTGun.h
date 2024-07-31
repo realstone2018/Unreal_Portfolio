@@ -1,9 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "GameData/PTGunData.h"
-#include "PTComponent/Equipment/GunFireComponent.h"
 #include "PTGun.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnStartReloadDelegate);
@@ -17,22 +15,22 @@ class PROJECT2_API APTGun : public AActor
 
 public:	
 	APTGun();
-	
-	FORCEINLINE void SetGunData(const FPTGunData& InGunData);
-
-	FOnChangeAmmo OnChangeAmmo;
 
 	AController* GetOwnerController() const;
+
+
+#pragma region Stat
+	FORCEINLINE void SetGunData(const FPTGunData& InGunData);
 
 private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = "true"))
 	FPTGunData GunData;
 	
 	UPROPERTY(VisibleAnywhere, Category = Stat)
-	int32 CurrentAmmo;
+	int32 CurrentAmmo;	// 현재 탄창
 
 	UPROPERTY(VisibleAnywhere, Category = Stat)
-	int32 MaxAmmo;
+	int32 MaxAmmo;	// 최대 탄창
 	
 	UPROPERTY(EditAnywhere, Category = Stat)
 	float RecoilAmount; // 반동의 크기
@@ -40,16 +38,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = Stat)
 	float RecoilResetSpeed; // 반동이 원래 위치로 돌아가는 속도
 	
-	UPROPERTY(VisibleAnywhere, Category = Components)
-	TObjectPtr<UGunFireComponent> GunFireComponent; 
+#pragma endregion 
 
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class APTProjectile> ProjectileClass;
-	
-	uint8 bIsFiring : 1;
-	int32 FireCount;
 
-// Fire
+#pragma region Fire
 public:
 	uint8 PullTrigger();
 	void StopTrigger();
@@ -57,50 +49,74 @@ public:
 	FORCEINLINE uint8 GetIsFiring() { return bIsFiring; }
 	FORCEINLINE int32 GetCurrentAmmo() { return CurrentAmmo; }
 	FORCEINLINE int32 GetMaxAmmo() { return MaxAmmo; }
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
-	USceneComponent* ProjectileSpawnPoint;
 	
 private:
 	void Fire();
 	void ConsumeBullet();
 	void ApplyRecoil();
-
-	void PlayImpactEffectAndSound(FHitResult Hit, FVector ShotDirection);
 	
-// Reload
-public:
-	float Reloading(float AccelerationRate);
-	void CancelReload(); //TODO: 구르기, 회피 등의 캐릭터의 다른 액션으로 캔슬
+	UPROPERTY(VisibleAnywhere, Category = Components)
+	TObjectPtr<class UGunFireComponent> GunFireComponent; 
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USceneComponent> ProjectileSpawnPoint;
+	
+	uint8 bIsFiring : 1;
+	int32 FireCount;
+
+	FTimerHandle FireRateTimerHandle;
+
+	const float MAX_FIRECOUNT_RECOIL = 2.0f;
+	const float RECOIL_VELOCITY_THRESHOLD = 300.f;
+
+#pragma endregion
+
+	
+#pragma region Reload
+public:
 	FOnStartReloadDelegate OnStartReload;
 	FOnCompleteReloadDelegate OnCompleteReload;
+	FOnChangeAmmo OnChangeAmmo;
+
+	float Reloading(float AccelerationRate);
 
 private:
-	void CompleteReload(); //TODO: 보급 획득시 즉시 장전 -> 즉시 Reloading 함수 or Reloading 인자로 1.0 넘기기
+	void CompleteReload();
 	void SetAmmo(int32 InCurrentAmmo, int32 InMaxAmmo);
 
+	FTimerHandle ReloadingTimerHandle;
 	
+	const int MAX_RELOAD_REDUCE_RATE = 0.5F;
+
+#pragma endregion
+	
+
+#pragma region Effect, Sound
+public:
+	void PlayMuzzleFlashEffectAndSound();
+	void PlayImpactEffectAndSound(FHitResult Hit, FVector ShotDirection);
+
 private:
 	UPROPERTY(VisibleAnywhere)
-	USceneComponent* Root;
-
+	TObjectPtr<USceneComponent> Root;
+	
 	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* Mesh;
-
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* MuzzleFlashEffect;
-
-	UPROPERTY(EditAnywhere)
-	USoundBase* MuzzleFlashSound;
+	TObjectPtr<USkeletalMeshComponent> Mesh;
 	
 	UPROPERTY(EditAnywhere)
-	UParticleSystem* ImpactEffect;
+	TObjectPtr<UParticleSystem> MuzzleFlashEffect;
 
 	UPROPERTY(EditAnywhere)
-	USoundBase* ImpactSound;
+	TObjectPtr<USoundBase> MuzzleFlashSound;
 	
-	FTimerHandle FireRateTimerHandle;
-	FTimerHandle ReloadingTimerHandle;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> ImpactEffect;
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> ImpactSound;
+
+	FString MuzzleEffectSocketName = "MuzzleFlashSocket";
+
+#pragma endregion
+	
 };
