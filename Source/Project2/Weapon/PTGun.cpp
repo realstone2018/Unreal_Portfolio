@@ -1,8 +1,12 @@
 #include "PTGun.h"
+
+#include "GameData/PTGameDataSingleton.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "Manager/PTAssetManager.h"
 #include "PTComponent/Equipment/RifleFireComponent.h"
 #include "PTComponent/Equipment/LauncherFireComponent.h"
+#include "GameData/PTGunData.h"
 
 APTGun::APTGun()
 {
@@ -32,21 +36,30 @@ AController* APTGun::GetOwnerController() const
 	return OwnerPawn->GetController();
 }
 
-void APTGun::SetGunData(const FPTGunData& InGunData)
+void APTGun::Init(const FString GunDataKey)
 {
-	GunData = InGunData;
+	GunData = UPTGameDataSingleton::Get().GetGunData(*GunDataKey);
+
 	MaxAmmo = GunData.MaxAmmo;
 	CurrentAmmo = MaxAmmo;
 
 	switch (GunData.GunType)
 	{
 		case EGunType::Rifle:
-			GunFireComponent = NewObject<URifleFireComponent>(this, URifleFireComponent::StaticClass(), TEXT("RifleFireComponent"));
+		{
+			URifleFireComponent* RifleFireComponent = NewObject<URifleFireComponent>(this, URifleFireComponent::StaticClass(), TEXT("RifleFireComponent"));
+			RifleFireComponent->OnHitTracing.BindUObject(this, &APTGun::PlayImpactEffectAndSound);
+			GunFireComponent = RifleFireComponent;
 			break;
+		}
 
 		case EGunType::Launcher:
-			GunFireComponent = NewObject<ULauncherFireComponent>(this, ULauncherFireComponent::StaticClass(), TEXT("LauncherFireComponent"));
+		{
+			ULauncherFireComponent* LauncherFireComponent = NewObject<ULauncherFireComponent>(this, ULauncherFireComponent::StaticClass(), TEXT("LauncherFireComponent"));
+			LauncherFireComponent->SetProjectile(GunData.ProjectileName);
+			GunFireComponent = LauncherFireComponent;
 			break;
+		}
 
 		case EGunType::Emitter:
 			break;
@@ -54,7 +67,6 @@ void APTGun::SetGunData(const FPTGunData& InGunData)
 	
 	GunFireComponent->RegisterComponent();	// 엔진에 생성한 컴포넌트를 인식
 	GunFireComponent->Init(this);
-	GunFireComponent->OnHitTracing.BindUObject(this, &APTGun::PlayImpactEffectAndSound);
 }
 
 uint8 APTGun::PullTrigger()
@@ -101,7 +113,12 @@ void APTGun::Fire()
 	ApplyRecoil();
 	PlayMuzzleFlashEffectAndSound();
 	
-	GunFireComponent->FireProcess(ProjectileSpawnPoint->GetComponentLocation(), GunData.Range, GunData.Damage, GunData.ProjectileName);
+	// 폰이 보고있는 시야의 시작 위치와 회전방향을 가져온다. (카메라가 붙어있는 경우 카메라 베이스로, 없는 경우는 모르겠다.)
+	FVector OutLocation;
+	FRotator ViewRotation;
+	GetOwnerController()->GetPlayerViewPoint(OutLocation, ViewRotation);
+	
+	GunFireComponent->FireProcess(ProjectileSpawnPoint->GetComponentLocation(), ViewRotation, GunData.Range, GunData.Damage);
 	FireCount++;
 }
 

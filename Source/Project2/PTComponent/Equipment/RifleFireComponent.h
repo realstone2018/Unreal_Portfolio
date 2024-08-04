@@ -10,6 +10,11 @@ class PROJECT2_API URifleFireComponent : public UGunFireComponent
 	GENERATED_BODY()
 
 public:
-	void FireProcess(FVector SpawnPoint, float Range, int32 Damage, FString ProjectileName) override;
-	uint8 GunTrace(FHitResult& HitResult, FVector& ShotDirection, FVector SpawnPoint, float Range);
+	FOnHitTracing OnHitTracing;
+
+	void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) override;
+
+private:
+	uint8 FireLineTracing(FHitResult& HitResult, FVector SpawnPoint, FVector End);
+	void TakeDamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection);
 };

@@ -13,10 +13,9 @@ class PROJECT2_API UGunFireComponent : public UActorComponent
 
 public:
 	virtual void Init(AActor* InRifle);
-	virtual void FireProcess(FVector SpawnPoint, float Range, int32 Damage, FString ProjectileName) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
 
-	FOnHitTracing OnHitTracing;
-	
+	virtual void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AActor> Gun;

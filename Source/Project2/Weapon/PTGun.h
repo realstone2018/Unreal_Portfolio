@@ -20,7 +20,7 @@ public:
 
 
 #pragma region Stat
-	FORCEINLINE void SetGunData(const FPTGunData& InGunData);
+	FORCEINLINE void Init(const FString GunDataKey);
 
 private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = "true"))

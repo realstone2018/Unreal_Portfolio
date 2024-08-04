@@ -18,9 +18,7 @@ class PROJECT2_API IPTPlayerInputInterface
 public:
 	virtual void StartAttack() = 0;
 	virtual void StopAttack() = 0;
-
 	virtual void DashAction() = 0;
-
 	virtual void ReloadAction() = 0;
 
 	virtual void EquipInput(EEquipType EquipType) = 0;

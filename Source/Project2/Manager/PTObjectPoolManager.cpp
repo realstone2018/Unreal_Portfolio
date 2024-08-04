@@ -9,7 +9,6 @@
 UPTObjectPoolManager::UPTObjectPoolManager()
 {
 	static ConstructorHelpers::FObjectFinder<UObjectPoolData> PoolDataRef(TEXT("/Script/Project2.ObjectPoolData'/Game/Project2/GameData/ObjectPoolDataAsset.ObjectPoolDataAsset'"));
-	ensure(PoolDataRef.Object);
 	if (PoolDataRef.Object)
 	{
 		PoolData = PoolDataRef.Object;

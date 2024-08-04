@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Physics/PTCollision.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Manager/PTAssetManager.h"
 
 #define ENABLE_DRAW_DEBUG 0
 
@@ -82,20 +83,50 @@ void APTProjectile::Terminate()
 	}
 }
 
-void APTProjectile::Init(FName ProjectileKey)
+void APTProjectile::SetData(FName DataKey)
 {
-	ProjectileData = UPTGameDataSingleton::Get().GetProjectileData(ProjectileKey);
+	ProjectileData = UPTGameDataSingleton::Get().GetProjectileData(DataKey);
+	LoadResource();
+
+	ProjectileMovementComponent->InitialSpeed = ProjectileData.MoveSpeed;
+	ProjectileMovementComponent->MaxSpeed =  ProjectileData.MoveSpeed;
 
 	CapsuleComponent->SetCapsuleHalfHeight(ProjectileData.Radius);
 	CapsuleComponent->SetCapsuleRadius(ProjectileData.Radius);
 
-	ProjectileMovementComponent->InitialSpeed = ProjectileData.MoveSpeed;
-	ProjectileMovementComponent->MaxSpeed =  ProjectileData.MoveSpeed;
-	
 	ProjectileMesh->SetHiddenInGame(false);
 	SetActorEnableCollision(true);
 	
 	CompleteInit = true;
+}
+
+void APTProjectile::LoadResource()
+{
+	UPTAssetManager& AssetManager = UPTAssetManager::Get();
+
+	AssetManager.LoadMeshAsset<UStaticMesh>(ProjectileData.StaticMesh, [this] (UStaticMesh* Mesh)
+	{
+		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Mesh: %s"), *Mesh->GetName());
+		ProjectileMesh->SetStaticMesh(Mesh);		
+	});
+
+	AssetManager.LoadFXAsset<UParticleSystem>(ProjectileData.TrailEffect, [this](UParticleSystem* Particle)
+	{
+		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Particle: %s"), *Particle->GetName());
+		TrailParticles->SetTemplate(Particle);
+	});
+
+	AssetManager.LoadFXAsset<UParticleSystem>(ProjectileData.ExplosionEffect, [this](UParticleSystem* Particle)
+	{
+		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Particle: %s"), *Particle->GetName());
+		ExplosionParticles = Particle;
+	});
+	
+	AssetManager.LoadSFXAsset<USoundWave>(ProjectileData.ExplosionSound, [this](USoundWave* Sound)
+	{
+		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Sound: %s"), *Sound->GetName());
+		ExplosionSound = Sound;
+	});
 }
 
 void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,

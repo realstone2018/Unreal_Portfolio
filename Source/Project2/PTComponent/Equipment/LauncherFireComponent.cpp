@@ -3,21 +3,29 @@
 #include "PTActor/PTProjectile.h"
 #include "Engine/DamageEvents.h"
 #include "GameData/PTGameDataSingleton.h"
+#include "Manager/PTAssetManager.h"
 #include "PTComponent/PTFactionComponent.h"
 
-void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int32 Damage, FString ProjectileKey)
+void ULauncherFireComponent::Init(AActor* InRifle)
 {
-	// 폰이 보고있는 시야의 시작 위치와 회전방향을 가져온다. (카메라가 붙어있는 경우 카메라 베이스로, 없는 경우는 모르겠다.)
-	FVector OutLocation;
-	FRotator OutRotation;
-	GunOwner->GetController()->GetPlayerViewPoint(OutLocation, OutRotation);
+	Super::Init(InRifle);
 	
+	FPTProjectileData ProjectileData = UPTGameDataSingleton::Get().GetProjectileData(CurrentProjectile);
+	UPTAssetManager& AssetManager = UPTAssetManager::Get();
+	AssetManager.LoadMeshAsset<UStaticMesh>(ProjectileData.StaticMesh, nullptr);
+	AssetManager.LoadFXAsset<UParticleSystem>(ProjectileData.TrailEffect, nullptr);
+	AssetManager.LoadFXAsset<UParticleSystem>(ProjectileData.ExplosionEffect, nullptr);
+	AssetManager.LoadSFXAsset<USoundWave>(ProjectileData.ExplosionSound, nullptr);
+}
+
+void ULauncherFireComponent::FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage)
+{
 	IPTGameInterface* GameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
 
-	APTProjectile* Projectile = GameMode->GetSpawnManager()->SpawnObject<APTProjectile>(OutRotation, SpawnPoint, true);
+	APTProjectile* Projectile = GameMode->GetSpawnManager()->SpawnObject<APTProjectile>(ShotDirection, SpawnPoint, true);
 	Projectile->SetOwner(GunOwner);
 	Projectile->OnExplosion.BindLambda([this, Damage](const TArray<FOverlapResult>& OverlapResults, FVector Location){
-		ApplyDamageToEnemies(GunOwner, OverlapResults, Location, Damage);
+		TakeDamageToOverlapResults(GunOwner, OverlapResults, Location, Damage);
 			
 		if (HitCameraShakeClass)
 		{
@@ -25,10 +33,10 @@ void ULauncherFireComponent::FireProcess(FVector SpawnPoint, float Range, int32 
 		}
 	});
 		
-	Projectile->Init(*ProjectileKey);
+	Projectile->SetData(CurrentProjectile);
 }
 
-void ULauncherFireComponent::ApplyDamageToEnemies(AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults, FVector Location, int32 Damage)
+void ULauncherFireComponent::TakeDamageToOverlapResults(AActor* ProjectileOwner, const TArray<FOverlapResult>& OverlapResults, FVector Location, int32 Damage)
 {
 	APTCharacterBase* OwnerCharacter = Cast<APTCharacterBase>(ProjectileOwner);	
 

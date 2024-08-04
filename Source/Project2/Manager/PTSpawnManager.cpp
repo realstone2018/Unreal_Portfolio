@@ -60,11 +60,17 @@ void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
 	{
 		FVector SpawnLocation = BaseSpawnLocation;
 		FNavLocation NavLocation;
-		if (NavSystem->GetRandomPointInNavigableRadius(BaseSpawnLocation, NAVIGATION_RANDOM_RADIUS, NavLocation))
+		// if (NavSystem->GetRandomPointInNavigableRadius(BaseSpawnLocation, NAVIGATION_RANDOM_RADIUS, NavLocation))
+		// {
+		// 	SpawnLocation = NavLocation;
+		// }
+		//SpawnObject<APTMonster>(FRotator::ZeroRotator, SpawnLocation, false);
+
+		FVector DebugLocation(6500.f, 470.f, 130.f);
+		if (NavSystem->GetRandomPointInNavigableRadius(DebugLocation, 10.F, NavLocation))
 		{
-			SpawnLocation = NavLocation;
+			DebugLocation = NavLocation;
 		}
-		
-		SpawnObject<APTMonster>(FRotator::ZeroRotator, SpawnLocation, false);
+		SpawnObject<APTMonster>(FRotator::ZeroRotator, DebugLocation, false);
 	}	
 }

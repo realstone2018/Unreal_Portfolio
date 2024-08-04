@@ -21,7 +21,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	float MoveSpeed;	// 속도
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	FString StaticMesh;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	FString TrailEffect;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	FString ExplosionEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
+	FString ExplosionSound;
+	
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
 	// FString ModelName;
 	//

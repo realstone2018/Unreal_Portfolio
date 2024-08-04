@@ -32,7 +32,9 @@ public:
 
 	FOnChangeEquip OnChangeEquip;
 	
-private:	
+private:
+	void SetEquipment(FString GunDataKey, EEquipType EquipType);
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APTGun> MainGunClass;
 

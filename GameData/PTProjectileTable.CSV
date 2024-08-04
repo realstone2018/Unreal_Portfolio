@@ -1,2 +1,2 @@
-Name,Radius,ExplosionRadius,MoveSpeed,TrailEffect,ExplosionEffect,ExplosionSound
-BaseLauncher,45,200,2000,P_IggyScorch_Projectile_Trail.P_IggyScorch_Projectile_Trail',p_Turret_Explosion.p_Turret_Explosion',
+Name,Radius,ExplosionRadius,MoveSpeed,StaticMesh,TrailEffect,ExplosionEffect,ExplosionSound
+BaseLauncher,45,200,2000,SM_Rocket_Xalign,P_BaseLauncher_Tail,P_Explosion,SFX_Projectile_Explosion

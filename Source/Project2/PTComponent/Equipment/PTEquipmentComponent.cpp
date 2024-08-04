@@ -19,22 +19,9 @@ UPTEquipmentComponent::UPTEquipmentComponent()
 
 void UPTEquipmentComponent::Init()
 {
-	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
+	SetEquipment(TEXT("BaseRifle"), EEquipType::Main);
+	SetEquipment(TEXT("BaseLauncher"), EEquipType::Sub);
 	
-	APTGun* MainGun = GetWorld()->SpawnActor<APTGun>(MainGunClass);
-	EquipGuns.Add(EEquipType::Main, MainGun);
-	MainGun->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-	MainGun->SetOwner(OwnerCharacter);
-	MainGun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseRifle"));
-	
-	APTGun* SubGun = GetWorld()->SpawnActor<APTGun>(SubGunClass);
-	EquipGuns.Add(EEquipType::Sub, SubGun);
-	SubGun->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-	SubGun->SetOwner(OwnerCharacter);
-	SubGun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseLauncher"));
-
-	//Gun->SetGunData(UPTGameDataSingleton::Get().GetGunData("BaseRifle"));
-
 	ChangeEquipment(EEquipType::Main);
 }
 
@@ -62,5 +49,22 @@ void UPTEquipmentComponent::ChangeEquipment(EEquipType NewEquipType)
 	{
 		Pair.Value->SetActorHiddenInGame(Pair.Key != CurrentEquipType);
 	}
+}
+
+void UPTEquipmentComponent::SetEquipment(FString GunDataKey, EEquipType EquipType)
+{
+	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
+
+	APTGun* Gun = GetWorld()->SpawnActor<APTGun>(EquipType == EEquipType::Main ?  MainGunClass : SubGunClass);
+	Gun->SetOwner(OwnerCharacter);
+	Gun->Init(GunDataKey);
+	
+	if (EquipGuns.Contains(EquipType))
+	{
+		EquipGuns.Remove(EquipType);
+	}
+	EquipGuns.Add(EquipType, Gun);
+
+	Gun->AttachToComponent(OwnerCharacter->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 }
 

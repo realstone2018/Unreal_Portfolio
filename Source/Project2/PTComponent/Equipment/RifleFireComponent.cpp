@@ -4,31 +4,27 @@
 
 #define ENABLE_DRAW_DEBUG 0
 
-void URifleFireComponent::FireProcess(FVector SpawnPoint, float Range, int32 Damage, FString ProjectileName)
+void URifleFireComponent::FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage)
 {
 	FHitResult HitResult;
-	FVector ShotDirection;
-	uint8 IsHit = GunTrace(HitResult, ShotDirection, SpawnPoint, Range);
+	FVector DamageDirection = -ShotDirection.Vector();
+	FVector End = SpawnPoint + ShotDirection.Vector() * Range;
+	uint8 IsHit = FireLineTracing(HitResult, SpawnPoint, End);
 	if (!IsHit)
 	{
 		return;
 	}
 
-	OnHitTracing.Execute(HitResult, ShotDirection);
-
-	AActor* HitActor = HitResult.GetActor();
-	if (HitActor != nullptr)
-	{
-		FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
-		HitActor->TakeDamage(Damage, DamageEvent, GunOwner->GetController(), Gun);;
-	}
-
+	TakeDamageToHitResult(HitResult, Damage, DamageDirection);
+	
+	OnHitTracing.Execute(HitResult, DamageDirection);
+	
 #if ENABLE_DRAW_DEBUG
 	DrawDebugPoint(GetWorld(), HitResult.Location, 10, FColor::Red, true);
 #endif
 }
 
-uint8 URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirection, FVector SpawnPoint, float Range)
+uint8 URifleFireComponent::FireLineTracing(FHitResult& HitResult, FVector SpawnPoint, FVector End)
 {
 	// 폰이 보고있는 시야의 시작 위치와 회전방향을 가져온다. (카메라가 붙어있는 경우 카메라 베이스로, 없는 경우는 모르겠다.)
 	FVector OutLocation;
@@ -37,8 +33,6 @@ uint8 URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirectio
 	
 	//컨트롤러를 가져와, 컨트롤러를 통해 뷰포트의 Location과 Rotation을 가져온다.
 	// 폰이 보고있는 시야의 시작 위치와 회전방향을 가져온다. (카메라가 붙어있는 경우 카메라 베이스로, 없는 경우는 모르겠다.)
-	FVector End = OutLocation + OutRotation.Vector() * Range;
-	ShotDirection =	-OutRotation.Vector();
 	
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(GetOwner());
@@ -49,5 +43,15 @@ uint8 URifleFireComponent::GunTrace(FHitResult& HitResult, FVector& ShotDirectio
 #endif
 	
 	//어딘가에 부딪쳐야만 True반환
-	return GetWorld()->LineTraceSingleByChannel(HitResult, OutLocation, End, ECC_GameTraceChannel1, Params);
+	return GetWorld()->LineTraceSingleByChannel(HitResult, SpawnPoint, End, ECC_GameTraceChannel1, Params);
+}
+
+void URifleFireComponent::TakeDamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection)
+{
+	AActor* HitActor = HitResult.GetActor();
+	if (HitActor != nullptr)
+	{
+		FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+		HitActor->TakeDamage(Damage, DamageEvent, GunOwner->GetController(), Gun);;
+	}
 }
