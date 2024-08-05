@@ -38,14 +38,14 @@ void APTProjectile::BeginPlay()
 void APTProjectile::Initialize(FName DataKey)
 {
 	SetData(DataKey);
-	
-	ProjectileMovementComponent->Activate(true);
-	ProjectileMesh->SetHiddenInGame(false);
-	TrailParticles->ActivateSystem(true);
 
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 	SetActorTickEnabled(true);
+	
+	ProjectileMovementComponent->Activate(true);
+	ProjectileMesh->SetHiddenInGame(false);
+	TrailParticles->ActivateSystem(true);
 	
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	GetComponents(SkeletalMeshComponents);
