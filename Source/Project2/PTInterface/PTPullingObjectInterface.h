@@ -15,6 +15,6 @@ class PROJECT2_API IPTPullingObjectInterface
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize() = 0;
+	virtual void Initialize(FName DataKey) = 0;
 	virtual void Terminate() = 0;
 };

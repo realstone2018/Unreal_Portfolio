@@ -22,7 +22,7 @@ public:
 	
 	FPTCharacterStat GetCharacterStat(int32 InLevel) const;
 	
-	FPTMonsterStat GetMonsterStat(FName MonsterName) const;
+	FPTMonsterStat GetMonsterStat(FName MonsterDataKey) const;
 	
 	FPTGunData GetGunData(FName GunName) const;
 

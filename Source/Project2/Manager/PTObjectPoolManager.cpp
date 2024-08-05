@@ -58,7 +58,7 @@ void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> Object
 }
 
 template <typename T, typename>
-T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans)
+T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans, FName DataKey)
 {
 	EPoolType PoolType = EPoolTypeUtil::ClassToPoolType(T::StaticClass());
 	if (PoolType == EPoolType::None)
@@ -84,7 +84,7 @@ T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans)
 	Object->SetActorTransform(Trans);
 
 	IPTPullingObjectInterface* InterfaceObject = Cast<IPTPullingObjectInterface>(Object);
-	InterfaceObject->Initialize();
+	InterfaceObject->Initialize(DataKey);
 
 	T* PoolableObject = Cast<T>(Object);
 	check(PoolableObject);

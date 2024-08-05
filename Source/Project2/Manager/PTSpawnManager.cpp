@@ -10,11 +10,11 @@ void UPTSpawnManager::Init(UWorld* InWorld, UPTObjectPoolManager* InPoolManager)
 }
 
 template <typename T, typename>
-T* UPTSpawnManager::SpawnObject(FRotator SpawnRotator, FVector SpawnLocation, uint8 ReturnImmediately)
+T* UPTSpawnManager::SpawnObject(FName DataKey, FRotator SpawnRotator, FVector SpawnLocation, uint8 ReturnImmediately)
 {
 	FTransform SpawnTransform(SpawnRotator, SpawnLocation);
 
-	T* PooledObject = PoolManager->GetPooledObject<T>(SpawnTransform);
+	T* PooledObject = PoolManager->GetPooledObject<T>(SpawnTransform, DataKey);
 	ensure(PooledObject);
 
 	if (ReturnImmediately)
@@ -60,17 +60,18 @@ void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
 	{
 		FVector SpawnLocation = BaseSpawnLocation;
 		FNavLocation NavLocation;
-		// if (NavSystem->GetRandomPointInNavigableRadius(BaseSpawnLocation, NAVIGATION_RANDOM_RADIUS, NavLocation))
-		// {
-		// 	SpawnLocation = NavLocation;
-		// }
-		//SpawnObject<APTMonster>(FRotator::ZeroRotator, SpawnLocation, false);
+		
+		 if (NavSystem->GetRandomPointInNavigableRadius(BaseSpawnLocation, NAVIGATION_RANDOM_RADIUS, NavLocation))
+		 {
+		 	SpawnLocation = NavLocation;
+		 }
+		SpawnObject<APTMonster>(FName("Scorch"), FRotator::ZeroRotator, SpawnLocation, false);
 
-		FVector DebugLocation(6500.f, 470.f, 130.f);
-		if (NavSystem->GetRandomPointInNavigableRadius(DebugLocation, 10.F, NavLocation))
-		{
-			DebugLocation = NavLocation;
-		}
-		SpawnObject<APTMonster>(FRotator::ZeroRotator, DebugLocation, false);
+		// FVector DebugLocation(6500.f, 470.f, 130.f);
+		// if (NavSystem->GetRandomPointInNavigableRadius(DebugLocation, 10.F, NavLocation))
+		// {
+		// 	DebugLocation = NavLocation;
+		// }
+		// SpawnObject<APTMonster>(FName("Scorch"), FRotator::ZeroRotator, DebugLocation, false);
 	}	
 }

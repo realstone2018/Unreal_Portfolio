@@ -11,7 +11,7 @@ class PROJECT2_API UPTMonsterStatComponent : public UPTCharacterStatComponent
 	GENERATED_BODY()
 
 public:
-	void SetMonsterStat(FName MonsterName);
+	void SetMonsterStat(FName MonsterDataKey);
 
 	FORCEINLINE const FPTMonsterStat& GetMonsterStat() const { return MonsterStat; }
 	FORCEINLINE float GetAttackDamage() const { return MonsterStat.Attack; }	

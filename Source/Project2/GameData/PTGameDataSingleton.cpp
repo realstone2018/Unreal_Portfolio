@@ -32,9 +32,9 @@ FPTCharacterStat UPTGameDataSingleton::GetCharacterStat(int32 InLevel) const
 	return CharacterStatArray.IsValidIndex(InLevel - 1)? CharacterStatArray[InLevel - 1] : FPTCharacterStat();
 }
 
-FPTMonsterStat UPTGameDataSingleton::GetMonsterStat(FName MonsterName) const
+FPTMonsterStat UPTGameDataSingleton::GetMonsterStat(FName MonsterDataKey) const
 {
-	return MonsterStatMap.Contains(MonsterName)? MonsterStatMap[MonsterName] : FPTMonsterStat();
+	return MonsterStatMap.Contains(MonsterDataKey)? MonsterStatMap[MonsterDataKey] : FPTMonsterStat();
 }
 
 FPTGunData UPTGameDataSingleton::GetGunData(FName GunName) const

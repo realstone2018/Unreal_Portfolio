@@ -11,14 +11,12 @@ class PROJECT2_API ULauncherFireComponent : public UGunFireComponent
 	GENERATED_BODY()
 
 public:
-	virtual void Init(AActor* InRifle) override;
+	virtual void Init(APTGun* InRifle) override;
 	
 	void SetProjectile(FString ProjectileKey) { CurrentProjectile = *ProjectileKey; }
 	void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) override;
 
 private:
-	void TakeDamageToOverlapResults(AActor* GunOwner, const TArray<FOverlapResult>& Targets, FVector Location, int32 InDamage);
-
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
 	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
 

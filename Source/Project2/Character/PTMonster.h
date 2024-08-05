@@ -24,7 +24,7 @@ class PROJECT2_API APTMonster : public APTCharacterBase, public IPTPullingObject
 public:
 	APTMonster();
 	
-	virtual void Initialize() override;
+	virtual void Initialize(FName DataKey) override;
 	virtual void Terminate() override;
 
 

@@ -16,7 +16,7 @@ public:
 #pragma region Polling
 public:
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
-	T* SpawnObject(FRotator SpawnRotator, FVector SpawnLocation, uint8 ReturnImmediately);
+	T* SpawnObject(FName DataKey, FRotator SpawnRotator, FVector SpawnLocation, uint8 ReturnImmediately);
 
 	template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
 	void ReturnObject(AActor* PooledObject);

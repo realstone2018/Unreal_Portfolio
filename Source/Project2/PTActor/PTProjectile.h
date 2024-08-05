@@ -23,14 +23,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void Initialize() override;
-	virtual void Terminate() override;
-	
-public:
+	virtual void Initialize(FName DataKey) override;
 	void SetData(FName DataKey);
+	void ResourceSetting();
 
-	void LoadResource();
+	virtual void Terminate() override;
 
+public:
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
@@ -63,7 +62,7 @@ private:
 	TObjectPtr<class USoundBase> LaunchSound;
 
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
-	TObjectPtr<class UParticleSystem> ExplosionParticles;
+	TObjectPtr<class UParticleSystem> ExplosionParticle;
 
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
 	TObjectPtr<class USoundBase> ExplosionSound;

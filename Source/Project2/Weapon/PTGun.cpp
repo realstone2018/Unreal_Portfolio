@@ -1,5 +1,6 @@
 #include "PTGun.h"
-
+#include "Character/PTCharacterBase.h"
+#include "Engine/DamageEvents.h"
 #include "GameData/PTGameDataSingleton.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
@@ -7,6 +8,7 @@
 #include "PTComponent/Equipment/RifleFireComponent.h"
 #include "PTComponent/Equipment/LauncherFireComponent.h"
 #include "GameData/PTGunData.h"
+#include "PTComponent/PTFactionComponent.h"
 
 APTGun::APTGun()
 {
@@ -153,6 +155,42 @@ void APTGun::ApplyRecoil()
 	NewRotation.Pitch += FMath::Sin(FMath::FRand() * 25.0f) * (PitchRecoil + FireCountRecoil + VelocityRecoil);
 
 	PlayerController->SetControlRotation(NewRotation);
+}
+
+void APTGun::DamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection)
+{
+	AActor* HitActor = HitResult.GetActor();
+	if (HitActor != nullptr)
+	{
+		FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+		HitActor->TakeDamage(Damage, DamageEvent, GetOwnerController(), GetOwner());;
+	}
+}
+
+void APTGun::DamageToOverlapResults(const TArray<FOverlapResult>& OverlapResults, FVector Location, int32 InDamage)
+{
+	for (FOverlapResult Target : OverlapResults)
+	{
+		APTCharacterBase* TargetCharacter = Cast<APTCharacterBase>(Target.GetActor());
+		APTCharacterBase* GunOwner = Cast<APTCharacterBase>(GetOwner());
+				
+		if (!TargetCharacter)
+		{
+			continue;
+		}
+
+		UPTFactionComponent* TargetFaction = TargetCharacter->GetFactionComponent();
+		if (TargetFaction->IsNoneFaction() || GunOwner->GetFactionComponent()->CompareFaction(TargetFaction))
+		{
+			continue;
+		}
+		
+		FRadialDamageEvent RadialDamageEvent;
+		RadialDamageEvent.Params.BaseDamage = InDamage;
+		RadialDamageEvent.Params.MinimumDamage = InDamage;
+		RadialDamageEvent.Origin = Location;
+		TargetCharacter->TakeDamage(InDamage, RadialDamageEvent, GetOwnerController(), GunOwner);
+	}
 }
 
 float APTGun::Reloading(float AccelerationRate)

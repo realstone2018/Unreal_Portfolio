@@ -23,10 +23,9 @@ APTMonster::APTMonster()
 	FactionComponent->SetFaction(EFaction::Monster);
 }
 
-void APTMonster::Initialize()
+void APTMonster::Initialize(FName DataKey)
 {
-	//TODO: 몬스터 Enum을 넘겨서 처리하도록 변경하기
-	MonsterStat->SetMonsterStat(FName("Scorch"));
+	MonsterStat->SetMonsterStat(DataKey);
 	
 	SetActorHiddenInGame(false);
 	SetActorTickEnabled(true);

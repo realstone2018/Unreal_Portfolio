@@ -35,7 +35,7 @@ public:
     void SetUpPool(EPoolType PoolType, /*TSubclassOf<T> ObjectClass,*/ int32 SetUpSize = 0);
 
     template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
-    T* GetPooledObject(FTransform const& Trans);
+    T* GetPooledObject(FTransform const& Transm, FName DataKey);
 
     template <typename T, typename = typename TEnableIf<TIsDerivedFrom<T, IPTPullingObjectInterface>::IsDerived>::Type>
     void ReturnPooledObject(AActor* Object);

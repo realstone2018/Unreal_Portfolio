@@ -46,6 +46,9 @@ public:
 	uint8 PullTrigger();
 	void StopTrigger();
 
+	void DamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection);
+	void DamageToOverlapResults(const TArray<FOverlapResult>& OverlapResults, FVector Location, int32 InDamage);
+	
 	FORCEINLINE uint8 GetIsFiring() { return bIsFiring; }
 	FORCEINLINE int32 GetCurrentAmmo() { return CurrentAmmo; }
 	FORCEINLINE int32 GetMaxAmmo() { return MaxAmmo; }

@@ -16,5 +16,4 @@ public:
 
 private:
 	uint8 FireLineTracing(FHitResult& HitResult, FVector SpawnPoint, FVector End);
-	void TakeDamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection);
 };

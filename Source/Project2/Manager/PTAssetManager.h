@@ -30,7 +30,20 @@ public:
 
 	template <typename T>
 	void LoadAssets(TArray<FString> AssetPaths, TFunction<void(TArray<UObject*>)> OnLoadComplete);
+
+	template <typename T>
+	T* GetdMeshAsset(FString Name);
 	
+	template <typename T>
+	T* GetFXAsset(FString Name);
+
+	template <typename T>
+	T* GetSFXAsset(FString Name);
+	
+	template <typename T>
+	T* GetLoadedAsset(FString Path);
+
+
 private:
 	const FString MESH_PATH_FORMAT = TEXT("/Game/Project2/Mesh/{0}.{0}");
 	const FString FX_PATH_FORMAT = TEXT("/Game/Project2/FX/{0}.{0}");

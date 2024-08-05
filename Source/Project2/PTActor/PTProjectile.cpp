@@ -35,17 +35,17 @@ void APTProjectile::BeginPlay()
 	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &APTProjectile::OnOverlapBegin);
 }
 
-void APTProjectile::Initialize()
+void APTProjectile::Initialize(FName DataKey)
 {
+	SetData(DataKey);
+	
+	ProjectileMovementComponent->Activate(true);
+	ProjectileMesh->SetHiddenInGame(false);
+	TrailParticles->ActivateSystem(true);
+
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 	SetActorTickEnabled(true);
-
-	ProjectileMovementComponent->Activate(true);
-	FVector Velocity(2000.f, 0.f, 0.f);
-	ProjectileMovementComponent->SetVelocityInLocalSpace(Velocity);
-
-	TrailParticles->Activate();
 	
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	GetComponents(SkeletalMeshComponents);
@@ -59,6 +59,39 @@ void APTProjectile::Initialize()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 	}
+
+	CompleteInit = true;
+}
+
+void APTProjectile::SetData(FName DataKey)
+{
+	ProjectileData = UPTGameDataSingleton::Get().GetProjectileData(DataKey);
+	ResourceSetting();
+	
+	FVector Velocity(ProjectileData.MoveSpeed, 0.f, 0.f);
+	ProjectileMovementComponent->SetVelocityInLocalSpace(Velocity);
+	
+	CapsuleComponent->SetCapsuleHalfHeight(ProjectileData.Radius);
+	CapsuleComponent->SetCapsuleRadius(ProjectileData.Radius);
+}
+
+void APTProjectile::ResourceSetting()
+{
+	UE_LOG(LogTemp, Log, TEXT("[%f] APTProjectile::LoadResource() - Try Load"), GetWorld()->GetTimeSeconds());
+	
+	UPTAssetManager& AssetManager = UPTAssetManager::Get();
+
+	UStaticMesh* Mesh = AssetManager.GetdMeshAsset<UStaticMesh>(ProjectileData.StaticMesh);
+	ProjectileMesh->SetStaticMesh(Mesh);		
+
+	UParticleSystem* TrailEffect = AssetManager.GetFXAsset<UParticleSystem>(ProjectileData.TrailEffect);
+	TrailParticles->SetTemplate(TrailEffect);
+
+	UParticleSystem* ExplosionEffect = AssetManager.GetFXAsset<UParticleSystem>(ProjectileData.ExplosionEffect);
+	ExplosionParticle = ExplosionEffect;
+	
+	USoundWave* Sound = AssetManager.GetSFXAsset<USoundWave>(ProjectileData.ExplosionSound);
+	ExplosionSound = Sound;
 }
 
 void APTProjectile::Terminate()
@@ -83,55 +116,11 @@ void APTProjectile::Terminate()
 	}
 }
 
-void APTProjectile::SetData(FName DataKey)
-{
-	ProjectileData = UPTGameDataSingleton::Get().GetProjectileData(DataKey);
-	LoadResource();
-
-	ProjectileMovementComponent->InitialSpeed = ProjectileData.MoveSpeed;
-	ProjectileMovementComponent->MaxSpeed =  ProjectileData.MoveSpeed;
-
-	CapsuleComponent->SetCapsuleHalfHeight(ProjectileData.Radius);
-	CapsuleComponent->SetCapsuleRadius(ProjectileData.Radius);
-
-	ProjectileMesh->SetHiddenInGame(false);
-	SetActorEnableCollision(true);
-	
-	CompleteInit = true;
-}
-
-void APTProjectile::LoadResource()
-{
-	UPTAssetManager& AssetManager = UPTAssetManager::Get();
-
-	AssetManager.LoadMeshAsset<UStaticMesh>(ProjectileData.StaticMesh, [this] (UStaticMesh* Mesh)
-	{
-		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Mesh: %s"), *Mesh->GetName());
-		ProjectileMesh->SetStaticMesh(Mesh);		
-	});
-
-	AssetManager.LoadFXAsset<UParticleSystem>(ProjectileData.TrailEffect, [this](UParticleSystem* Particle)
-	{
-		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Particle: %s"), *Particle->GetName());
-		TrailParticles->SetTemplate(Particle);
-	});
-
-	AssetManager.LoadFXAsset<UParticleSystem>(ProjectileData.ExplosionEffect, [this](UParticleSystem* Particle)
-	{
-		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Particle: %s"), *Particle->GetName());
-		ExplosionParticles = Particle;
-	});
-	
-	AssetManager.LoadSFXAsset<USoundWave>(ProjectileData.ExplosionSound, [this](USoundWave* Sound)
-	{
-		UE_LOG(LogTemp, Log, TEXT("APTProjectile::Init() - OnLoadComplete   Sound: %s"), *Sound->GetName());
-		ExplosionSound = Sound;
-	});
-}
-
 void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UE_LOG(LogTemp, Log, TEXT("APTProjectile::OnOverlapBegin() - CompleteInit: %s    OtherActor: %s"), CompleteInit ? TEXT("True") : TEXT("False"), *OtherActor->GetName());
+
 	if (!CompleteInit || GetOwner() == OtherActor)
 	{
 		return;
@@ -146,16 +135,14 @@ void APTProjectile::Explosion()
 	FVector Location = GetActorLocation();
 	
 	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(GetOwner());
-	
 	TArray<FOverlapResult> OutOverlapResults;
 	GetWorld()->OverlapMultiByChannel(OutOverlapResults, Location, FQuat::Identity, CCHANNEL_PTBULLET, FCollisionShape::MakeSphere(ProjectileData.ExplosionRadius), Params);	
 
 	OnExplosion.Execute(OutOverlapResults, Location);
 
-	if (ExplosionParticles)
+	if (ExplosionParticle)
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticles, GetActorLocation(), GetActorRotation());
+		UGameplayStatics::SpawnEmitterAtLocation(this, ExplosionParticle, GetActorLocation(), GetActorRotation());
 	}
 
 	if (ExplosionSound)
