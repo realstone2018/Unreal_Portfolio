@@ -22,7 +22,7 @@ public:
 	float MoveSpeed;	// 속도
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
-	FString StaticMesh;
+	FString StaticMesh; // 총알 Mesh
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	FString TrailEffect;
@@ -32,20 +32,5 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stat)
 	FString ExplosionSound;
-	
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
-	// FString ModelName;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
-	// FString MuzzleflashEffectName;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
-	// FString MuzzleflashSoundName;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
-	// FString ImpactEffectName;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Assets)
-	// FString ImpactSoundName;
 	
 };

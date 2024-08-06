@@ -33,7 +33,6 @@ void APTGameModeBase::BeginPlay()
 	PoolManager->SetupPool<APTProjectile>(EPoolType::Projectile);
 
 	SpawnManager->Init(GetWorld(), PoolManager);
-
 }
 
 void APTGameModeBase::StartPlay()
@@ -129,13 +128,14 @@ void APTGameModeBase::MonsterWaveTimer()
 {
 	FTimerHandle MonsterWaveTimerHandle;
 
-	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 1);
+	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 4);
+	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 4);
 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
 	
 	 GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this]()
 	 {
 	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
-	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 2);
-	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 2);
-	 }), 25.f, true);
+	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 4);
+	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+	 }), 10.f, true);
 }

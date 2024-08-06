@@ -1,2 +1,2 @@
 Name,Radius,ExplosionRadius,MoveSpeed,StaticMesh,TrailEffect,ExplosionEffect,ExplosionSound
-BaseLauncher,45,200,2000,SM_Rocket_Xalign,P_BaseLauncher_Tail,P_Explosion,SFX_Projectile_Explosion
+BaseLauncher,45,230,2000,SM_Rocket_Xalign,P_BaseLauncher_Tail,P_Explosion,SFX_Projectile_Explosion

@@ -42,7 +42,7 @@ public:
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timer", meta = (AllowPrivateAccess = "true"))
-	float StageClearTime = 100.f;
+	float StageClearTime = 60.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timer", meta = (AllowPrivateAccess = "true"))
 	float PlayerRespawnDelay = 5.f;

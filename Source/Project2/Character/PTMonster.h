@@ -64,8 +64,8 @@ private:
 
 #pragma region AI
 private:
-	FORCEINLINE float GetAIDetectPlayerRange() override { return 1000.f;  }
-	FORCEINLINE float GetAIDetectWallRange() override {return 800; }
+	FORCEINLINE float GetAIDetectPlayerRange() override { return 2000.f;  }
+	FORCEINLINE float GetAIDetectWallRange() override {return 1500; }
 
 	virtual float GetAIAttackRange() override { return MonsterStat->GetAttackRange(); }
 	virtual float GetAITurnSpeed() override { return 10.f; }
