@@ -25,7 +25,7 @@ protected:
 
 	virtual void Initialize(FName DataKey) override;
 	void SetData(FName DataKey);
-	void ResourceSetting();
+	void LoadResource();
 
 	virtual void Terminate() override;
 
@@ -33,11 +33,10 @@ public:
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
+protected:
 	void Explosion();
-
-	void Dead();
-
-private:
+    void Dead();
+	
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = "true"))
 	FPTProjectileData ProjectileData;
 	
@@ -54,7 +53,7 @@ private:
 	uint8 CompleteInit : 1;
 
 #pragma region Effect, Sound
-private:
+protected:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	TObjectPtr<UParticleSystemComponent> TrailParticles;
 

@@ -1,14 +1,14 @@
 #include "PTGun.h"
-#include "Character/PTCharacterBase.h"
 #include "Engine/DamageEvents.h"
-#include "GameData/PTGameDataSingleton.h"
-#include "GameFramework/Character.h"
+#include "Engine/OverlapResult.h"
 #include "Kismet/GameplayStatics.h"
 #include "Manager/PTAssetManager.h"
 #include "PTComponent/Equipment/RifleFireComponent.h"
 #include "PTComponent/Equipment/LauncherFireComponent.h"
-#include "GameData/PTGunData.h"
 #include "PTComponent/PTFactionComponent.h"
+#include "Character/PTCharacterBase.h"
+#include "GameData/PTGameDataSingleton.h"
+#include "GameData/PTGunData.h"
 
 APTGun::APTGun()
 {

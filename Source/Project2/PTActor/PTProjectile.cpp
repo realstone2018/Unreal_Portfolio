@@ -66,7 +66,7 @@ void APTProjectile::Initialize(FName DataKey)
 void APTProjectile::SetData(FName DataKey)
 {
 	ProjectileData = UPTGameDataSingleton::Get().GetProjectileData(DataKey);
-	ResourceSetting();
+	LoadResource();
 	
 	FVector Velocity(ProjectileData.MoveSpeed, 0.f, 0.f);
 	ProjectileMovementComponent->SetVelocityInLocalSpace(Velocity);
@@ -75,7 +75,7 @@ void APTProjectile::SetData(FName DataKey)
 	CapsuleComponent->SetCapsuleRadius(ProjectileData.Radius);
 }
 
-void APTProjectile::ResourceSetting()
+void APTProjectile::LoadResource()
 {
 	UE_LOG(LogTemp, Log, TEXT("[%f] APTProjectile::LoadResource() - Try Load"), GetWorld()->GetTimeSeconds());
 	

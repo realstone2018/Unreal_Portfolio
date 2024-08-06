@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "PTComponent/Equipment/GunFireComponent.h"
-#include "Engine/OverlapResult.h"
 #include "LauncherFireComponent.generated.h"
 
 UCLASS()
@@ -17,6 +16,8 @@ public:
 	void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) override;
 
 private:
+	void LoadResource();
+	
 	UPROPERTY(EditAnywhere, Category = "EffectAndSound")
 	TSubclassOf<class UCameraShakeBase> HitCameraShakeClass;
 

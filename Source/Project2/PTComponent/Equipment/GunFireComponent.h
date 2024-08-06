@@ -13,14 +13,11 @@ class PROJECT2_API UGunFireComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	virtual void Init(APTGun* InRifle);
+	virtual void Init(APTGun* InRifle) { Gun = InRifle; }
 
 	virtual void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
 
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<APTGun> Gun;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<AActor> GunOwner;
 };
