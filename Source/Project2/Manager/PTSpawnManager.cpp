@@ -12,7 +12,7 @@ void UPTSpawnManager::Init(UWorld* InWorld, UPTObjectPoolManager* InPoolManager)
 template <typename T, typename>
 T* UPTSpawnManager::SpawnObject(FName DataKey, FRotator SpawnRotator, FVector SpawnLocation, uint8 ReturnImmediately)
 {
-	FTransform SpawnTransform(SpawnRotator, SpawnLocation);
+	FTransform SpawnTransform(SpawnRotator, SpawnLocation + FVector(0.f, 0.f, 500.f));
 
 	T* PooledObject = PoolManager->GetPoolObject<T>(SpawnTransform, DataKey);
 	ensure(PooledObject);
