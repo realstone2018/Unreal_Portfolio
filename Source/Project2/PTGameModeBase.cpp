@@ -29,8 +29,8 @@ void APTGameModeBase::BeginPlay()
 	check(MainStation);
 	
 	PoolManager->Init(GetWorld());
-	PoolManager->SetUpPool<APTMonster>(EPoolType::Monster);
-	PoolManager->SetUpPool<APTProjectile>(EPoolType::Projectile);
+	PoolManager->SetupPool<APTMonster>(EPoolType::Monster);
+	PoolManager->SetupPool<APTProjectile>(EPoolType::Projectile);
 
 	SpawnManager->Init(GetWorld(), PoolManager);
 

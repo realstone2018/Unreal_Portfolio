@@ -31,6 +31,7 @@ public:
 
 	const FPoolData& GetPoolData(EPoolType PoolType);
 
+private:
 	UPROPERTY(EditAnywhere)
 	TMap<EPoolType, FPoolData> PoolData;
 

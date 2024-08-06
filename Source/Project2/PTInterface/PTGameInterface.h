@@ -20,8 +20,6 @@ class PROJECT2_API IPTGameInterface
 
 public:
 	virtual APTStructure* GetMainStation() = 0;
-
-	virtual UPTObjectPoolManager* GetObjectPoolManager() = 0;
 	virtual UPTSpawnManager* GetSpawnManager() = 0;
 
 	virtual void OnMainStationDestruct() = 0;

@@ -71,25 +71,23 @@ void APTGun::Init(const FString GunDataKey)
 	GunFireComponent->Init(this);
 }
 
-uint8 APTGun::PullTrigger()
+void APTGun::PullTrigger()
 {
 	if (CurrentAmmo <= 0)
 	{
-		return false;
+		return;
 	}
 	
 	if (!bIsFiring)
 	{
-		FireCount = 0;
 		bIsFiring = true;
+		FireCount = 0;
 		
 		Fire();
 		
 		GetWorld()->GetTimerManager().ClearTimer(FireRateTimerHandle);
 		GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, &APTGun::Fire, GunData.FireRate, true);
 	}
-
-	return true;
 }
 
 void APTGun::StopTrigger()
@@ -115,7 +113,6 @@ void APTGun::Fire()
 	ApplyRecoil();
 	PlayMuzzleFlashEffectAndSound();
 	
-	// 폰이 보고있는 시야의 시작 위치와 회전방향을 가져온다. (카메라가 붙어있는 경우 카메라 베이스로, 없는 경우는 모르겠다.)
 	FVector OutLocation;
 	FRotator ViewRotation;
 	GetOwnerController()->GetPlayerViewPoint(OutLocation, ViewRotation);

@@ -59,7 +59,7 @@ public:
 
 private:
 	UPROPERTY()
-	uint8 IsReloading : 1;
+	uint8 bIsReloading : 1;
 
 #pragma endregion
 

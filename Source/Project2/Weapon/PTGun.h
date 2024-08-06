@@ -43,7 +43,7 @@ private:
 
 #pragma region Fire
 public:
-	uint8 PullTrigger();
+	void PullTrigger();
 	void StopTrigger();
 
 	void DamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection);

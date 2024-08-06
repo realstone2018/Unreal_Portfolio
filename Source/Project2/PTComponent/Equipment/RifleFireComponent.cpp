@@ -6,14 +6,14 @@
 void URifleFireComponent::FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage)
 {
 	FHitResult HitResult;
-	FVector DamageDirection = -ShotDirection.Vector();
 	FVector End = SpawnPoint + ShotDirection.Vector() * Range;
-	uint8 IsHit = FireLineTracing(HitResult, SpawnPoint, End);
-	if (!IsHit)
+	uint8 bIsHit = FireLineTracing(HitResult, SpawnPoint, End);
+	if (!bIsHit)
 	{
 		return;
 	}
 
+	FVector DamageDirection = -ShotDirection.Vector();
 	Gun->DamageToHitResult(HitResult, Damage, DamageDirection);
 	OnHitTracing.Execute(HitResult, DamageDirection);
 	
@@ -31,6 +31,6 @@ uint8 URifleFireComponent::FireLineTracing(FHitResult& HitResult, FVector SpawnP
 #if ENABLE_DRAW_DEBUG
 	DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
 #endif
-	
+
 	return GetWorld()->LineTraceSingleByChannel(HitResult, SpawnPoint, End, CCHANNEL_PTBULLET, Params);
 }

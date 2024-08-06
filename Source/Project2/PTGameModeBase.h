@@ -58,7 +58,6 @@ private:
 
 #pragma region Object Pool, Spawn
 public:
-	FORCEINLINE UPTObjectPoolManager* GetObjectPoolManager() override { return PoolManager; }
 	FORCEINLINE UPTSpawnManager* GetSpawnManager() override { return SpawnManager; }
 	
 private:

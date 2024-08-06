@@ -21,7 +21,7 @@ void UPTObjectPoolManager::Init(UWorld* World)
 }
 
 template <typename T, typename>
-void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> ObjectClass,*/ int32 SetUpSize)
+void UPTObjectPoolManager::SetupPool(EPoolType PoolType, int32 SetUpSize)
 {
 	FString ParentName = UEnum::GetValueAsString(PoolType);
 	FString ParentPath = "ObjectPool/" + ParentName;
@@ -38,13 +38,10 @@ void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> Object
 	
 	for (int32 i = 0; i < Size; i++)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Set Up Pool is Fail, PoolType: %s   ClassName: %s"), *UEnum::GetValueAsString(PoolType), *Data.PoolClass->GetName());
-
 		AActor* NewObject = WorldContext->SpawnActor<T>(Data.PoolClass, SpawnLocation, FRotator::ZeroRotator);
 		if (NewObject == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Set Up Pool is Fail, PoolType: %s"), *UEnum::GetValueAsString(PoolType));
-			ensure(NewObject);
 			continue;
 		}
 		
@@ -58,7 +55,7 @@ void UPTObjectPoolManager::SetUpPool(EPoolType PoolType, /*TSubclassOf<T> Object
 }
 
 template <typename T, typename>
-T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans, FName DataKey)
+T* UPTObjectPoolManager::GetPoolObject(FTransform const& Trans, FName DataKey)
 {
 	EPoolType PoolType = EPoolTypeUtil::ClassToPoolType(T::StaticClass());
 	if (PoolType == EPoolType::None)
@@ -73,7 +70,7 @@ T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans, FName DataKey)
 
 	if (PoolMap[PoolType].DeactiveArray.Num() <= 0)
 	{
-		SetUpPool<T>(PoolType, PoolMap[PoolType].ActiveArray.Num() / 2);
+		SetupPool<T>(PoolType, PoolMap[PoolType].ActiveArray.Num() / 2);
 		UE_LOG(LogTemp, Error, TEXT("%s PoolType is Full, Increase Pull Size"), *UEnum::GetValueAsString(PoolType));
 	}
 	
@@ -93,7 +90,7 @@ T* UPTObjectPoolManager::GetPooledObject(FTransform const& Trans, FName DataKey)
 }
 
 template <typename T, typename>
-void UPTObjectPoolManager::ReturnPooledObject(AActor* Object)
+void UPTObjectPoolManager::ReturnPoolObject(AActor* Object)
 {
 	EPoolType PoolType = EPoolTypeUtil::ClassToPoolType(T::StaticClass());
 	if (PoolType == EPoolType::None)

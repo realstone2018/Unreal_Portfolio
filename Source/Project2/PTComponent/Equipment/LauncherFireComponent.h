@@ -10,9 +10,7 @@ class PROJECT2_API ULauncherFireComponent : public UGunFireComponent
 	GENERATED_BODY()
 
 public:
-	virtual void Init(APTGun* InRifle) override;
-	
-	void SetProjectile(FString ProjectileKey) { CurrentProjectile = *ProjectileKey; }
+	void SetProjectile(FString ProjectileKey);
 	void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) override;
 
 private:

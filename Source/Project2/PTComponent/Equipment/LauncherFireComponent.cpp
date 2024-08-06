@@ -4,10 +4,9 @@
 #include "GameData/PTGameDataSingleton.h"
 #include "PTActor/PTProjectile.h"
 
-void ULauncherFireComponent::Init(APTGun* InRifle)
+void ULauncherFireComponent::SetProjectile(FString ProjectileKey)
 {
-	Super::Init(InRifle);
-	
+	CurrentProjectile = *ProjectileKey;
 	LoadResource();
 }
 
@@ -24,7 +23,6 @@ void ULauncherFireComponent::LoadResource()
 void ULauncherFireComponent::FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage)
 {
 	IPTGameInterface* GameMode = Cast<IPTGameInterface>(GetWorld()->GetAuthGameMode());
-
 	APTProjectile* Projectile = GameMode->GetSpawnManager()->SpawnObject<APTProjectile>(CurrentProjectile, ShotDirection, SpawnPoint, true);
 	Projectile->SetOwner(Gun->GetOwner());
 	Projectile->OnExplosion.BindLambda([this, Damage](const TArray<FOverlapResult>& OverlapResults, FVector Location){

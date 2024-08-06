@@ -82,21 +82,23 @@ void APTPlayerCharacter::Dash()
 
 void APTPlayerCharacter::StartAttack()
 {
-	if (IsReloading)
+	if (bIsReloading)
 	{
 		return;
 	}
 	
-	if (EquipmentComponent->GetCurrentGun()->PullTrigger() == false)
+	if (EquipmentComponent->GetCurrentGun()->GetCurrentAmmo() <= 0)
 	{
 		Reloading();
+		return;
 	}
+
+	EquipmentComponent->GetCurrentGun()->PullTrigger();
 }
 
 void APTPlayerCharacter::StopAttack()
 {
 	EquipmentComponent->GetCurrentGun()->StopTrigger();
-
 }
 
 void APTPlayerCharacter::ReloadAction()
@@ -106,7 +108,7 @@ void APTPlayerCharacter::ReloadAction()
 
 void APTPlayerCharacter::EquipInput(EEquipType EquipType)
 {
-	if (IsReloading || EquipmentComponent->GetCurrentGun()->GetIsFiring())
+	if (bIsReloading || EquipmentComponent->GetCurrentGun()->GetIsFiring())
 	{
 		return;
 	}
@@ -118,13 +120,13 @@ void APTPlayerCharacter::Reloading()
 {
 	APTGun* CurrentGun = EquipmentComponent->GetCurrentGun();
 
-	if (!IsReloading && !CurrentGun->GetIsFiring())
+	if (!bIsReloading && !CurrentGun->GetIsFiring())
 	{
-		IsReloading = true;
+		bIsReloading = true;
 
 		CurrentGun->OnCompleteReload.AddLambda(
 		[&](){
-			IsReloading = false;			
+			bIsReloading = false;			
 		});
 		
 		float ReloadAccelerationRateStat = 0.f;

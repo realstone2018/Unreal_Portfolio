@@ -77,8 +77,6 @@ void APTProjectile::SetData(FName DataKey)
 
 void APTProjectile::LoadResource()
 {
-	UE_LOG(LogTemp, Log, TEXT("[%f] APTProjectile::LoadResource() - Try Load"), GetWorld()->GetTimeSeconds());
-	
 	UPTAssetManager& AssetManager = UPTAssetManager::Get();
 
 	UStaticMesh* Mesh = AssetManager.GetdMeshAsset<UStaticMesh>(ProjectileData.StaticMesh);
@@ -119,8 +117,6 @@ void APTProjectile::Terminate()
 void APTProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Log, TEXT("APTProjectile::OnOverlapBegin() - CompleteInit: %s    OtherActor: %s"), CompleteInit ? TEXT("True") : TEXT("False"), *OtherActor->GetName());
-
 	if (!CompleteInit || GetOwner() == OtherActor)
 	{
 		return;

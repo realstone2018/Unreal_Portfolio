@@ -14,7 +14,7 @@ T* UPTSpawnManager::SpawnObject(FName DataKey, FRotator SpawnRotator, FVector Sp
 {
 	FTransform SpawnTransform(SpawnRotator, SpawnLocation);
 
-	T* PooledObject = PoolManager->GetPooledObject<T>(SpawnTransform, DataKey);
+	T* PooledObject = PoolManager->GetPoolObject<T>(SpawnTransform, DataKey);
 	ensure(PooledObject);
 
 	if (ReturnImmediately)
@@ -35,7 +35,7 @@ void UPTSpawnManager::ReturnObject(AActor* PooledObject)
 	FTimerHandle DeadTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(DeadTimerHandle,
 		FTimerDelegate::CreateLambda([this, PooledObject](){
-			PoolManager->ReturnPooledObject<T>(PooledObject);
+			PoolManager->ReturnPoolObject<T>(PooledObject);
 		}
 	), 5.0f, false);
 }
@@ -43,7 +43,7 @@ void UPTSpawnManager::ReturnObject(AActor* PooledObject)
 template <typename T, typename>
 void UPTSpawnManager::ReturnImmediatelyObject(AActor* PooledObject)
 {
-	PoolManager->ReturnPooledObject<T>(PooledObject);
+	PoolManager->ReturnPoolObject<T>(PooledObject);
 }
 
 void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
