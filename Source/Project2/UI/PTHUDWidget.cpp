@@ -51,8 +51,9 @@ void UPTHUDWidget::UpdateGunReloadImg(uint8 InVisibility)
 	GunInfo->SetReloadingImg(InVisibility);
 }
 
-void UPTHUDWidget::UpdateEquipWeapon(uint8 IsEquipMain)
+void UPTHUDWidget::UpdateEquipWeapon(uint8 IsEquipMain, int32 NewCurAmmo, int32 NewMaxAmmo)
 {
 	IsEquipMain ? EquipWeapon->EquipMainWeapon() : EquipWeapon->EquipSubWeapon();
+	UpdateGunAmmo(NewCurAmmo, NewMaxAmmo);
 }
 

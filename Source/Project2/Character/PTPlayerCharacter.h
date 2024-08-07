@@ -14,9 +14,7 @@ public:
 	APTPlayerCharacter();
 
 	virtual void PossessedBy(AController* NewController) override;
-
-	virtual void BeginPlay() override;
-
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
@@ -70,5 +68,5 @@ public:
 	
 private:
 	virtual void SetupHUDWidget(UPTHUDWidget* InHUDWidget) override; // IPTCharacterHUDInterface
-	
+	void SetupEquipmentWidget(UPTHUDWidget* InHUDWidget, APTGun* NewEquipment, EEquipType NewEquipType);
 };

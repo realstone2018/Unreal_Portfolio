@@ -20,7 +20,7 @@ public:
 	void UpdateGunAmmo(int32 NewCurAmmo, int32 NewMaxAmmo);
 	void UpdateGunReloadImg(uint8 InVisibility);
 
-	void UpdateEquipWeapon(uint8 IsEquipMain);
+	void UpdateEquipWeapon(uint8 IsEquipMain, int32 NewCurAmmo, int32 NewMaxAmmo);
 	
 protected:
 	UPROPERTY()
