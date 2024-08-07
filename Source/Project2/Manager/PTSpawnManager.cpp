@@ -12,7 +12,7 @@ void UPTSpawnManager::Init(UWorld* InWorld, UPTObjectPoolManager* InPoolManager)
 template <typename T, typename>
 T* UPTSpawnManager::SpawnObject(FName DataKey, FRotator SpawnRotator, FVector SpawnLocation, uint8 ReturnImmediately)
 {
-	FTransform SpawnTransform(SpawnRotator, SpawnLocation + FVector(0.f, 0.f, 500.f));
+	FTransform SpawnTransform(SpawnRotator, SpawnLocation);
 
 	T* PooledObject = PoolManager->GetPoolObject<T>(SpawnTransform, DataKey);
 	ensure(PooledObject);
@@ -49,6 +49,7 @@ void UPTSpawnManager::ReturnImmediatelyObject(AActor* PooledObject)
 void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
 {
 	BaseSpawnLocation = PTVectorUtil::GetCirclePoint<double>(BaseSpawnLocation, SPAWN_RADIUS);
+	BaseSpawnLocation += FVector(0.f, 0.f, 500.f);
 	
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(World);
 	if (NavSystem == nullptr)
