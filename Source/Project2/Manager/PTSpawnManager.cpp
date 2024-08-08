@@ -48,31 +48,10 @@ void UPTSpawnManager::ReturnImmediatelyObject(AActor* PooledObject)
 
 void UPTSpawnManager::SpawnMonsterWave(FVector BaseSpawnLocation, int32 Num)
 {
-	BaseSpawnLocation = PTVectorUtil::GetCirclePoint<double>(BaseSpawnLocation, SPAWN_RADIUS);
-	BaseSpawnLocation += FVector(0.f, 0.f, 500.f);
-	
-	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(World);
-	if (NavSystem == nullptr)
-	{ 
-		return;
-	}
-	
 	for (int i = 0; i < Num; i++)
 	{
-		FVector SpawnLocation = BaseSpawnLocation;
-		FNavLocation NavLocation;
-		
-		 if (NavSystem->GetRandomPointInNavigableRadius(BaseSpawnLocation, NAVIGATION_RANDOM_RADIUS, NavLocation))
-		 {
-		 	SpawnLocation = NavLocation;
-		 }
+		FVector SpawnLocation = PTVectorUtil::GetCirclePoint<double>(BaseSpawnLocation, SPAWN_RADIUS);
+		SpawnLocation += FVector(0.f, 0.f, 500.f);
 		SpawnObject<APTMonster>(FName("Scorch"), FRotator::ZeroRotator, SpawnLocation, false);
-
-		// FVector DebugLocation(6500.f, 470.f, 130.f);
-		// if (NavSystem->GetRandomPointInNavigableRadius(DebugLocation, 10.F, NavLocation))
-		// {
-		// 	DebugLocation = NavLocation;
-		// }
-		// SpawnObject<APTMonster>(FName("Scorch"), FRotator::ZeroRotator, DebugLocation, false);
 	}	
 }

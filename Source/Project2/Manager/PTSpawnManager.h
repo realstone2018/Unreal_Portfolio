@@ -32,7 +32,6 @@ private:
 	TObjectPtr<UPTObjectPoolManager> PoolManager;
 
 	const float SPAWN_RADIUS = 8000.f;
-	const float NAVIGATION_RANDOM_RADIUS = 500.f;
 #pragma endregion
 
 

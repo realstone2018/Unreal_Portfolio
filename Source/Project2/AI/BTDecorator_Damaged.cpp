@@ -5,8 +5,6 @@
 
 bool UBTDecorator_Damaged::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
-	bool bResult = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
-
 	APawn* OwnerPawn = OwnerComp.GetAIOwner()->GetPawn();
 	if (OwnerPawn == nullptr || OwnerPawn->GetController() == nullptr)
 	{
