@@ -15,7 +15,6 @@ void URifleFireComponent::FireProcess(FVector SpawnPoint, FRotator ShotDirection
 
 	FVector DamageDirection = -ShotDirection.Vector();
 	Gun->DamageToHitResult(HitResult, Damage, DamageDirection);
-	OnHitTracing.Execute(HitResult, DamageDirection);
 	
 #if ENABLE_DRAW_DEBUG
 	DrawDebugPoint(GetWorld(), HitResult.Location, 10, FColor::Red, true);

@@ -10,8 +10,6 @@ class PROJECT2_API URifleFireComponent : public UGunFireComponent
 	GENERATED_BODY()
 
 public:
-	FOnHitTracing OnHitTracing;
-
 	void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) override;
 
 private:

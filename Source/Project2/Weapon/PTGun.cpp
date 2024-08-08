@@ -50,7 +50,6 @@ void APTGun::Init(const FString GunDataKey)
 		case EGunType::Rifle:
 		{
 			URifleFireComponent* RifleFireComponent = NewObject<URifleFireComponent>(this, URifleFireComponent::StaticClass(), TEXT("RifleFireComponent"));
-			RifleFireComponent->OnHitTracing.BindUObject(this, &APTGun::PlayImpactEffectAndSound);
 			GunFireComponent = RifleFireComponent;
 			break;
 		}
@@ -154,8 +153,10 @@ void APTGun::ApplyRecoil()
 	PlayerController->SetControlRotation(NewRotation);
 }
 
-void APTGun::DamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection)
+void APTGun::DamageToHitResult(FHitResult HitResult, int32 Damage, FVector DamageDirection)
 {
+	PlayImpactEffectAndSound(HitResult.Location, DamageDirection);
+	
 	IPTFactionInterface* OwnerFaction = Cast<IPTFactionInterface>(GetOwner());
 	IPTFactionInterface* TargetFaction = Cast<IPTFactionInterface>(HitResult.GetActor());
 	if (OwnerFaction == nullptr || TargetFaction == nullptr)
@@ -165,7 +166,7 @@ void APTGun::DamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotD
 	
 	if (EFactionUtil::IsHostility(OwnerFaction->GetFaction(), TargetFaction->GetFaction()))
 	{
-		FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
+		FPointDamageEvent DamageEvent(Damage, HitResult, DamageDirection, nullptr);
 		HitResult.GetActor()->TakeDamage(Damage, DamageEvent, GetOwnerController(), GetOwner());
 	}
 }
@@ -236,15 +237,15 @@ void APTGun::PlayMuzzleFlashEffectAndSound()
 	}	
 }
 
-void APTGun::PlayImpactEffectAndSound(FHitResult Hit, FVector ShotDirection)
+void APTGun::PlayImpactEffectAndSound(FVector Location, FVector Direction)
 {
 	if (ImpactEffect)
 	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.Location, ShotDirection.Rotation());
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Location, Direction.Rotation());
 	}
 
 	if (ImpactSound)
 	{
-		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactSound, Hit.Location);
+		UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactSound, Location);
 	}
 }
