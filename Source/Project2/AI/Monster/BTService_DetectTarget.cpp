@@ -57,7 +57,12 @@ void UBTService_DetectTarget::TickNode(UBehaviorTreeComponent& OwnerComp, uint8*
 		TargetStructure = DetectStructure(OverlapResults, OwnerLocation, AIPawn->GetAIDetectWallRange());
 	}
 	
-	UpdateBlackboardValue(OwnerComp.GetBlackboardComponent(), BBKEY_TARGET, TargetPlayer);
+	bool bInRage = OwnerComp.GetBlackboardComponent()->GetValueAsBool(BBKEY_INRAGE);
+	if (bInRage == false)
+	{
+		UpdateBlackboardValue(OwnerComp.GetBlackboardComponent(), BBKEY_TARGET, TargetPlayer);
+	}
+	
 	UpdateBlackboardValue(OwnerComp.GetBlackboardComponent(), BBKEY_TARGET_WALL, TargetStructure);
 }
 
@@ -141,12 +146,6 @@ UObject* UBTService_DetectTarget::DetectStructure(const TArray<FOverlapResult>& 
 
 void UBTService_DetectTarget::UpdateBlackboardValue(UBlackboardComponent* BlackboardComp, FName KeyName, UObject* NewValue)
 {
-	if (NewValue == nullptr)
-	{
-		BlackboardComp->SetValueAsObject(KeyName, nullptr);
-		return;
-	}
-
 	UObject* currentValue = BlackboardComp->GetValueAsObject(KeyName);
 	if (currentValue != NewValue)
 	{

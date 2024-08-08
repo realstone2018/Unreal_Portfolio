@@ -43,6 +43,8 @@ public:
 	FOnDeadDelegate OnDead;
 	FAICharacterAttackFinished OnAttackFinished;
 
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
 	virtual void Dead() override;
 	virtual void Dash();
 	void Attack();
@@ -65,11 +67,17 @@ private:
 #pragma region AI
 private:
 	FORCEINLINE float GetAIDetectPlayerRange() override { return 2000.f;  }
-	FORCEINLINE float GetAIDetectWallRange() override {return 1500; }
+	AActor* GetLastAttacker() override { return LastAttacker;; }
 
+	UPROPERTY()
+	TObjectPtr<AActor> LastAttacker;
+	
+	FORCEINLINE float GetAIDetectWallRange() override {return 1500; }
 	virtual float GetAIAttackRange() override { return MonsterStat->GetAttackRange(); }
 	virtual float GetAITurnSpeed() override { return 10.f; }
 	virtual float GetAIAttackCooldown() override { return MonsterStat->GetAttackCooldown(); }
+
+	virtual float GetHpRatio() override;
 	
 	virtual void JumpByAI() override { Dash(); }
 	

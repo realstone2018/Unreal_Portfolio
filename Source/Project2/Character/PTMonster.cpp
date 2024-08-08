@@ -90,6 +90,13 @@ UPTCharacterStatComponent* APTMonster::GetStatComponent()
 	return MonsterStat;
 }
 
+float APTMonster::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	LastAttacker = DamageCauser;
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
 void APTMonster::Dead()
 {
 	Super::Dead();
@@ -182,6 +189,13 @@ void APTMonster::EndAttackMontage(UAnimMontage* TargetMontage, bool IsProperlyEn
 	}
 
 	HitTargets.Empty();
+}
+
+float APTMonster::GetHpRatio()
+{
+	float currentHp = static_cast<float>(MonsterStat->GetCurrentHp());
+	float maxHp = static_cast<float>(MonsterStat->GetMaxHp());
+	return currentHp / maxHp;
 }
 
 void APTMonster::AttackByAI(float& AttackCooldown)

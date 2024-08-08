@@ -18,12 +18,16 @@ class PROJECT2_API IPTAIInterface
 
 public:
 	virtual float GetAIDetectPlayerRange() = 0;
+	virtual AActor* GetLastAttacker() = 0;
+	
 	virtual float GetAIDetectWallRange() = 0;
 	virtual float GetAIAttackRange() = 0;
 	virtual float GetAITurnSpeed() = 0;
 	virtual float GetAIAttackCooldown() = 0;
 	
 	virtual void JumpByAI() = 0;
+
+	virtual float GetHpRatio() = 0;
 	
 	virtual void AttackByAI(float& AttackCooldown) = 0;
 	virtual void SetAIAttackDelegate(const FAICharacterAttackFinished& InOnAttackFinished) = 0;
