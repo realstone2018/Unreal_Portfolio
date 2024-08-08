@@ -55,6 +55,8 @@ public:
 	
 	void Reloading();
 
+	virtual EFaction GetFaction() override { return EFaction::Player; }
+	
 private:
 	UPROPERTY()
 	uint8 bIsReloading : 1;

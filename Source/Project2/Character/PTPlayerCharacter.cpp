@@ -6,7 +6,6 @@
 #include "PTComponent/PTInputComponent.h"
 #include "PTComponent/Character/PTPlayerStatComponent.h"
 #include "PTComponent/Character//PTCharacterMoveComponent.h"
-#include "PTComponent/PTFactionComponent.h"
 #include "Physics/PTCollision.h"
 #include "PTInterface/PTGameInterface.h"
 #include "UI/PTHUDWidget.h"
@@ -29,7 +28,6 @@ APTPlayerCharacter::APTPlayerCharacter()
 	EquipmentComponent = CreateDefaultSubobject<UPTEquipmentComponent>(TEXT("EquipmentComponent"));
 
 	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
-	FactionComponent->SetFaction(EFaction::Player);
 }
 
 void APTPlayerCharacter::PossessedBy(AController* NewController)

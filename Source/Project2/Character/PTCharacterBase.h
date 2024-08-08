@@ -5,10 +5,11 @@
 #include "PTInterface/PTAnimationInterface.h"
 #include "PTInterface/PTHUDInterface.h"
 #include "PTComponent/Character/PTCharacterStatComponent.h"
+#include "PTInterface/PTFactionInterface.h"
 #include "PTCharacterBase.generated.h"
 
 UCLASS()
-class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationInterface, public IPTHUDInterface
+class PROJECT2_API APTCharacterBase : public ACharacter, public IPTAnimationInterface, public IPTHUDInterface, public IPTFactionInterface
 {
 	GENERATED_BODY()
 
@@ -22,14 +23,8 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAceess = "true"))
 	TObjectPtr<class UPTCharacterMoveComponent> MoveComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	TObjectPtr<class UPTFactionComponent> FactionComponent;
 	
 	virtual UPTCharacterStatComponent* GetStatComponent() { return nullptr; }
-
-public:
-	FORCEINLINE UPTFactionComponent* GetFactionComponent() { return FactionComponent; }
 
 #pragma endregion
 
@@ -45,6 +40,7 @@ public:
 
 	virtual void OnNotifyAttack() override { }
 
+	virtual EFaction GetFaction() override { return EFaction::None; }
 #pragma endregion
 
 

@@ -53,6 +53,8 @@ public:
 	virtual void OnNotifyAttack() override;
 	void EndAttackMontage(class UAnimMontage* TargetMontage, bool IsProperlyEnded);
 
+	virtual EFaction GetFaction() override { return EFaction::Monster; }
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation") 
 	TObjectPtr<class UAnimMontage> AttackMontage;

@@ -2,7 +2,6 @@
 #include "Components/CapsuleComponent.h"
 #include "PTComponent/Character/PTCharacterStatComponent.h"
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
-#include "PTComponent/PTFactionComponent.h"
 #include "UI/PTWidgetComponent.h"
 #include "UI/PTHpBarWidget.h"
 #include "UI/PTUserWidget.h"
@@ -12,7 +11,6 @@ APTCharacterBase::APTCharacterBase()
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 	
 	MoveComponent = Cast<UPTCharacterMoveComponent>(ACharacter::GetMovementComponent());
-	FactionComponent = CreateDefaultSubobject<UPTFactionComponent>(TEXT("Faction"));
 
 	HpBar = CreateDefaultSubobject<UPTWidgetComponent>(TEXT("Widget"));
 	HpBar->SetupAttachment(GetMesh());

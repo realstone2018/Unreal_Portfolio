@@ -3,7 +3,6 @@
 #include "Components/CapsuleComponent.h"
 #include "PTGameModeBase.h"
 #include "PTComponent/Character/PTCharacterMoveComponent.h"
-#include "PTComponent/PTFactionComponent.h"
 #include "Physics/PTCollision.h"
 #include "AI/Monster/PTMonsterAIController.h"
 #include "UI/PTWidgetComponent.h"
@@ -19,8 +18,6 @@ APTMonster::APTMonster()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	MonsterStat = CreateDefaultSubobject<UPTMonsterStatComponent>(TEXT("MonsterStat"));
-
-	FactionComponent->SetFaction(EFaction::Monster);
 }
 
 void APTMonster::Initialize(FName DataKey)

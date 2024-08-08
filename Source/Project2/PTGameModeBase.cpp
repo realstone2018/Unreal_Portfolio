@@ -132,7 +132,7 @@ void APTGameModeBase::MonsterWaveTimer()
 
 	 GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this]()
 	 {
-	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 3);
+	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 10);
 
-	 }), 2.f, true);
+	 }), 10.f, true);
 }

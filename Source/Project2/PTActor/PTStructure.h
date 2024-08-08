@@ -2,10 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PTInterface/PTFactionInterface.h"
 #include "PTStructure.generated.h"
 
 UCLASS()
-class PROJECT2_API APTStructure : public AActor
+class PROJECT2_API APTStructure : public AActor, public IPTFactionInterface
 {
 	GENERATED_BODY()
 	
@@ -16,16 +17,17 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
-	TObjectPtr<class UPTFactionComponent> FactionComponent;
+	virtual EFaction GetFaction() override { return EFaction::Player; }
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
+	uint8 GetbIsMainStation() { return bIsMainStation; }
 
+protected:
 	virtual void Destruct();
 
-	uint8 GetbIsMainStation() { return bIsMainStation; }
-	
-private:
+#pragma region Component
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Component")
 	TObjectPtr<class UBoxComponent> BoxComponent;
 
@@ -34,7 +36,7 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta=(AllowPrivateAccess))
 	TObjectPtr<class USceneComponent> SceneComponent;
-	
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AStaticMeshActor> FrameWallClass;
 
@@ -43,7 +45,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AStaticMeshActor> StaticMesh; 
+
+#pragma endregion
 	
+protected:
 	UPROPERTY()
 	int32 MaxHp;
 	
@@ -53,7 +58,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	uint8 bIsMainStation : 1;
 
-#pragma region Effect
+#pragma region Effect, Sound
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UParticleSystem> DamagedEffect;
 

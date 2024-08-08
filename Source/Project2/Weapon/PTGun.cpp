@@ -5,10 +5,10 @@
 #include "Manager/PTAssetManager.h"
 #include "PTComponent/Equipment/RifleFireComponent.h"
 #include "PTComponent/Equipment/LauncherFireComponent.h"
-#include "PTComponent/PTFactionComponent.h"
 #include "Character/PTCharacterBase.h"
 #include "GameData/PTGameDataSingleton.h"
 #include "GameData/PTGunData.h"
+#include "PTInterface/PTFactionInterface.h"
 
 APTGun::APTGun()
 {
@@ -156,37 +156,40 @@ void APTGun::ApplyRecoil()
 
 void APTGun::DamageToHitResult(FHitResult HitResult, int32 Damage, FVector ShotDirection)
 {
-	AActor* HitActor = HitResult.GetActor();
-	if (HitActor != nullptr)
+	IPTFactionInterface* OwnerFaction = Cast<IPTFactionInterface>(GetOwner());
+	IPTFactionInterface* TargetFaction = Cast<IPTFactionInterface>(HitResult.GetActor());
+	if (OwnerFaction == nullptr || TargetFaction == nullptr)
+	{
+		return;
+	}
+	
+	if (EFactionUtil::IsHostility(OwnerFaction->GetFaction(), TargetFaction->GetFaction()))
 	{
 		FPointDamageEvent DamageEvent(Damage, HitResult, ShotDirection, nullptr);
-		HitActor->TakeDamage(Damage, DamageEvent, GetOwnerController(), GetOwner());;
+		HitResult.GetActor()->TakeDamage(Damage, DamageEvent, GetOwnerController(), GetOwner());
 	}
 }
 
 void APTGun::DamageToOverlapResults(const TArray<FOverlapResult>& OverlapResults, FVector Location, int32 InDamage)
 {
+	IPTFactionInterface* OwnerFaction = Cast<IPTFactionInterface>(GetOwner());
+
 	for (FOverlapResult Target : OverlapResults)
 	{
-		APTCharacterBase* TargetCharacter = Cast<APTCharacterBase>(Target.GetActor());
-		APTCharacterBase* GunOwner = Cast<APTCharacterBase>(GetOwner());
-				
-		if (!TargetCharacter)
+		IPTFactionInterface* TargetFaction = Cast<IPTFactionInterface>(Target.GetActor());
+		if (OwnerFaction == nullptr || TargetFaction == nullptr)
 		{
-			continue;
+			return;
 		}
 
-		UPTFactionComponent* TargetFaction = TargetCharacter->GetFactionComponent();
-		if (TargetFaction->IsNoneFaction() || GunOwner->GetFactionComponent()->CompareFaction(TargetFaction))
+		if (EFactionUtil::IsHostility(OwnerFaction->GetFaction(), TargetFaction->GetFaction()))
 		{
-			continue;
+			FRadialDamageEvent RadialDamageEvent;
+			RadialDamageEvent.Params.BaseDamage = InDamage;
+			RadialDamageEvent.Params.MinimumDamage = InDamage;
+			RadialDamageEvent.Origin = Location;
+			Target.GetActor()->TakeDamage(InDamage, RadialDamageEvent, GetOwnerController(), GetOwner());
 		}
-		
-		FRadialDamageEvent RadialDamageEvent;
-		RadialDamageEvent.Params.BaseDamage = InDamage;
-		RadialDamageEvent.Params.MinimumDamage = InDamage;
-		RadialDamageEvent.Origin = Location;
-		TargetCharacter->TakeDamage(InDamage, RadialDamageEvent, GetOwnerController(), GunOwner);
 	}
 }
 
