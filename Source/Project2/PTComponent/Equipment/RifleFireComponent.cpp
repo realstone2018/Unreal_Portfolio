@@ -1,9 +1,9 @@
 #include "PTComponent/Equipment//RifleFireComponent.h"
 #include "Physics/PTCollision.h"
 
-#define ENABLE_DRAW_DEBUG 0
+#define ENABLE_DRAW_DEBUG 1
 
-void URifleFireComponent::FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage)
+void URifleFireComponent::FireProcess(FVector SpawnPoint, FVector ViewLocation, FRotator ShotDirection, float Range, int32 Damage)
 {
 	FHitResult HitResult;
 	FVector End = SpawnPoint + ShotDirection.Vector() * Range;
@@ -28,7 +28,7 @@ uint8 URifleFireComponent::FireLineTracing(FHitResult& HitResult, FVector SpawnP
 	Params.AddIgnoredActor(Gun->GetOwner());
 
 #if ENABLE_DRAW_DEBUG
-	DrawDebugLine(GetWorld(), OutLocation, End, FColor::Red, true, 5.f);
+	DrawDebugLine(GetWorld(), SpawnPoint, End, FColor::Red, true, 5.f);
 #endif
 
 	return GetWorld()->LineTraceSingleByChannel(HitResult, SpawnPoint, End, CCHANNEL_PTBULLET, Params);

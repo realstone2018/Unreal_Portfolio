@@ -112,9 +112,9 @@ void APTGun::Fire()
 	ApplyRecoil();
 	PlayMuzzleFlashEffectAndSound();
 	
-	FVector OutLocation;
+	FVector ViewLocation;
 	FRotator ViewRotation;
-	GetOwnerController()->GetPlayerViewPoint(OutLocation, ViewRotation);
+	GetOwnerController()->GetPlayerViewPoint(ViewLocation, ViewRotation);
 	
 	GunFireComponent->FireProcess(ProjectileSpawnPoint->GetComponentLocation(), ViewRotation, GunData.Range, GunData.Damage);
 	FireCount++;

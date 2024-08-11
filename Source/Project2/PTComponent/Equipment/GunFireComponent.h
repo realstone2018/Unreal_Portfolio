@@ -15,7 +15,7 @@ class PROJECT2_API UGunFireComponent : public UActorComponent
 public:
 	virtual void Init(APTGun* InRifle) { Gun = InRifle; }
 
-	virtual void FireProcess(FVector SpawnPoint, FRotator ShotDirection, float Range, int32 Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
+	virtual void FireProcess(FVector SpawnPoint, FVector ViewLocation, FRotator ViewDirection, float Range, int32 Damage) PURE_VIRTUAL(UGunFireComponent::FireProcess, ;);
 
 protected:
 	UPROPERTY(VisibleAnywhere)
