@@ -180,7 +180,7 @@ void APTGun::DamageToOverlapResults(const TArray<FOverlapResult>& OverlapResults
 		IPTFactionInterface* TargetFaction = Cast<IPTFactionInterface>(Target.GetActor());
 		if (OwnerFaction == nullptr || TargetFaction == nullptr)
 		{
-			return;
+			continue;
 		}
 
 		if (EFactionUtil::IsHostility(OwnerFaction->GetFaction(), TargetFaction->GetFaction()))
