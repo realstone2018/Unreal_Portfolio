@@ -116,7 +116,7 @@ void APTGun::Fire()
 	FRotator ViewRotation;
 	GetOwnerController()->GetPlayerViewPoint(ViewLocation, ViewRotation);
 	
-	GunFireComponent->FireProcess(ProjectileSpawnPoint->GetComponentLocation(), ViewRotation, GunData.Range, GunData.Damage);
+	GunFireComponent->FireProcess(ProjectileSpawnPoint->GetComponentLocation(), ViewLocation, ViewRotation, GunData.Range, GunData.Damage);
 	FireCount++;
 }
 

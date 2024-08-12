@@ -150,7 +150,7 @@ void APTProjectile::Explosion()
 	DrawDebugSphere(
 		GetWorld(),
 		Location,
-		ExplosionRadius,
+		ProjectileData.ExplosionRadius,
 		12,
 		FColor::Red,
 		false,

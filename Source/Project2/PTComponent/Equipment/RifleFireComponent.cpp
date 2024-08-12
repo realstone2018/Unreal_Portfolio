@@ -1,19 +1,19 @@
 #include "PTComponent/Equipment//RifleFireComponent.h"
 #include "Physics/PTCollision.h"
 
-#define ENABLE_DRAW_DEBUG 1
+#define ENABLE_DRAW_DEBUG 0
 
-void URifleFireComponent::FireProcess(FVector SpawnPoint, FVector ViewLocation, FRotator ShotDirection, float Range, int32 Damage)
+void URifleFireComponent::FireProcess(FVector SpawnPoint, FVector ViewLocation, FRotator ViewDirection, float Range, int32 Damage)
 {
 	FHitResult HitResult;
-	FVector End = SpawnPoint + ShotDirection.Vector() * Range;
-	uint8 bIsHit = FireLineTracing(HitResult, SpawnPoint, End);
+	FVector End = ViewLocation + ViewDirection.Vector() * Range;
+	uint8 bIsHit = FireLineTracing(HitResult, ViewLocation, End);
 	if (!bIsHit)
 	{
 		return;
 	}
 
-	FVector DamageDirection = -ShotDirection.Vector();
+	FVector DamageDirection = -ViewDirection.Vector();
 	Gun->DamageToHitResult(HitResult, Damage, DamageDirection);
 	
 #if ENABLE_DRAW_DEBUG

@@ -11,7 +11,7 @@ class PROJECT2_API ULauncherFireComponent : public UGunFireComponent
 
 public:
 	void SetProjectile(FString ProjectileKey);
-	void FireProcess(FVector SpawnPoint, FVector ViewLocation, FRotator ShotDirection, float Range, int32 Damage) override;
+	void FireProcess(FVector SpawnPoint, FVector ViewLocation, FRotator ViewDirection, float Range, int32 Damage) override;
 
 private:
 	void LoadResource();
