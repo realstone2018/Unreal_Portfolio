@@ -1,14 +1,12 @@
 #include "Character/PTPlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+#include "Physics/PTCollision.h"
 #include "EnhancedInputComponent.h"
 #include "PTComponent/PTInputComponent.h"
 #include "PTComponent/Character/PTPlayerStatComponent.h"
 #include "PTComponent/Character//PTCharacterMoveComponent.h"
-#include "Physics/PTCollision.h"
 #include "PTInterface/PTGameInterface.h"
-#include "UI/PTHUDWidget.h"
 
 APTPlayerCharacter::APTPlayerCharacter()
 {
@@ -16,18 +14,16 @@ APTPlayerCharacter::APTPlayerCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 400.f;
 	CameraBoom->bUsePawnControlRotation = true;
-	
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 	
 	GetCapsuleComponent()->SetCollisionProfileName(CPROFILE_PTPLAYER);
+	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 
 	PlayerInputComponent = CreateDefaultSubobject<UPTInputComponent>(TEXT("InputComponet"));	
-	StatComponent = CreateDefaultSubobject<UPTPlayerStatComponent>(TEXT("PlayerStatComponent"));
+	PlayerStat = CreateDefaultSubobject<UPTPlayerStatComponent>(TEXT("PlayerStat"));
 	EquipmentComponent = CreateDefaultSubobject<UPTEquipmentComponent>(TEXT("EquipmentComponent"));
-
-	GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
 }
 
 void APTPlayerCharacter::PossessedBy(AController* NewController)
@@ -38,7 +34,6 @@ void APTPlayerCharacter::PossessedBy(AController* NewController)
 	PlayerInputComponent->SetCharacterControl(ECharacterControlType::Shoulder);
 
 	EquipmentComponent->Init();
-
 }
 
 void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
@@ -51,7 +46,7 @@ void APTPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Component)
 
 UPTCharacterStatComponent* APTPlayerCharacter::GetStatComponent()
 {
-	return StatComponent;
+	return PlayerStat;
 }
 
 void APTPlayerCharacter::Dead()
@@ -137,11 +132,11 @@ void APTPlayerCharacter::SetupHUDWidget(UPTHUDWidget* InHUDWidget)
 		return;
 	}
 	
-	StatComponent->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
-	StatComponent->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
+	PlayerStat->OnStatChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateStat);
+	PlayerStat->OnHpChanged.AddUObject(InHUDWidget, &UPTHUDWidget::UpdateHpBar);
 	
-	InHUDWidget->UpdateStat(StatComponent->GetBaseStat(), StatComponent->GetModifierStat());
-	InHUDWidget->UpdateHpBar(StatComponent->GetCurrentHp());
+	InHUDWidget->UpdateStat(PlayerStat->GetBaseStat(), PlayerStat->GetModifierStat());
+	InHUDWidget->UpdateHpBar(PlayerStat->GetCurrentHp());
 
 	SetupEquipmentWidget(InHUDWidget, EquipmentComponent->GetCurrentGun(), EEquipType::Main);
 	

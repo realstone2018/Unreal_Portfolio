@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Character/PTCharacterBase.h"
 #include "PTInterface/PTPlayerInputInterface.h"
+#include "UI/PTHUDWidget.h"
 #include "PTPlayerCharacter.generated.h"
 
 UCLASS()
@@ -30,7 +31,7 @@ protected:
 	TObjectPtr<class UPTInputComponent> PlayerInputComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UPTPlayerStatComponent> StatComponent;
+	TObjectPtr<class UPTPlayerStatComponent> PlayerStat;
 
 	virtual UPTCharacterStatComponent* GetStatComponent() override;
 
