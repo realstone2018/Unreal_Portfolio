@@ -58,5 +58,14 @@ namespace PTVectorUtil
 		float Y = Center.Y + Radius * FMath::Sin(Theta);
 
 		return TVector<RealType>(X, Y, 0);
+	}
+
+	FVector GetCirclePointTest(const FVector Center, float Radius)
+	{
+		float Theta = FMath::FRandRange(0.0f, 2.0f * PI); // 0에서 2π 사이의 랜덤 각도 생성
+		float X = Center.X + Radius * FMath::Cos(Theta);
+		float Y = Center.Y + Radius * FMath::Sin(Theta);
+
+		return FVector(X, Y, 0);
 	} 
 }

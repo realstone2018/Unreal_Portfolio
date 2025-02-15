@@ -13,6 +13,7 @@ protected:
 	virtual void NativeConstruct() override;
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void UpdateBullet(int32 NewCurAmount, int32 NewMaxAmount);
 	void SetReloadingImg(uint8 InVisibility);
 	

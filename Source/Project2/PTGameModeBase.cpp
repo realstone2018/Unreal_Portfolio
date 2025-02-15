@@ -77,6 +77,11 @@ void APTGameModeBase::OnPlayerDead(ACharacter* ControllCharacter)
 	PlayerRespawnTimer();
 }
 
+void APTGameModeBase::LevelReStart()
+{
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+}
+
 void APTGameModeBase::PlayerRespawnTimer()
 {
 	APTPlayerController* PlayerController = Cast<APTPlayerController>(GetWorld()->GetFirstPlayerController());
@@ -126,13 +131,16 @@ float APTGameModeBase::GetPlayerRespawnRemainTime()
 
 void APTGameModeBase::MonsterWaveTimer()
 {
-	FTimerHandle MonsterWaveTimerHandle;
+	FVector SpawnLocation = MainStation->GetActorLocation();
+	SpawnManager->SpawnMonsterWave(SpawnLocation, 1);
 
-	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 6);
-
-	 GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this]()
-	 {
-	 	SpawnManager->SpawnMonsterWave(MainStation->GetActorLocation(), 10);
-
-	 }), 10.f, true);
+	if (MonsterWaveTimerHandle.IsValid())
+	{
+		GetWorldTimerManager().ClearTimer(MonsterWaveTimerHandle);
+	}
+	
+	GetWorldTimerManager().SetTimer(MonsterWaveTimerHandle, FTimerDelegate::CreateLambda([this, SpawnLocation]()
+	{
+		SpawnManager->SpawnMonsterWave(SpawnLocation, 1);
+	}), 5.f, true);
 }

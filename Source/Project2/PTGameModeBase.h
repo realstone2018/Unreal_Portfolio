@@ -25,6 +25,9 @@ public:
 
 	virtual void OnPlayerDead(ACharacter* ControllCharacter) override;
 
+	UFUNCTION(BlueprintCallable, Category = "GameMode")
+	void LevelReStart();
+
 #pragma endregion
 
 
@@ -42,7 +45,7 @@ public:
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timer", meta = (AllowPrivateAccess = "true"))
-	float StageClearTime = 60.f;
+	float StageClearTime = 8.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timer", meta = (AllowPrivateAccess = "true"))
 	float PlayerRespawnDelay = 5.f;
@@ -51,8 +54,11 @@ private:
 	FTimerHandle StageTimerHandle;
 
 	UPROPERTY()
-	FTimerHandle PlayerRespawnTimerHandle;
+	FTimerHandle MonsterWaveTimerHandle;
 	
+	UPROPERTY()
+	FTimerHandle PlayerRespawnTimerHandle;
+
 #pragma endregion
 
 
